@@ -8,7 +8,7 @@ public interface StudentService {
 	
 	ArrayList<Student> findAllStudents();
 	
-	Student findStudent(String id);
+	Student findStudent(String Id);
 
 	Student createStudent(Student student);
 
