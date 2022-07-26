@@ -7,15 +7,14 @@
 	<div th:replace="fragments/general.html :: menu"></div>-->
 
 	<div class="container">
-		<h1>Booking Form</h1>
-		<form th:action="@{/users/save}" th:object="${user}" method="post" enctype="multipart/form-data">
+		<h1>Report Misuse</h1>
+		<form th:action="@{/report/save}" th:object="${report}" method="post" enctype="multipart/form-data">
 			<label>Photo: </label>
 			<input type="file" name="image" accept="image/png, image/jpeg" />
 			<ul>
-				<li th:each="feat : ${allFeatures}">
-					<input type="checkbox" th:field="*{features}" th:value="${feat}" />
-					<label th:for="${#ids.prev('features')}"
-						th:text="#{${'seedstarter.feature.' + feat}}">Heating</label>
+				<li th:each="desc : ${descriptions}">
+					<input type="checkbox" th:field="*{}" th:value="${desc}" />
+					<label th:for="${#ids.prev('type')}" th:text="#{${'seedstarter.type.' + desc}}"></label>
 				</li>
 			</ul>
 			<a href="" th:href="@{/room/edit/}">Submit</a>
