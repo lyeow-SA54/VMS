@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!--<head th:replace="fragments/general.html :: headerfiles"/>-->
+
+<body>
+	<!--<header th:insert="fragments/general.html :: header"> </header>
+	<div th:replace="fragments/general.html :: menu"></div>-->
+
+	<h2 th:if="${not #lists.isEmpty(booking)}">Booking Summary</h2>
+	<span th:text="${room.name}" />
+	<a href="" th:href="@{/room/edit/}">View Pending Booking</a>
+	<a href="" th:href="@{/room/edit/}">Update</a>
+	<br />
+	<!--<div th:replace="fragments/general.html :: footer"></div>-->
+</body>
+
+</html>
