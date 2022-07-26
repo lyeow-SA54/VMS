@@ -13,24 +13,24 @@
 				<input type="hidden" th:field="*{id}">
 			</fieldset>
 			<fieldset>
-				Availability <input type="text" th:field="*{availability}">
-				<p th:if="${#fields.hasErrors('availability')}" th:errors="*{availability}"></p>
-			</fieldset>
-			<fieldset>
-				Pax <input type="number" th:field="*{pax}">
-				<p th:if="${#fields.hasErrors('pax')}" th:errors="*{pax}"></p>
+				Name <input type="text" th:field="*{name}">
+				<p th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
 			</fieldset>
 			<fieldset>
 				Facilities <input type="text" th:field="*{facilities}">
 				<p th:if="${#fields.hasErrors('facilities')}" th:errors="*{facilities}"></p>
 			</fieldset>
 			<fieldset>
-				Name <input type="text" th:field="*{name}">
-				<p th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+				Pax <input type="number" th:field="*{pax}">
+				<p th:if="${#fields.hasErrors('pax')}" th:errors="*{pax}"></p>
 			</fieldset>
 			<fieldset>
 				Slots <input type="text" th:field="*{slots}">
 				<p th:if="${#fields.hasErrors('slots')}" th:errors="*{slots}"></p>
+			</fieldset>
+			<fieldset>
+				Availability <input type="text" th:field="*{availability}">
+				<p th:if="${#fields.hasErrors('availability')}" th:errors="*{availability}"></p>
 			</fieldset>
 			<fieldset>
 				<input type="submit" value="Save" />
