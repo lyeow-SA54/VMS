@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!--<head th:replace="fragments/general.html :: headerfiles"/>-->
+
+<body>
+	<!--<header th:insert="fragments/general.html :: header"> </header>
+	<div th:replace="fragments/general.html :: menu"></div>-->
+
+	<h1>Rooms</h1>
+	<a href="room-form.html" th:href="@{/room/add}">Add Room</a>
+
+	<h2 th:if="${not #lists.isEmpty(rooms)}">Room List</h2>
+	<table th:if="${not #lists.isEmpty(rooms)}">
+		<tr>
+			<th>Name</th>
+			<th>Facilities</th>
+			<th>Pax</th>
+			<th>Slots</th>
+			<th>Availability</th>
+			<th>Edit Facility</th>
+			<th>Delete Facility</th>
+		</tr>
+		<tr th:each="room:${rooms}">
+			<td th:text=${room.name}></td>
+			<td th:text=${room.facilities}></td>
+			<td th:text=${room.pax}></td>
+			<td th:text=${room.slots}></td>
+			<td th:text=${room.availability}></td>
+			<td><a href="" th:href="@{/room/edit/}+${room.id}">Edit</a></td>
+			<td><a href="" th:href="@{/room/delete/}+${room.id}">Delete</a></td>
+		</tr>
+	</table>
+
+	<br />
+	<!--<div th:replace="fragments/general.html :: footer"></div>-->
+</body>
+
+</html>
