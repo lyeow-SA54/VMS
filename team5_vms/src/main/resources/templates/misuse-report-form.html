@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!--<head th:replace="fragments/general.html :: headerfiles"/>-->
+
+<body>
+	<!--<header th:insert="fragments/general.html :: header"> </header>
+	<div th:replace="fragments/general.html :: menu"></div>-->
+
+	<div class="container">
+		<h1>Booking Form</h1>
+		<form th:action="@{/users/save}" th:object="${user}" method="post" enctype="multipart/form-data">
+			<label>Photo: </label>
+			<input type="file" name="image" accept="image/png, image/jpeg" />
+			<ul>
+				<li th:each="feat : ${allFeatures}">
+					<input type="checkbox" th:field="*{features}" th:value="${feat}" />
+					<label th:for="${#ids.prev('features')}"
+						th:text="#{${'seedstarter.feature.' + feat}}">Heating</label>
+				</li>
+			</ul>
+			<a href="" th:href="@{/room/edit/}">Submit</a>
+		</form>
+		<br />
+		<!--<div th:replace="fragments/general.html :: footer"></div>-->
+</body>
+
+</html>
