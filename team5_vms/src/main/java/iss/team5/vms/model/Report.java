@@ -16,6 +16,7 @@ import iss.team5.vms.helper.Category;
 import iss.team5.vms.helper.IdGenerator;
 import iss.team5.vms.helper.StudentStatus;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 
 @Entity
