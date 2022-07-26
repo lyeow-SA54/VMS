@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!--<head th:replace="fragments/general.html :: headerfiles"/>-->
+
+<body>
+	<!--<header th:insert="fragments/general.html :: header"> </header>
+	<div th:replace="fragments/general.html :: menu"></div>-->
+
+	<div class="container">
+		<h1>Room Form</h1>
+		<form action="#" th:object="${room}" th:action="@{/roomy/save}" method="post">
+			<fieldset>
+				<input type="hidden" th:field="*{id}">
+			</fieldset>
+			<fieldset>
+				Availability <input type="text" th:field="*{availability}">
+				<p th:if="${#fields.hasErrors('availability')}" th:errors="*{availability}"></p>
+			</fieldset>
+			<fieldset>
+				Pax <input type="number" th:field="*{pax}">
+				<p th:if="${#fields.hasErrors('pax')}" th:errors="*{pax}"></p>
+			</fieldset>
+			<fieldset>
+				Facilities <input type="text" th:field="*{facilities}">
+				<p th:if="${#fields.hasErrors('facilities')}" th:errors="*{facilities}"></p>
+			</fieldset>
+			<fieldset>
+				Name <input type="text" th:field="*{name}">
+				<p th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+			</fieldset>
+			<fieldset>
+				Slots <input type="text" th:field="*{slots}">
+				<p th:if="${#fields.hasErrors('slots')}" th:errors="*{slots}"></p>
+			</fieldset>
+			<fieldset>
+				<input type="submit" value="Save" />
+				&nbsp; &nbsp;
+				<input type="reset" value="Cancel" />
+			</fieldset>
+		</form>
+		<br />
+		<!--<div th:replace="fragments/general.html :: footer"></div>-->
+</body>
+
+</html>
