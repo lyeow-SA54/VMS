@@ -8,18 +8,20 @@
 
 	<div class="container">
 		<h1>Booking Form</h1>
-		<form action="#" th:object="${room}" th:action="@{/room/save}" method="post">
+		<form action="#" th:object="${book}" th:action="@{/book/{sid}/new(sid=${student.id})}" method="post">
 			<fieldset>
 				<input type="hidden" th:field="*{id}">
 			</fieldset>
 			<fieldset>
-				Date <input type="text" th:field="*{availability}">
-				<p th:if="${#fields.hasErrors('availability')}" th:errors="*{availability}"></p>
+				Date <input type="text" th:field="${{booking.date}}">
+				<p th:if="${#fields.hasErrors('{booking.date}')}" th:errors="${{booking.date}}"></p>
 			</fieldset>
 			<fieldset>
 				<label for="Time Slot">Time Slot:</label>
-				<select th:field="*{type}">
-					<option th:each="type : ${allTypes}" th:value="${type}" th:text="#{${'seedstarter.type.' + type}}">
+				<select th:field="${room.slots}">
+					<option th:each="type : ${slots}" 
+							th:value="${type}" 
+							th:text="#{${'seedstarter.type.' + type}}">
 						Wireframe</option>
 				</select>
 			</fieldset>
@@ -36,12 +38,12 @@
 			</fieldset>
 		</form>
 		<ul>
-			<li th:each="room : ${rooms}">
+			<li th:each="room : ${rmList}">
 				<input type="radio" th:field="*{type}" th:value="${room}" />
 				<label th:for="${#ids.prev('type')}" th:text="#{${'seedstarter.type.’ + room}}">Wireframe</label>
 			</li>
 		</ul>
-		<a href="" th:href="@{/room/edit/}">Update Booking</a>
+		<a href="" th:href="@{/book/{sid}/status(sid=${student.id})}">Submit Booking</a>
 		<br />
 		<!--<div th:replace="fragments/general.html :: footer"></div>-->
 </body>

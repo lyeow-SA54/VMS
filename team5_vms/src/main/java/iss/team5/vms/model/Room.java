@@ -35,8 +35,4 @@ public class Room {
 	private String facilities;
 	private String roomName;
 	
-	@NotBlank(message = "Please select a time slot")
-	@Column(name = "Booking_status", columnDefinition = "ENUM('NINE','TEN','ELVELN','TWELVE','THIRTEEN','FOURTEEN','FIFTEEN','SIXTEEN')")
-	@Enumerated(EnumType.STRING)
-	private BookingSlots slots;
 }

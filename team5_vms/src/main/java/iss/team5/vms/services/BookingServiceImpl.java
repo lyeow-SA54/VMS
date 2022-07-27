@@ -55,13 +55,16 @@ public class BookingServiceImpl implements BookingService {
 		
 		//first come first service
 		Booking bookedRoom = brepo.findBookingByRoom(rm);
+		
 		if (bookedRoom.getRoom().getAvailbility().name() == "OPEN" )
 		{
 			//scoring
 			if (s.getScore() < 3)
 			{
 				booking.setStatus(BookingStatus.SUCCESSFUL);
+				
 				booking.setStudent(s);
+				booking.setRoom(rm);
 				booking.setRoom(rm);
 			}
 			else if (s.getScore() == 3)
@@ -72,6 +75,7 @@ public class BookingServiceImpl implements BookingService {
 				Runnable setStatus = () -> {booking.setStatus(BookingStatus.SUCCESSFUL);};
 				if (bookedRoom.getRoom().getAvailbility().name() == "OPEN" ) {
 				executorService.schedule(setStatus, 1, TimeUnit.HOURS);
+				rm.setAvailbility(BookingAvailablity.BOOKED);
 				booking.setStudent(s);
 				booking.setRoom(rm);
 				}

@@ -17,5 +17,7 @@ public interface BookingService {
 	Booking changeBooking(Booking booking);
 
 	void removeBooking(Booking booking);
+	
+	ArrayList<Room> findAvailableRoom(Booking booking);
 
 }

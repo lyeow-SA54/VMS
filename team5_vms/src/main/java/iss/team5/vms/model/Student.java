@@ -4,6 +4,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -15,7 +18,7 @@ import iss.team5.vms.helper.IdGenerator;
 @Data
 @Entity
 
-public class Student {
+public class Student{
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "custom_id_gen")
   @GenericGenerator(
@@ -26,7 +29,8 @@ public class Student {
           @Parameter(name = IdGenerator.NUMBER_FORMAT_PARAMETER, value = "%05d") })
 	private String Id;
 	private int score;
+	@OneToOne
+	@JoinColumn (name="userID")
 	private User user;
-	
 
 }
