@@ -53,4 +53,16 @@ public class BookingsRepoTest {
 		b1.setRoom(new Room("R1"));
 		Assertions.assertNotNull(b1.getRoom());
     }
+	
+	@Test
+    @Order(3)
+	public void findBookingByRoom()  {
+    	Booking b1 = new Booking("B1", dateTimeInput.dateInput("01/01/2022"), LocalTime.now(), 1);
+		br.saveAndFlush(b1);
+		Room r1 = new Room("R1");
+		b1.setRoom(r1);
+		List<Booking> bookinglist = br.findAllBookingsByRoom(r1);
+		Assertions.assertNotNull(bookinglist.size());
+    }
+	
 }

@@ -1,6 +1,7 @@
 package iss.team5.vms.services;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import iss.team5.vms.model.Booking;
 import iss.team5.vms.model.Student;
@@ -18,7 +19,7 @@ public interface BookingService {
 
 	void removeBooking(Booking booking);
 
-	Booking findBookingByRoom(Room room);	
+	List<Booking> findBookingsByRoom(Room room);	
 	
 	ArrayList<Booking> findAllBookingsByRoom(Room room);
 	

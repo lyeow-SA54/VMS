@@ -1,6 +1,7 @@
 package iss.team5.vms.services;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,9 +48,8 @@ public class BookingServiceImpl implements BookingService{
 	}
 
 	@Override
-	public Booking findBookingByRoom(Room room) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Booking> findBookingsByRoom(Room room) {
+		return br.findBookingByRoom(room);
 	}
 
 	@Override
