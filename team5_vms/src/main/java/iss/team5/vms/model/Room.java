@@ -15,9 +15,11 @@ import iss.team5.vms.helper.BookingAvailablity;
 import iss.team5.vms.helper.BookingSlots;
 import iss.team5.vms.helper.IdGenerator;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@NoArgsConstructor
 public class Room {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "custom_id_gen")
@@ -34,4 +36,9 @@ public class Room {
 	@Column(name = "Booking_slots", columnDefinition = "ENUM('SUCCESSFUL','REJECTED','CANCELLED')")
 	@Enumerated(EnumType.STRING)
 	private BookingSlots slots;
+	
+	public Room(String id)
+	{
+		this.id = id;
+	}
 }

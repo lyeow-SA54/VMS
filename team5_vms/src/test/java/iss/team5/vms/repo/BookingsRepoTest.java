@@ -19,6 +19,7 @@ import iss.team5.vms.Team5VmsApplication;
 import iss.team5.vms.helper.BookingStatus;
 import iss.team5.vms.helper.dateTimeInput;
 import iss.team5.vms.model.Booking;
+import iss.team5.vms.model.Room;
 import iss.team5.vms.repositories.BookingRepo;
 
 
@@ -42,5 +43,14 @@ public class BookingsRepoTest {
 		br.saveAllAndFlush(bookingList);
 		Booking b1 = bookingList.get(0);
 		Assertions.assertNotNull(b1.getId());
+    }
+	
+	@Test
+    @Order(2)
+	public void testUpdateBooking()  {
+    	Booking b1 = new Booking("B1", dateTimeInput.dateInput("01/01/2022"), LocalTime.now(), 1);
+		br.saveAndFlush(b1);
+		b1.setRoom(new Room("R1"));
+		Assertions.assertNotNull(b1.getRoom());
     }
 }
