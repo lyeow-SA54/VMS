@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
 
@@ -25,17 +26,24 @@ public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
-	@NotBlank(message = "Name is mandatory")
+	@NotNull(message = "Name is mandatory")
 	private String firstName;
 	private String lastName;
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Role> roles;
-	@NotBlank(message = "Email is mandatory")
+	@NotNull(message = "Email is mandatory")
 	private String email;
-	@NotBlank(message = "Username is mandatory")
+	@NotNull(message = "Username is mandatory")
 	private String username;
-	@NotBlank(message = "Password is mandatory, minimum length is 6 character")
+	@NotNull(message = "Password is mandatory, minimum length is 6 character")
 	@Length (min = 6)
 	private String password;
 
+	public User(String firstName, String email, String username, String password)
+	{
+		this.firstName = firstName;
+		this.email = email;
+		this.username = username;
+		this.password = password;
+	}
 }

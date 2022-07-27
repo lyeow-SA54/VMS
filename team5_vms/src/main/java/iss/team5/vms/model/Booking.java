@@ -30,7 +30,7 @@ public class Booking {
 	      name = "custom_id_gen",      strategy = "iss.team5.vms.helper.IdGenerator", 
 	      parameters = {
 	          @Parameter(name = IdGenerator.INCREMENT_PARAM, value = "1"),
-	          @Parameter(name = IdGenerator.VALUE_PREFIX_PARAMETER, value = "BOOK_"),
+	          @Parameter(name = IdGenerator.VALUE_PREFIX_PARAMETER, value = "B"),
 	          @Parameter(name = IdGenerator.NUMBER_FORMAT_PARAMETER, value = "%05d") })
 	private String id;
 //	@OnDelete(action = OnDeleteAction.CASCADE)

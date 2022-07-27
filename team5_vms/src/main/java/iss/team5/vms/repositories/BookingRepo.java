@@ -11,6 +11,8 @@ import iss.team5.vms.model.Student;
 
 public interface BookingRepo extends JpaRepository<Booking,String>{
 	
+	Boolean existsBy();
+	
 	ArrayList<Booking> findAllBookingsByRoom(Room room);
 	
 	Booking findBookingByStudent(Student student);	

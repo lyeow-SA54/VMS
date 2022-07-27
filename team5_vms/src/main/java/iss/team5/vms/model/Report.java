@@ -31,7 +31,7 @@ public class Report {
       name = "custom_id_gen",      strategy = "iss.team5.vms.helper.IdGenerator", 
       parameters = {
           @Parameter(name = IdGenerator.INCREMENT_PARAM, value = "1"),
-          @Parameter(name = IdGenerator.VALUE_PREFIX_PARAMETER, value = "RE_"),
+          @Parameter(name = IdGenerator.VALUE_PREFIX_PARAMETER, value = "RE"),
           @Parameter(name = IdGenerator.NUMBER_FORMAT_PARAMETER, value = "%05d") })
 	private String id;
 	@NotBlank(message = "Please choose a date")

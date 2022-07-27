@@ -6,7 +6,6 @@ import iss.team5.vms.model.Report;
 import iss.team5.vms.model.Booking;
 import iss.team5.vms.model.Student;
 
-
 public interface ReportService {
 	
 	ArrayList<Report> findAllReports();

@@ -8,10 +8,11 @@ import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
-import iss.team5.vms.repositories.StudentRepo;
-import iss.team5.vms.repositories.UserRepo;
+import iss.team5.vms.model.Role;
 import iss.team5.vms.model.Student;
 import iss.team5.vms.model.User;
+import iss.team5.vms.repositories.StudentRepo;
+import iss.team5.vms.repositories.UserRepo;
 
 @Service 
 public class StudentServiceImpl implements StudentService{
@@ -21,6 +22,10 @@ public class StudentServiceImpl implements StudentService{
 	
 	@Resource
 	private UserRepo urepo;
+	
+	public boolean tableExist() {
+		return srepo.existsBy();
+	}
 	
 	@Override
 	@Transactional
@@ -37,11 +42,10 @@ public class StudentServiceImpl implements StudentService{
 	@Override
 	@Transactional
 	public Student createStudent(Student student) {
-		User u=new User();
-		urepo.saveAndFlush(u);
-		Student s = new Student();
-		s.setUser(u);
-		return srepo.saveAndFlush(s);
+		User user = student.getUser();
+		Role role = new Role("STUDENT");
+		user.setRoles(List.of(role));
+		return srepo.saveAndFlush(student);
 	}
 	
 	@Override

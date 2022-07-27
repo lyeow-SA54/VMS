@@ -9,9 +9,11 @@ import iss.team5.vms.model.Room;
 
 public interface BookingService {
 	
-	ArrayList<Booking> findAllBookings();
+	boolean tableExist();
 	
-	Booking findBooking(String id);
+	List<Booking> findAllBookings();
+	
+	Booking findBookingById(String id);
 
 	Booking createBooking(Booking booking);
 

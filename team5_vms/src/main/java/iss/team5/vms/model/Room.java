@@ -27,7 +27,7 @@ public class Room {
 	      name = "custom_id_gen",      strategy = "iss.team5.vms.helper.IdGenerator", 
 	      parameters = {
 	          @Parameter(name = IdGenerator.INCREMENT_PARAM, value = "1"),
-	          @Parameter(name = IdGenerator.VALUE_PREFIX_PARAMETER, value = "RM_"),
+	          @Parameter(name = IdGenerator.VALUE_PREFIX_PARAMETER, value = "RM"),
 	          @Parameter(name = IdGenerator.NUMBER_FORMAT_PARAMETER, value = "%05d") })
 	private String id;
 	private BookingAvailablity availability;

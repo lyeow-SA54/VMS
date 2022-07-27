@@ -18,15 +18,13 @@ public class BookingServiceImpl implements BookingService{
 	@Autowired BookingRepo br;
 
 	@Override
-	public ArrayList<Booking> findAllBookings() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Booking> findAllBookings() {
+		return br.findAll();
 	}
 
 	@Override
-	public Booking findBooking(String id) {
-		// TODO Auto-generated method stub
-		return null;
+	public Booking findBookingById(String id) {
+		return br.findById(id).get();
 	}
 
 	@Override
@@ -80,6 +78,11 @@ public class BookingServiceImpl implements BookingService{
 	public Student findStudentByBooking(Booking booking) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public boolean tableExist() {
+		return br.existsBy();
 	}
 
 }

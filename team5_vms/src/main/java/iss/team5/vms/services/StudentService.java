@@ -6,6 +6,8 @@ import iss.team5.vms.model.Student;
 
 public interface StudentService {
 	
+	boolean tableExist();
+	
 	ArrayList<Student> findAllStudents();
 	
 	Student findStudent(String Id);
