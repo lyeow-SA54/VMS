@@ -7,6 +7,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -28,10 +29,14 @@ public class Room {
 	          @Parameter(name = IdGenerator.VALUE_PREFIX_PARAMETER, value = "RM_"),
 	          @Parameter(name = IdGenerator.NUMBER_FORMAT_PARAMETER, value = "%05d") })
 	private String id;
+	@Column(name = "Booking_availbility", columnDefinition = "ENUM('BOOKED','OPEN')")
+	@Enumerated(EnumType.STRING)
 	private BookingAvailablity availbility;
 	private String facilities;
 	private String roomName;
-	@Column(name = "Booking_slots", columnDefinition = "ENUM('SUCCESSFUL','REJECTED','CANCELLED')")
+	
+	@NotBlank(message = "Please select a time slot")
+	@Column(name = "Booking_status", columnDefinition = "ENUM('NINE','TEN','ELVELN','TWELVE','THIRTEEN','FOURTEEN','FIFTEEN','SIXTEEN')")
 	@Enumerated(EnumType.STRING)
 	private BookingSlots slots;
 }

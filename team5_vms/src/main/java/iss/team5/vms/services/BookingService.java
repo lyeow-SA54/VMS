@@ -18,16 +18,4 @@ public interface BookingService {
 
 	void removeBooking(Booking booking);
 
-	Booking findBookingByRoom(Room room);	
-	
-	ArrayList<Booking> findAllBookingsByRoom(Room room);
-	
-	Booking findBookingByStudent(Student student);	
-	
-	ArrayList<Booking> findAllBookingByStudent(Student student);
-
-	Room findRoomByBooking(Booking booking);
-	
-	Student findStudentByBooking(Booking booking);
-
 }

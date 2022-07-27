@@ -39,8 +39,7 @@ public class Booking {
 	@NotBlank(message = "Please choose a date")
 	DateTimeFormatter dt = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 	private LocalDate date;
-	@NotBlank(message = "Please select a time slot")
-	@Column(name = "Booking_status", columnDefinition = "ENUM('NINE','TEN','ELVELN','TWELVE','THIRTEEN','FOURTEEN','FIFTEEN','SIXTEEN')")
+	@Column(name = "Booking_slots", columnDefinition = "ENUM('SUCCESSFUL','REJECTED','CANCELLED','WAITINGLIST')")
 	@Enumerated(EnumType.STRING)
 	private BookingStatus status;
 	@OnDelete(action = OnDeleteAction.CASCADE)
