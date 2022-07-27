@@ -1,19 +1,26 @@
 package iss.team5.vms.model;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
 import org.hibernate.validator.constraints.Length;
 
-import iss.team5.vms.helper.Role;
 import lombok.Data;
 
 
 @Entity
+@Table
 @Data
+
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -21,8 +28,8 @@ public class User {
 	@NotBlank(message = "Name is mandatory")
 	private String firstName;
 	private String lastName;
-	@NotBlank(message = "Role is mandatory")
-	private Role role;
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Role> roles;
 	@NotBlank(message = "Email is mandatory")
 	private String email;
 	@NotBlank(message = "Username is mandatory")

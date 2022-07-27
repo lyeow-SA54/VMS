@@ -7,6 +7,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -34,7 +35,9 @@ public class Report {
 	private String id;
 	@NotBlank(message = "Please choose a date")
 	private String details;
+	@OneToOne
 	private Student student;
+	@OneToOne
 	private Booking booking;
 	@Column(name = "category", columnDefinition = "ENUM('CLEANLINESS','VANDALISE','HOGGING','MISUSE')")
 	@Enumerated(EnumType.STRING)
@@ -42,5 +45,6 @@ public class Report {
 	@Column(name = "Student_status", columnDefinition = "ENUM('PROBATION','NORMAL')")
 	@Enumerated(EnumType.STRING)
 	private StudentStatus status;
-	private Image img;
+//	@OneToOne
+//	private Image img;
 }

@@ -4,11 +4,13 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import lombok.Data;
+import javax.persistence.OneToOne;
+
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 import iss.team5.vms.helper.IdGenerator;
+import lombok.Data;
 
 
 
@@ -26,7 +28,7 @@ public class Student {
           @Parameter(name = IdGenerator.NUMBER_FORMAT_PARAMETER, value = "%05d") })
 	private String Id;
 	private int score;
+	@OneToOne
 	private User user;
 	
-
 }

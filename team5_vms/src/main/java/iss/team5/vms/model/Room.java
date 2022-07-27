@@ -28,7 +28,7 @@ public class Room {
 	          @Parameter(name = IdGenerator.VALUE_PREFIX_PARAMETER, value = "RM_"),
 	          @Parameter(name = IdGenerator.NUMBER_FORMAT_PARAMETER, value = "%05d") })
 	private String id;
-	private BookingAvailablity availbility;
+	private BookingAvailablity availability;
 	private String facilities;
 	private String roomName;
 	@Column(name = "Booking_slots", columnDefinition = "ENUM('SUCCESSFUL','REJECTED','CANCELLED')")
