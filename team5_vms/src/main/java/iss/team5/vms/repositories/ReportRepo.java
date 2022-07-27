@@ -13,8 +13,6 @@ import iss.team5.vms.model.Student;
 
 public interface ReportRepo extends JpaRepository<Report,String>{
 	
-	ArrayList<Report> findAllReports();
-	
 	ArrayList<Report> findAllReportByStudent(Student student);
 	
 	Report findReportByStudent(Student student);
@@ -23,7 +21,4 @@ public interface ReportRepo extends JpaRepository<Report,String>{
 	
     Report findReportByBooking(Booking booking);
     
-    Student findStudentByReport(Report report);
-    
-    Booking findBookingByReport(Report report);
 }

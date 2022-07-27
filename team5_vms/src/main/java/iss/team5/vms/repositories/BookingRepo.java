@@ -1,24 +1,15 @@
 package iss.team5.vms.repositories;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import iss.team5.vms.model.Booking;
-
-public interface BookingRepo extends JpaRepository<Booking, String> {
-import java.util.ArrayList;
-
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-
-import iss.team5.vms.model.Booking;
-import iss.team5.vms.model.Student;
 import iss.team5.vms.model.Room;
+import iss.team5.vms.model.Student;
 
 public interface BookingRepo extends JpaRepository<Booking,String>{
-	
-	ArrayList<Booking> findAllBookings();
 	
 	ArrayList<Booking> findAllBookingsByRoom(Room room);
 	
@@ -26,9 +17,10 @@ public interface BookingRepo extends JpaRepository<Booking,String>{
 	
 	ArrayList<Booking> findAllBookingByStudent(Student student);
 
-	Room findRoomByBooking(Booking booking);
+	List<Booking> findBookingByRoom(Room room);
 	
-	Student findStudentByBooking(Booking booking);
+	//Student class doesn't have Booking attribute, use BookingRepo to do this instead
+//	Student findStudentByBooking(Booking booking);
 
 	ArrayList<Booking> findAllById(String id);
 	

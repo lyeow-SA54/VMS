@@ -46,7 +46,7 @@ public class ReportServiceImpl implements ReportService{
 		r.setBooking(r.getBooking());
 		r.setCategory(r.getCategory());
 		r.setStatus(r.getStatus());
-		r.setImg(r.getImg());
+//		r.setImg(r.getImg());
 		return rprepo.saveAndFlush(r);
 	}
 	
@@ -70,30 +70,12 @@ public class ReportServiceImpl implements ReportService{
 		return rprepo.findReportByStudent(student);
 	}
 	
-	@Override 
-	@Transactional
-	public ArrayList<Report> findAllReportByBooking(Booking booking){
-		ArrayList<Report> r = (ArrayList<Report>)rprepo.findAllReportByBooking(booking);
-		return r;
-	}
-	
 	@Override
 	@Transactional
 	public  Report findReportByBooking(Booking booking) {
 		return rprepo.findReportByBooking(booking);
 	}
 	
-	@Override
-	@Transactional
-	public Student findStudentByReport(Report report) {
-		return rprepo.findStudentByReport(report);
-	}
-	
-	@Override
-	@Transactional
-	public Booking findBookingByReport(Report report) {
-		return rprepo.findBookingByReport(report);
-	}
 	
 	
 	

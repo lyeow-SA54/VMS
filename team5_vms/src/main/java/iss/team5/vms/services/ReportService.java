@@ -21,14 +21,8 @@ public interface ReportService {
 	
 	ArrayList<Report> findAllReportByStudent(Student student);
 	
-	Report findReportByStudent(Student student);
-
-	ArrayList<Report> findAllReportByBooking(Booking booking);	
+	Report findReportByStudent(Student student);	
 	
     Report findReportByBooking(Booking booking);
-    
-    Student findStudentByReport(Report report);
-    
-    Booking findBookingByReport(Report report);
     
 }

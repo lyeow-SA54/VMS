@@ -9,6 +9,4 @@ import iss.team5.vms.model.Room;
 
 public interface RoomRepo extends JpaRepository<Room,String>{
 	
-	ArrayList<Room> findAllRooms();
-
 }
