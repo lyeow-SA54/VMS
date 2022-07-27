@@ -9,5 +9,6 @@ import iss.team5.vms.model.Student;
 
 public interface StudentRepo extends JpaRepository<Student,String>{
 	
+	ArrayList<Student> findAllStudents();
 
 }
