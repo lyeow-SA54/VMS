@@ -37,9 +37,8 @@ public class BookingsRepoTest {
     @Order(1)
 	public void testCreateBooking()  {
     	List<Booking> bookingList = new ArrayList<Booking>();
-    	bookingList.add(new Booking("B1", dateTimeInput.dateInput("01/01/2022"), LocalTime.now(), 1));
-    	bookingList.add(new Booking("B2", dateTimeInput.dateInput("01/01/2022"), LocalTime.now(), 1));
-    	bookingList.add(new Booking("B3", dateTimeInput.dateInput("01/01/2022"), LocalTime.now(), 1));
+    	bookingList.add(new Booking("B1", dateTimeInput.dateInput("01/08/2022"), LocalTime.now(), 1, BookingStatus.SUCCESSFUL));
+    	bookingList.add(new Booking("B2", dateTimeInput.dateInput("02/08/2022"), LocalTime.now(), 2, BookingStatus.CANCELLED));
 		br.saveAllAndFlush(bookingList);
 		Booking b1 = bookingList.get(0);
 		Assertions.assertNotNull(b1.getId());
@@ -48,7 +47,7 @@ public class BookingsRepoTest {
 	@Test
     @Order(2)
 	public void testUpdateBooking()  {
-    	Booking b1 = new Booking("B1", dateTimeInput.dateInput("01/01/2022"), LocalTime.now(), 1);
+    	Booking b1 = new Booking("B1", dateTimeInput.dateInput("01/08/2022"), LocalTime.now(), 1, BookingStatus.SUCCESSFUL);
 		br.saveAndFlush(b1);
 		b1.setRoom(new Room("R1"));
 		Assertions.assertNotNull(b1.getRoom());
@@ -57,7 +56,7 @@ public class BookingsRepoTest {
 	@Test
     @Order(3)
 	public void findBookingByRoom()  {
-    	Booking b1 = new Booking("B1", dateTimeInput.dateInput("01/01/2022"), LocalTime.now(), 1);
+    	Booking b1 = new Booking("B1", dateTimeInput.dateInput("01/08/2022"), LocalTime.now(), 1, BookingStatus.SUCCESSFUL);
 		br.saveAndFlush(b1);
 		Room r1 = new Room("R1");
 		b1.setRoom(r1);

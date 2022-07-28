@@ -8,5 +8,5 @@ import org.springframework.data.jpa.repository.Query;
 import iss.team5.vms.model.Room;
 
 public interface RoomRepo extends JpaRepository<Room,String>{
-	
+	Boolean existsBy();
 }

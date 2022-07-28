@@ -35,11 +35,19 @@ public class Room {
 	private boolean availability;
 	private String facilities;
 	private String roomName;
+	private int capacity;
 	private LocalTime blockedStartTime;
 	private int blockDuration;
 	
 	public Room(String id)
 	{
 		this.id = id;
+	}
+	
+	public Room(boolean availability, String facilities, String roomName, int capacity) {
+		this.availability=availability;
+		this.facilities=facilities;
+		this.roomName=roomName;
+		this.capacity=capacity;
 	}
 }

@@ -8,5 +8,5 @@ import org.springframework.data.jpa.repository.Query;
 import iss.team5.vms.model.User;
 
 public interface UserRepo extends JpaRepository<User,Integer>{
-	
+	Boolean existsBy();
 }

@@ -16,6 +16,10 @@ public class RoomServiceImpl implements RoomService{
 	@Resource
 	private RoomRepo rrepo;
 	
+	public boolean tableExist() {
+		return rrepo.existsBy();
+	}
+	
 	@Override
 	@Transactional
 	public ArrayList<Room> findAllRooms(){
@@ -44,6 +48,9 @@ public class RoomServiceImpl implements RoomService{
 		r.setRoomName(room.getRoomName());
 		r.setBlockedStartTime(room.getBlockedStartTime());
 		r.setBlockDuration(room.getBlockDuration());
+		r.setAvailability(room.isAvailability());
+		r.setFacilities(room.getFacilities());
+		r.setRoomName(room.getRoomName());
 		return rrepo.saveAndFlush(r);
 	}
 	
