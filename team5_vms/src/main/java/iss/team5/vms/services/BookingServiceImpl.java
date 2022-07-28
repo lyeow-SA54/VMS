@@ -67,6 +67,8 @@ public class BookingServiceImpl implements BookingService{
 		booking.setRoom(room);
 		br.saveAndFlush(booking);
 		
+		//Chao try
+		
 	}
 
 }
