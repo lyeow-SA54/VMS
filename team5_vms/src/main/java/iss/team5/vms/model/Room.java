@@ -14,7 +14,6 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
-import iss.team5.vms.helper.BookingAvailablity;
 import iss.team5.vms.helper.BookingSlots;
 import iss.team5.vms.helper.IdGenerator;
 import lombok.Data;
@@ -33,7 +32,7 @@ public class Room {
 	          @Parameter(name = IdGenerator.VALUE_PREFIX_PARAMETER, value = "RM"),
 	          @Parameter(name = IdGenerator.NUMBER_FORMAT_PARAMETER, value = "%05d") })
 	private String id;
-	private BookingAvailablity availability;
+	private boolean availability;
 	private String facilities;
 	private String roomName;
 	private LocalTime blockedStartTime;

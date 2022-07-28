@@ -39,10 +39,11 @@ public class RoomServiceImpl implements RoomService{
 	@Transactional
 	public Room changeRoom(Room room) {
 		Room r = findRoom(room.getId());
-		r.setAvailability(r.getAvailability());
-		r.setFacilities(r.getFacilities());
-		r.setRoomName(r.getRoomName());
-		r.setSlots(r.getSlots());
+		r.setAvailability(room.isAvailability());
+		r.setFacilities(room.getFacilities());
+		r.setRoomName(room.getRoomName());
+		r.setBlockedStartTime(room.getBlockedStartTime());
+		r.setBlockDuration(room.getBlockDuration());
 		return rrepo.saveAndFlush(r);
 	}
 	
