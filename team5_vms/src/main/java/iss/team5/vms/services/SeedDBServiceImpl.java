@@ -36,8 +36,7 @@ public class SeedDBServiceImpl implements SeedDBService {
 	
 	public void databaseInit() {
 		createInitialData();
-		//changeStudent();
-		
+		loadBookingData();
 	}
 
 	public void createInitialData() {
@@ -78,25 +77,15 @@ public class SeedDBServiceImpl implements SeedDBService {
 		}
 	}
 	
-	/*
-	 * public void changeStudent() { if(ss.tableExist()){ ss.changeStudent(new
-	 * Student("fn1", "email1@u.nus.edu", "user1", "password1"));
-	 * ss.changeStudent(new Student("fn2", "email2@u.nus.edu", "user2",
-	 * "password2")); ss.changeStudent(new Student("fn3", "email3@u.nus.edu",
-	 * "user3", "password3")); ss.changeStudent(new Student("fn4",
-	 * "email4@u.nus.edu", "user4", "password4")); ss.changeStudent(new
-	 * Student("fn5", "email5@u.nus.edu", "user5", "password5")); } }
-	 */
-	
+	public void loadBookingData() {
+		Student s1 = ss.findStudentById("S00001");
+		
+		Booking b1 = bs.findBookingById("B00002");
+		Booking b2 = bs.findBookingById("B00003");
+		
+		bs.addStudent(b2, s1);
+		bs.addStudent(b1, s1);		
+	}
 }
-
-	
-	
-	
-	
-//	)
-//	public void loadBookingData() {
-//		
-//	}
 	
 

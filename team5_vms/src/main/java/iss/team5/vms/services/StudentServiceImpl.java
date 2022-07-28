@@ -35,7 +35,7 @@ public class StudentServiceImpl implements StudentService{
 	}
 	
 	@Transactional
-	public Student findStudent(String Id) {
+	public Student findStudentById(String Id) {
 		return srepo.findById(Id).orElse(null);
 	}
 	
@@ -51,9 +51,9 @@ public class StudentServiceImpl implements StudentService{
 	@Override
 	@Transactional
 	public Student changeStudent(Student student) {
-		Student s = findStudent(student.getId());
-		s.setScore(s.getScore());
-		s.setUser(s.getUser());
+		Student s = findStudentById(student.getId());
+		s.setScore(student.getScore());
+		s.setUser(student.getUser());
 		return srepo.saveAndFlush(s);
 	}
 	

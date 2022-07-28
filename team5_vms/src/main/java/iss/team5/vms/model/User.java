@@ -10,18 +10,17 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
 
 import lombok.Data;
-
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table
 @Data
-
+@NoArgsConstructor
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -35,8 +34,7 @@ public class User {
 	private String email;
 	@NotNull(message = "Username is mandatory")
 	private String username;
-	@NotNull(message = "Password is mandatory, minimum length is 6 character")
-	@Length (min = 6)
+	@NotNull(message = "Password is mandatory")
 	private String password;
 
 	public User(String firstName, String email, String username, String password)

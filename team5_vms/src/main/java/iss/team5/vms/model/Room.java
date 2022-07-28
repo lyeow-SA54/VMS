@@ -1,5 +1,7 @@
 package iss.team5.vms.model;
 
+import java.time.LocalTime;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -7,6 +9,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -36,6 +39,8 @@ public class Room {
 	private String facilities;
 	private String roomName;
 	private int capacity;
+	private LocalTime blockedStartTime;
+	private int blockDuration;
 	
 	public Room(String id)
 	{

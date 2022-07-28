@@ -34,12 +34,6 @@ public class BookingServiceImpl implements BookingService{
 	}
 
 	@Override
-	public Booking changeBooking(Booking booking) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public void removeBooking(Booking booking) {
 		// TODO Auto-generated method stub
 		
@@ -51,38 +45,28 @@ public class BookingServiceImpl implements BookingService{
 	}
 
 	@Override
-	public ArrayList<Booking> findAllBookingsByRoom(Room room) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Booking findBookingByStudent(Student student) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ArrayList<Booking> findAllBookingByStudent(Student student) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Room findRoomByBooking(Booking booking) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Student findStudentByBooking(Booking booking) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public boolean tableExist() {
 		return br.existsBy();
+	}
+
+	@Override
+	public List<Booking> findBookingsByStudent(Student student) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void addStudent(Booking booking, Student student) {
+		booking.setStudent(student);
+		br.saveAndFlush(booking);
+		
+	}
+
+	@Override
+	public void addRoom(Booking booking, Room room) {
+		booking.setRoom(room);
+		br.saveAndFlush(booking);
+		
 	}
 
 }

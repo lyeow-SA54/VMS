@@ -12,9 +12,11 @@ import org.hibernate.annotations.Parameter;
 
 import iss.team5.vms.helper.IdGenerator;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@NoArgsConstructor
 
 public class Student{
 	@Id
