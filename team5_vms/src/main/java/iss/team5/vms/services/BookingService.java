@@ -17,20 +17,14 @@ public interface BookingService {
 
 	Booking createBooking(Booking booking);
 
-	Booking changeBooking(Booking booking);
-
 	void removeBooking(Booking booking);
 
 	List<Booking> findBookingsByRoom(Room room);	
 	
-	ArrayList<Booking> findAllBookingsByRoom(Room room);
+	List<Booking> findBookingsByStudent(Student student);
 	
-	Booking findBookingByStudent(Student student);	
+	void addStudent(Booking booking, Student student);
 	
-	ArrayList<Booking> findAllBookingByStudent(Student student);
-
-	Room findRoomByBooking(Booking booking);
-	
-	Student findStudentByBooking(Booking booking);
+	void addRoom(Booking booking, Room room);
 
 }

@@ -29,6 +29,7 @@ public class SeedDBServiceImpl implements SeedDBService {
 	
 	public void databaseInit() {
 		createInitialData();
+		loadBookingData();
 	}
 
 	public void createInitialData() {
@@ -41,9 +42,15 @@ public class SeedDBServiceImpl implements SeedDBService {
 		bs.createBooking(new Booking("B2", dateTimeInput.dateInput("01/01/2022"), LocalTime.now(), 1));
 		}
 	}
-//	
-//	public void loadBookingData() {
-//		
-//	}
+	
+	public void loadBookingData() {
+		Student s1 = ss.findStudentById("S00001");
+		
+		Booking b1 = bs.findBookingById("B00002");
+		Booking b2 = bs.findBookingById("B00003");
+		
+		bs.addStudent(b2, s1);
+		bs.addStudent(b1, s1);		
+	}
 	
 }
