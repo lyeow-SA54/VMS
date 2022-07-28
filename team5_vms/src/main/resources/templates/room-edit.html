@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
+	<meta charset="ISO-8859-1">
 	<title>VMS</title>
 	<link rel="stylesheet" th:href="@{/css/simple.css}" />
 </head>
@@ -11,53 +12,41 @@
 		<div class="row">
 			<div class="col-3"></div>
 			<div class="col-6">
-				<form action="#" th:action="@{/room/create}" th:object="${room}" method="post">
-					<h4>New Room Page</h4>
-					<table class="table table-borderless" align="center">
+				<form action="#" th:action="@{/room/edit}" th:object="${room}" method="post">
+					<fieldset>
+						<input type="hidden" th:field="*{id}" name="id" />
+					</fieldset>
+					<h5 style="text-align:center;">Editing Room ID : <span th:text="${room.id}"></span></h5>
+					<table class="table table-borderless">
 						<tbody>
-							<tr>
-								<td>
-									<fieldset>
-										<input type="hidden" th:field="*{id}">
-									</fieldset>
-								</td>
-							</tr>
 							<tr>
 								<td><span th:text="#{fieldLabel.name}"></span></td>
 								<td>
-									<fieldset>
-										<input type="text" th:field="*{roomName}">
-									</fieldset>
+									<fieldset><input type="text" th:field="*{roomName}" /></fieldset>
 								</td>
 								<td th:if="${#fields.hasErrors('roomName')}" th:errors="*{roomName}"></td>
 							</tr>
 							<tr>
 								<td><span th:text="#{fieldLabel.facilities}"></span></td>
 								<td>
-									<fieldset>
-										<input type="text" th:field="*{facilities}">
-									</fieldset>
+									<fieldset><input type="text" th:field="*{facilities}" /></fieldset>
 								</td>
 								<td th:if="${#fields.hasErrors('facilities')}" th:errors="*{facilities}"></td>
 							</tr>
 							<tr>
 								<td><span th:text="#{fieldLabel.capacity}"></span></td>
 								<td>
-									<fieldset>
-										<input type="number" th:field="*{capacity}" min="0" max="10">
-									</fieldset>
+									<fieldset><input type="number" th:field="*{capacity}" min="0" max="10" /></fieldset>
 								</td>
 								<td th:if="${#fields.hasErrors('capacity')}" th:errors="*{capacity}"></td>
 							</tr>
 							<tr>
 								<td><span th:text="#{fieldLabel.availability}"></span></td>
 								<td>
-									<!--<label for="Availability">Availability:</label>-->
 									<select name="availability" th:field="*{availability}">
 										<option
 											th:each="availability : ${T(iss.team5.vms.helper.BookingAvailablity).values()}"
-											th:value="${availability}" th:text="${availability.displayName}"
-											th:selected=${availability.displayName==open}></option>
+											th:value="${availability}" th:text="${availability.displayName}"></option>
 									</select>
 								</td>
 							</tr>
@@ -67,9 +56,9 @@
 										<a th:href="@{/room/list}">Back</a>
 									</div>
 								</td>
-								<td colspan="2">
+								<td>
 									<fieldset>
-										<input type="submit" value="Create" class="btn btn-primary" />
+										<input type="submit" value="Update" class="btn btn-primary" />
 									</fieldset>
 								</td>
 							</tr>
@@ -77,7 +66,6 @@
 					</table>
 				</form>
 			</div>
-			<div class="col-3"></div>
 		</div>
 	</div>
 </body>

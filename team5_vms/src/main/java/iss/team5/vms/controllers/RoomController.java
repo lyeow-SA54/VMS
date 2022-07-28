@@ -1,0 +1,80 @@
+package iss.team5.vms.controllers;
+
+import java.util.ArrayList;
+
+import java.util.List;
+
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import iss.team5.vms.model.Room;
+import iss.team5.vms.services.RoomService;
+
+@Controller
+@RequestMapping(value = "/room")
+public class RoomController {
+
+	@Autowired
+	private RoomService rService;
+
+	@RequestMapping(value = "/create", method = RequestMethod.GET)
+	public ModelAndView newRoom() {
+		ModelAndView mav = new ModelAndView("room-form");
+		mav.addObject("room", new Room());
+		return mav;
+	}
+
+	@RequestMapping(value = "/create", method = RequestMethod.POST)
+	public ModelAndView createRoom(@ModelAttribute @Valid Room room, BindingResult result) {
+		if (result.hasErrors())
+			return new ModelAndView("room-form");
+		ModelAndView mav = new ModelAndView("forward:/room/list");
+		rService.createRoom(room);
+		return mav;
+	}
+
+	@RequestMapping(value = "/list")
+	@ResponseBody
+	public ModelAndView roomList() {
+		ModelAndView mav = new ModelAndView("rooms");
+		List<Room> rooms = rService.findAllRooms();
+		mav.addObject("rooms", rooms);
+		return mav;
+	}
+
+	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
+	public ModelAndView editRoom(@PathVariable String id) {
+		ModelAndView mav = new ModelAndView("room-edit");
+		Room room = rService.findRoom(id);
+		mav.addObject("room", room);
+		return mav;
+	}
+
+	@RequestMapping(value = "/edit", method = RequestMethod.POST)
+	public ModelAndView editRoom(@ModelAttribute @Valid Room room, BindingResult result) {
+		if (result.hasErrors())
+			return new ModelAndView("room-edit");
+		ModelAndView mav = new ModelAndView("rooms");
+		rService.changeRoom(room);
+		ArrayList<Room> rooms = rService.findAllRooms();
+		mav.addObject("rooms", rooms);
+		return mav;
+	}
+
+	@RequestMapping(value = "/delete/{id}")
+	public ModelAndView deleteRoom(@PathVariable("id") String id) {
+		ModelAndView mav = new ModelAndView("forward:/room/list");
+		Room room = rService.findRoom(id);
+		rService.removeRoom(room);
+		return mav;
+	}
+}

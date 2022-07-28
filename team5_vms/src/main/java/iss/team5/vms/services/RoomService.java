@@ -12,7 +12,7 @@ public interface RoomService {
 
 	Room createRoom(Room room);
 
-	Room changeRoom(Room room);
+	void changeRoom(Room room);
 
 	void removeRoom(Room room);	
 

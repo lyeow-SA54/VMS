@@ -1,6 +1,7 @@
 package iss.team5.vms.model;
 
 import javax.persistence.Column;
+
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -12,7 +13,6 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 import iss.team5.vms.helper.BookingAvailablity;
-import iss.team5.vms.helper.BookingSlots;
 import iss.team5.vms.helper.IdGenerator;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -33,9 +33,7 @@ public class Room {
 	private BookingAvailablity availability;
 	private String facilities;
 	private String roomName;
-	@Column(name = "Booking_slots", columnDefinition = "ENUM('SUCCESSFUL','REJECTED','CANCELLED')")
-	@Enumerated(EnumType.STRING)
-	private BookingSlots slots;
+	private int capacity;
 	
 	public Room(String id)
 	{
