@@ -13,6 +13,8 @@ import iss.team5.vms.model.Student;
 
 public interface ReportRepo extends JpaRepository<Report,String>{
 	
+	Boolean existsBy();
+	
 	ArrayList<Report> findAllReportByStudent(Student student);
 	
 	Report findReportByStudent(Student student);

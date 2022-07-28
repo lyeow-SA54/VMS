@@ -49,12 +49,13 @@ public class Booking {
 	@OneToOne
 	private Room room;
 	
-	public Booking (String id, LocalDate date, LocalTime time, int duration)
+	public Booking (String id, LocalDate date, LocalTime time, int duration, BookingStatus status)
 	{
 		this.id = id;
 		this.date = date;
 		this.time = time;
 		this.duration = duration;
+		this.status= status;
 	}
 	
 }

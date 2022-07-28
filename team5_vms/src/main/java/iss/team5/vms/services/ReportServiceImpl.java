@@ -18,6 +18,10 @@ public class ReportServiceImpl implements ReportService{
 	@Resource
 	private ReportRepo rprepo;
 	
+	public boolean tableExist() {
+		return rprepo.existsBy();
+	}
+	
 	@Override
 	@Transactional
 	public ArrayList<Report> findAllReports(){

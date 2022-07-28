@@ -8,6 +8,8 @@ import iss.team5.vms.model.Student;
 
 public interface ReportService {
 	
+	boolean tableExist();
+	
 	ArrayList<Report> findAllReports();
 	
 	Report findReport(String id);

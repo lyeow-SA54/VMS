@@ -22,6 +22,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@NoArgsConstructor
 
 public class Report {
 	@Id
@@ -48,4 +49,18 @@ public class Report {
 	private StudentStatus status;
 //	@OneToOne
 //	private Image img;
+	
+	public Report(String details, Category category, StudentStatus status) {
+		this.details=details;
+		this.category=category;
+		this.status=status;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 }

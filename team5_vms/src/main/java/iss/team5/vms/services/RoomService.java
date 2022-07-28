@@ -6,6 +6,8 @@ import iss.team5.vms.model.Room;
 
 public interface RoomService {
 	
+	boolean tableExist();
+	
 	ArrayList<Room> findAllRooms();
 	
 	Room findRoom(String id);

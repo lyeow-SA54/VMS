@@ -30,15 +30,22 @@ public class Room {
 	          @Parameter(name = IdGenerator.VALUE_PREFIX_PARAMETER, value = "RM"),
 	          @Parameter(name = IdGenerator.NUMBER_FORMAT_PARAMETER, value = "%05d") })
 	private String id;
+	@Column(name = "availability", columnDefinition = "ENUM('FULL','OPEN')")
+	@Enumerated(EnumType.STRING)
 	private BookingAvailablity availability;
 	private String facilities;
 	private String roomName;
-	@Column(name = "Booking_slots", columnDefinition = "ENUM('SUCCESSFUL','REJECTED','CANCELLED')")
-	@Enumerated(EnumType.STRING)
-	private BookingSlots slots;
+	private int capacity;
 	
 	public Room(String id)
 	{
 		this.id = id;
+	}
+	
+	public Room(BookingAvailablity availability, String facilities, String roomName, int capacity) {
+		this.availability=availability;
+		this.facilities=facilities;
+		this.roomName=roomName;
+		this.capacity=capacity;
 	}
 }
