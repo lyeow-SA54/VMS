@@ -17,8 +17,6 @@ public interface BookingService {
 
 	Booking createBooking(Booking booking);
 
-	void removeBooking(Booking booking);
-
 	List<Booking> findBookingsByRoom(Room room);	
 	
 	List<Booking> findBookingsByStudent(Student student);
@@ -26,5 +24,7 @@ public interface BookingService {
 	void addStudent(Booking booking, Student student);
 	
 	void addRoom(Booking booking, Room room);
+	
+	public String checkIn(Student student, Booking booking);
 
 }

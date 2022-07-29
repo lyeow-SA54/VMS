@@ -1,5 +1,6 @@
 package iss.team5.vms.services;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,12 +35,6 @@ public class BookingServiceImpl implements BookingService{
 	}
 
 	@Override
-	public void removeBooking(Booking booking) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public List<Booking> findBookingsByRoom(Room room) {
 		return br.findBookingByRoom(room);
 	}
@@ -66,9 +61,21 @@ public class BookingServiceImpl implements BookingService{
 	public void addRoom(Booking booking, Room room) {
 		booking.setRoom(room);
 		br.saveAndFlush(booking);
+	}
+	
+	@Override
+	public String checkIn(Student student, Booking booking)
+	{
+		if (booking.getStudent().getId().equals(student.getId()))
+		{
+			if (booking.getTime().plusMinutes(10).compareTo(LocalTime.now())>0)
+			{booking.setCheckedIn(true);
+			br.saveAndFlush(booking);
+			return "Checked in successfully";}
+			else return "Time now is past check in window period";
+		}
 		
-		//Chao try
-		
+		else return "Booking owner mismatch";
 	}
 
 }

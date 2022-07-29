@@ -48,6 +48,7 @@ public class Booking {
 //	@OnDelete(action = OnDeleteAction.CASCADE)
 	@OneToOne
 	private Room room;
+	private boolean checkedIn;
 	
 	public Booking (String id, LocalDate date, LocalTime time, int duration, BookingStatus status)
 	{

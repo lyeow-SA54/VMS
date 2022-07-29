@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!--<head th:replace="fragments/general.html :: headerfiles"/>-->
+
+<body>
+
+<div th:if="${outcomeMsg!=null}"><span th:text = "${outcomeMsg}"></span></div>
+
+	<table>
+		<tr>
+			<th>Room Name</th>
+			<th>Start Time</th>
+			<th>Duration</th>
+			<th>Status</th>
+		</tr>
+		<tr th:each="booking:${bookings}">
+			<td th:text=${booking.room.roomName}></td>
+			<td th:text=${booking.time}></td>
+			<td th:text=${booking.duration}></td>
+			<td th:text=${booking.status}></td>
+		</tr>
+	</table>
+	<br />
+	<!--<div th:replace="fragments/general.html :: footer"></div>-->
+</body>
+
+</html>
