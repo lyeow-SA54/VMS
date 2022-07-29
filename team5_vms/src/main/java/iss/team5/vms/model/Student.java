@@ -32,8 +32,8 @@ public class Student{
 	@OneToOne (cascade = CascadeType.ALL)
 	private User user;
 	
-	public Student(String firstName, String email, String username, String password)
+	public Student(String firstName, String lastName, String email, String username, String password)
 	{
-		this.user = new User(firstName, email, username, password);
+		this.user = new User(firstName, lastName, email, username, password);
 	}
 }

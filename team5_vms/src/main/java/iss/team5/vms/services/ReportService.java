@@ -12,7 +12,7 @@ public interface ReportService {
 	
 	ArrayList<Report> findAllReports();
 	
-	Report findReport(String id);
+	Report findReportById(String id);
 
 	Report createReport(Report report);
 

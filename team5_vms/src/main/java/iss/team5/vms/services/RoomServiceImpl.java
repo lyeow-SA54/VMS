@@ -28,21 +28,20 @@ public class RoomServiceImpl implements RoomService{
 	}
 	
 	@Transactional
-	public Room findRoom(String id) {
+	public Room findRoomById(String id) {
 		return rrepo.findById(id).orElse(null);
 	}
 	
 	@Override
 	@Transactional
 	public Room createRoom(Room room) {
-		Room r = new Room();
-		return rrepo.saveAndFlush(r);
+		return rrepo.saveAndFlush(room);
 	}
 	
 	@Override
 	@Transactional
 	public Room changeRoom(Room room) {
-		Room r = findRoom(room.getId());
+		Room r = findRoomById(room.getId());
 		r.setAvailability(room.isAvailability());
 		r.setFacilities(room.getFacilities());
 		r.setRoomName(room.getRoomName());

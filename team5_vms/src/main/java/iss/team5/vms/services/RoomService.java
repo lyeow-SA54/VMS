@@ -10,7 +10,7 @@ public interface RoomService {
 	
 	ArrayList<Room> findAllRooms();
 	
-	Room findRoom(String id);
+	Room findRoomById(String id);
 
 	Room createRoom(Room room);
 

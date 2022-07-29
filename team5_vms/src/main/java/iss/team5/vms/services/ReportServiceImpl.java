@@ -30,27 +30,26 @@ public class ReportServiceImpl implements ReportService{
 	}
 	
 	@Transactional 
-	public Report findReport(String id) {
+	public Report findReportById(String id) {
 		return rprepo.findById(id).orElse(null);
 	}
 	
 	@Override
 	@Transactional
 	public Report createReport(Report report) {
-		Report r = new Report();
-		return rprepo.saveAndFlush(r);
+		return rprepo.saveAndFlush(report);
 	}
 	
 	@Override
 	@Transactional
 	public Report changeReport(Report report) {
-		Report r = findReport(report.getId());
-		r.setDetails(r.getDetails());
-		r.setStudent(r.getStudent());
-		r.setBooking(r.getBooking());
-		r.setCategory(r.getCategory());
-		r.setStatus(r.getStatus());
-//		r.setImg(r.getImg());
+		Report r = findReportById(report.getId());
+		r.setDetails(report.getDetails());
+		r.setStudent(report.getStudent());
+		r.setBooking(report.getBooking());
+		r.setCategory(report.getCategory());
+		r.setStatus(report.getStatus());
+//		r.setImg(report.getImg());
 		return rprepo.saveAndFlush(r);
 	}
 	

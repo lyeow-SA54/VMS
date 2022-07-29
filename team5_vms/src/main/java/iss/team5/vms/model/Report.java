@@ -8,7 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -35,7 +35,7 @@ public class Report {
           @Parameter(name = IdGenerator.VALUE_PREFIX_PARAMETER, value = "RE"),
           @Parameter(name = IdGenerator.NUMBER_FORMAT_PARAMETER, value = "%05d") })
 	private String id;
-	@NotBlank(message = "Please choose a date")
+	@NotNull
 	private String details;
 	@OneToOne
 	private Student student;

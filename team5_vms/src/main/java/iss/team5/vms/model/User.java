@@ -37,11 +37,12 @@ public class User {
 	@NotNull(message = "Password is mandatory")
 	private String password;
 
-	public User(String firstName, String email, String username, String password)
+	public User(String firstName, String lastName, String email, String username, String password)
 	{
 		this.firstName = firstName;
 		this.email = email;
 		this.username = username;
 		this.password = password;
+		this.lastName = lastName;
 	}
 }
