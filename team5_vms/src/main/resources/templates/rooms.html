@@ -24,7 +24,7 @@
 				<div class="col" style="text-align:center;">
 					<h4>There are no rooms yet.</h4>
 					<h5 style="text-decoration: underline;">
-						<a th:href="@{/room/create}">Add New Room</a>
+						<a th:href="@{/admin/rooms/create}">Add New Room</a>
 					</h5>
 				</div>
 			</div>
@@ -39,7 +39,7 @@
 				</div>
 				<div class="col-6"></div>
 				<div class="col-3" style="margin-top: 20px; margin-bottom: 20px; text-align:right;">
-					<h5 style="text-decoration: underline;"><a th:href="@{/room/create}">Add Room</a>
+					<h5 style="text-decoration: underline;"><a th:href="@{/admin/rooms/create}">Add Room</a>
 					</h5>
 				</div>
 			</div>
@@ -52,18 +52,20 @@
 								<th>Facilities</th>
 								<th>Capacity</th>
 								<th>Availability</th>
-								<th>Edit Facility</th>
-								<th>Delete Facility</th>
+								<th></th>
+								<th></th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr th:each="room:${rooms}">
 								<td th:text=${room.roomName}></td>
-								<td th:text=${room.facilities}></td>
+								<td th:each="fac:${room.facilities}">
+								<span th:text="${fac.name}">&nbsp;</span>
+								</td>
 								<td th:text=${room.capacity}></td>
 								<td th:text=${room.availability}></td>
-								<td><a href="" th:href="@{/room/edit/}+${room.id}">Edit</a></td>
-								<td><a href="" th:href="@{/room/delete/}+${room.id}">Delete</a></td>
+								<td><a href="" th:href="@{/admin/rooms/edit/}+${room.id}">Edit</a></td>
+								<td><a href="" th:href="@{/admin/rooms/delete/}+${room.id}">Delete</a></td>
 							</tr>
 						</tbody>
 					</table>

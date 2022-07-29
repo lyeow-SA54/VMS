@@ -1,7 +1,6 @@
 package iss.team5.vms.controllers;
 
 import java.util.ArrayList;
-
 import java.util.List;
 
 import javax.validation.Valid;
@@ -16,20 +15,27 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import iss.team5.vms.model.Facility;
 import iss.team5.vms.model.Room;
+import iss.team5.vms.services.FacilityService;
 import iss.team5.vms.services.RoomService;
 
 @Controller
-@RequestMapping(value = "/room")
+@RequestMapping(value = "/admin/rooms")
 public class RoomController {
 
 	@Autowired
 	private RoomService rService;
 
+	@Autowired
+	private FacilityService fService;
+
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	public ModelAndView newRoom() {
 		ModelAndView mav = new ModelAndView("room-form");
 		mav.addObject("room", new Room());
+		List<Facility> facilities = (List<Facility>) fService.findAllFacilities();
+		mav.addObject("fList", facilities);
 		return mav;
 	}
 
@@ -37,7 +43,7 @@ public class RoomController {
 	public ModelAndView createRoom(@ModelAttribute @Valid Room room, BindingResult result) {
 		if (result.hasErrors())
 			return new ModelAndView("room-form");
-		ModelAndView mav = new ModelAndView("forward:/room/list");
+		ModelAndView mav = new ModelAndView("forward:/admin/rooms/list");
 		rService.createRoom(room);
 		return mav;
 	}
@@ -56,6 +62,8 @@ public class RoomController {
 		ModelAndView mav = new ModelAndView("room-edit");
 		Room room = rService.findRoom(id);
 		mav.addObject("room", room);
+		List<Facility> facilities = (List<Facility>) fService.findAllFacilities();
+		mav.addObject("fList", facilities);
 		return mav;
 	}
 
@@ -72,7 +80,7 @@ public class RoomController {
 
 	@RequestMapping(value = "/delete/{id}")
 	public ModelAndView deleteRoom(@PathVariable("id") String id) {
-		ModelAndView mav = new ModelAndView("forward:/room/list");
+		ModelAndView mav = new ModelAndView("forward:/admin/rooms/list");
 		Room room = rService.findRoom(id);
 		rService.removeRoom(room);
 		return mav;

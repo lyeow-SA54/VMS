@@ -12,7 +12,7 @@
 		<div class="row">
 			<div class="col-3"></div>
 			<div class="col-6">
-				<form action="#" th:action="@{/room/edit}" th:object="${room}" method="post">
+				<form action="#" th:action="@{/admin/rooms/edit}" th:object="${room}" method="post">
 					<fieldset>
 						<input type="hidden" th:field="*{id}" name="id" />
 					</fieldset>
@@ -29,7 +29,11 @@
 							<tr>
 								<td><span th:text="#{fieldLabel.facilities}"></span></td>
 								<td>
-									<fieldset><input type="text" th:field="*{facilities}" /></fieldset>
+									<fieldset>
+										<input type="checkbox" name="facilities" th:each="facility : ${fList}"
+											th:text="${facility.name}" th:value="${facility.id}"
+											th:field="*{facilities}" />
+									</fieldset>
 								</td>
 								<td th:if="${#fields.hasErrors('facilities')}" th:errors="*{facilities}"></td>
 							</tr>
@@ -53,7 +57,7 @@
 							<tr>
 								<td>
 									<div style="padding-top:15px;">
-										<a th:href="@{/room/list}">Back</a>
+										<a th:href="@{/admin/rooms/list}">Back</a>
 									</div>
 								</td>
 								<td>

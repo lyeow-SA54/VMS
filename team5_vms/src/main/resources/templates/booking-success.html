@@ -8,8 +8,8 @@
 
 	<h2 th:if="${not #lists.isEmpty(booking)}">Booking Summary</h2>
 	<span th:text="${room.name}" />
-	<a href="" th:href="@{/room/edit/}">View Pending Booking</a>
-	<a href="" th:href="@{/room/edit/}">Update</a>
+	<a href="" th:href="@{/admin/rooms/edit/}">View Pending Booking</a>
+	<a href="" th:href="@{/admin/rooms/edit/}">Update</a>
 	<br />
 	<!--<div th:replace="fragments/general.html :: footer"></div>-->
 </body>

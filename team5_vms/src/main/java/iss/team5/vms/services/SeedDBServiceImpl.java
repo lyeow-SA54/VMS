@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import iss.team5.vms.helper.dateTimeInput;
 import iss.team5.vms.model.Booking;
+import iss.team5.vms.model.Facility;
 import iss.team5.vms.model.Student;
 
 @Service
@@ -27,6 +28,9 @@ public class SeedDBServiceImpl implements SeedDBService {
 	@Autowired 
 	UserService us;
 	
+	@Autowired
+	FacilityService fs;
+	
 	public void databaseInit() {
 		createInitialData();
 	}
@@ -40,6 +44,15 @@ public class SeedDBServiceImpl implements SeedDBService {
 		bs.createBooking(new Booking("B1", dateTimeInput.dateInput("01/01/2022"), LocalTime.now(), 1));
 		bs.createBooking(new Booking("B2", dateTimeInput.dateInput("01/01/2022"), LocalTime.now(), 1));
 		}
+		
+		if(!fs.tableExist()) {
+			Facility f1 = new Facility("F1","Projector");
+			fs.createFacility(f1);
+			Facility f2 = new Facility("F2","White Board");
+			fs.createFacility(f2);
+			Facility f3 = new Facility("F3","Laptop");
+			fs.createFacility(f3);
+			}
 	}
 //	
 //	public void loadBookingData() {
