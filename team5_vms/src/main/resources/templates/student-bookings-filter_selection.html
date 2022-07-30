@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!--<head th:replace="fragments/general.html :: headerfiles"/>-->
+
+<body>
+
+<div th:if="${outcomeMsg!=null}"><span th:text = "${outcomeMsg}"></span></div>
+
+	<form action="#" th:action="@{/student/booking/options}" method="post">
+					<h5 style="text-align:center; margin:15px;">New Lecturer Page</h5>
+					<table class="table table-borderless">
+						<tbody>
+							<tr>
+								<td><span th:text="Pax"></span></td>
+								<td>
+									<fieldset>
+										<input type="number" th:field="${room.capacity}" />
+									</fieldset>
+								</td>
+								<!--<td th:if="${#fields.hasErrors('lecturerID')}" th:errors="*{lecturerID}"></td>-->
+							</tr>
+							<tr>
+								<td><span th:text="Facilities"></span></td>
+								<td>
+									<fieldset>
+										<input type="text" th:field="${room.facilities}" />
+									</fieldset>
+								</td>
+								<!--<td th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></td>-->
+							</tr>
+							<tr>
+								<td><span th:text="Date"></span></td>
+								<td>
+									<fieldset>
+										<input type="date" th:field="${booking.date}" />
+									</fieldset>
+								</td>
+								<!--<td th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></td>-->
+							</tr>
+							<tr>
+								<td><span th:text="Time"></span></td>
+								<td>
+									<fieldset>
+										<input type="time" th:field="${booking.time}" />
+									</fieldset>
+								</td>
+								<!--<td th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></td>-->
+							</tr>
+							<tr>
+								<td><span th:text="Duration"></span></td>
+								<td>
+									<fieldset>
+										<input type="number" th:field="${booking.duration}" />
+									</fieldset>
+								</td>
+								<!--<td th:if="${#fields.hasErrors('lecturerID')}" th:errors="*{lecturerID}"></td>-->
+							</tr>
+							<tr>
+								<td colspan="2">
+									<fieldset>
+										<input type="submit" value="Submit" class="btn btn-primary" />
+									</fieldset>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</form>
+	<br />
+	<!--<div th:replace="fragments/general.html :: footer"></div>-->
+</body>
+
+</html>

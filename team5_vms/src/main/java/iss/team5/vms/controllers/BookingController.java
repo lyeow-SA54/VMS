@@ -1,25 +1,23 @@
 package iss.team5.vms.controllers;
 
-import java.awt.image.BufferedImage;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import iss.team5.vms.helper.QRGenerator;
 import iss.team5.vms.model.Booking;
+import iss.team5.vms.model.Room;
 import iss.team5.vms.model.Student;
 import iss.team5.vms.services.BookingService;
+import iss.team5.vms.services.RoomService;
 import iss.team5.vms.services.StudentService;
 
 @Controller
-@RequestMapping("/bookings")
+@RequestMapping("/student")
 public class BookingController {
 
 	@Autowired
@@ -27,6 +25,9 @@ public class BookingController {
 
 	@Autowired
 	StudentService ss;
+	
+	@Autowired
+	RoomService rs;
 
 	@RequestMapping("/checkin/{bookingId}")
 	public ModelAndView bookingCheckin(@PathVariable("bookingId") String bookingId) {
@@ -48,6 +49,26 @@ public class BookingController {
 		return mav;
 	}
 	
+	@RequestMapping(value = "/booking/options", method = RequestMethod.GET)
+	public ModelAndView bookingOptionSelection() {
+
+		Booking booking = new Booking();
+		Room room = new Room();
+		ModelAndView mav = new ModelAndView("student-bookings-filter_selection");
+		mav.addObject("booking", booking);
+		mav.addObject("room", room);
+		return mav;
+	}
 	
+	@RequestMapping(value = "/booking/options", method = RequestMethod.POST)
+	public ModelAndView bookingOptionSelected(Booking booking, Room room) {
+
+		List<Room> rooms = rs.findRoomsByAttributes(room);
+		List<Booking> bookings = bs.checkBookingAvailable(booking, rooms);
+		ModelAndView mav = new ModelAndView("student-bookings-slot_selection");
+		//booking.id used as placeholder for room name as bookings not persisted in repo yet - can't set room object to booking
+		mav.addObject("bookings", bookings);
+		return mav;
+	}
 
 }

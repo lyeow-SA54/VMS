@@ -25,6 +25,10 @@ public interface BookingService {
 	
 	void addRoom(Booking booking, Room room);
 	
-	public String checkIn(Student student, Booking booking);
+	String checkIn(Student student, Booking booking);
+	
+	List<Booking> checkBookingAvailable(Booking booking, List<Room> rooms);
+
+	boolean checkBookingByDateTimeRoom(Booking booking, Room room);
 
 }

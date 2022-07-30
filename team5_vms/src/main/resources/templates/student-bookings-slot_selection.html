@@ -8,16 +8,14 @@
 
 	<table>
 		<tr>
-			<!--<th>Room Name</th>-->
+			<th>Room Name</th>
 			<th>Start Time</th>
 			<th>Duration</th>
-			<th>Status</th>
 		</tr>
 		<tr th:each="booking:${bookings}">
-			<!--<td th:text=${booking.room.roomName}></td>-->
+			<td th:text=${booking.id}></td>
 			<td th:text=${booking.time}></td>
 			<td th:text=${booking.duration}></td>
-			<td th:text=${booking.status}></td>
 		</tr>
 	</table>
 	<br />

@@ -1,6 +1,8 @@
 package iss.team5.vms.services;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
@@ -22,9 +24,8 @@ public class RoomServiceImpl implements RoomService{
 	
 	@Override
 	@Transactional
-	public ArrayList<Room> findAllRooms(){
-		ArrayList<Room> r = (ArrayList<Room>)rrepo.findAll();
-		return r;
+	public List<Room> findAllRooms(){
+		return rrepo.findAll();
 	}
 	
 	@Transactional
@@ -35,7 +36,8 @@ public class RoomServiceImpl implements RoomService{
 	@Override
 	@Transactional
 	public Room createRoom(Room room) {
-		return rrepo.saveAndFlush(room);
+		return rrepo.saveAndFlush(room
+				);
 	}
 	
 	@Override
@@ -59,5 +61,14 @@ public class RoomServiceImpl implements RoomService{
 		rrepo.delete(room);
 		rrepo.flush();
 	}
+
+	@Override
+	public List<Room> findRoomsByAttributes(Room room) {
+		return rrepo.findAll().stream().filter(froom -> 
+		(froom.getCapacity()>=room.getCapacity())
+		&&(froom.getFacilities().equals(room.getFacilities()))).collect(Collectors.toList());
+	}
+	
+	
 
 }

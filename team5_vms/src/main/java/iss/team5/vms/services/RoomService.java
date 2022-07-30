@@ -1,6 +1,7 @@
 package iss.team5.vms.services;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import iss.team5.vms.model.Room;
 
@@ -8,7 +9,7 @@ public interface RoomService {
 	
 	boolean tableExist();
 	
-	ArrayList<Room> findAllRooms();
+	List<Room> findAllRooms();
 	
 	Room findRoomById(String id);
 
@@ -17,5 +18,7 @@ public interface RoomService {
 	Room changeRoom(Room room);
 
 	void removeRoom(Room room);	
+	
+	List<Room> findRoomsByAttributes(Room room);
 
 }

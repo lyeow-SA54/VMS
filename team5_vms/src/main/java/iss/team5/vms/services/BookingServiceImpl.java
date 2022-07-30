@@ -3,6 +3,8 @@ package iss.team5.vms.services;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,9 +16,10 @@ import iss.team5.vms.model.Student;
 import iss.team5.vms.repositories.BookingRepo;
 
 @Service
-public class BookingServiceImpl implements BookingService{
-	
-	@Autowired BookingRepo br;
+public class BookingServiceImpl implements BookingService {
+
+	@Autowired
+	BookingRepo br;
 
 	@Override
 	public List<Booking> findAllBookings() {
@@ -36,7 +39,7 @@ public class BookingServiceImpl implements BookingService{
 
 	@Override
 	public List<Booking> findBookingsByRoom(Room room) {
-		return br.findBookingByRoom(room);
+		return br.findAllByRoom(room);
 	}
 
 	@Override
@@ -54,7 +57,7 @@ public class BookingServiceImpl implements BookingService{
 	public void addStudent(Booking booking, Student student) {
 		booking.setStudent(student);
 		br.saveAndFlush(booking);
-		
+
 	}
 
 	@Override
@@ -62,20 +65,65 @@ public class BookingServiceImpl implements BookingService{
 		booking.setRoom(room);
 		br.saveAndFlush(booking);
 	}
-	
+
 	@Override
-	public String checkIn(Student student, Booking booking)
-	{
-		if (booking.getStudent().getId().equals(student.getId()))
-		{
-			if (booking.getTime().plusMinutes(10).compareTo(LocalTime.now())>0)
-			{booking.setCheckedIn(true);
-			br.saveAndFlush(booking);
-			return "Checked in successfully";}
-			else return "Time now is past check in window period";
+	public String checkIn(Student student, Booking booking) {
+		if (booking.getStudent().getId().equals(student.getId())) {
+			if (booking.getTime().plusMinutes(10).compareTo(LocalTime.now()) > 0) {
+				booking.setCheckedIn(true);
+				br.saveAndFlush(booking);
+				return "Checked in successfully";
+			} else
+				return "Time now is past check in window period";
 		}
+
+		else
+			return "Booking owner mismatch";
+	}
+
+	@Override
+	public List<Booking> checkBookingAvailable(Booking booking, List<Room> rooms) {
+		LocalTime bstart = booking.getTime();
+		int duration = booking.getDuration();
+		if (duration>2) duration=2;
+		LocalTime bend = bstart.plusHours(duration);
 		
-		else return "Booking owner mismatch";
+		//rooms with no blocked timings
+		List<Room> nullBlockTimeRooms = rooms.stream().filter(room -> room.getBlockedStartTime()==null).collect(Collectors.toList());
+		
+		//check against room blocked timings if there are
+		List<Room> frooms = rooms.stream()
+				.filter(room -> room.getBlockedStartTime()!=null)
+				.filter(room -> (room.getBlockedStartTime().isAfter(bend))
+						&& (room.getBlockedStartTime().plusHours(room.getBlockDuration()).isBefore(bstart)))
+				.collect(Collectors.toList());
+		
+		//all rooms that are available in requested timing
+		frooms.addAll(nullBlockTimeRooms);
+		
+		List<Booking> bookings = new ArrayList<Booking>();
+		//checking if there are existing bookings overlapping with requested time slot for each room for that day
+		for (Room r : frooms) {
+			if (checkBookingByDateTimeRoom(booking, r)) {
+				
+				bookings.add(new Booking(r.getRoomName(), booking.getDate(), booking.getTime(), duration, r));
+			}
+		}
+		return bookings;
+	}
+
+	@Override
+	public boolean checkBookingByDateTimeRoom(Booking booking, Room room) {
+		// all the bookings for the day for the specific room
+		List<Booking> bookings = br.findByDateAndRoom(booking.getDate(), room);
+		// check whether each booking for the room overlaps with the requested booking time. if overlap return false
+		for (Booking b : bookings) {
+			if (booking.getTime().isBefore(b.getTime().plusHours(b.getDuration()))
+					&& (booking.getTime().plusHours(booking.getDuration()).isAfter(b.getTime()))) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 }

@@ -14,6 +14,7 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import iss.team5.vms.helper.BookingStatus;
 import iss.team5.vms.helper.IdGenerator;
@@ -40,6 +41,7 @@ public class Booking {
 //	DateTimeFormatter dt = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 	private LocalDate date;
 	@NotNull(message = "Please choose a start time")
+	@DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
 	private LocalTime time;
 	@NotNull(message = "Please choose a duration")
 	private int duration;
@@ -57,6 +59,14 @@ public class Booking {
 		this.time = time;
 		this.duration = duration;
 		this.status= status;
+	}
+	
+	public Booking (String id, LocalDate date, LocalTime time, int duration, Room room)
+	{
+		this.id=id;
+		this.date = date;
+		this.time = time;
+		this.duration = duration;
 	}
 	
 }
