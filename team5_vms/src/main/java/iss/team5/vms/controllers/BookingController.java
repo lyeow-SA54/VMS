@@ -66,7 +66,6 @@ public class BookingController {
 		List<Room> rooms = rs.findRoomsByAttributes(room);
 		List<Booking> bookings = bs.checkBookingAvailable(booking, rooms);
 		ModelAndView mav = new ModelAndView("student-bookings-slot_selection");
-		//booking.id used as placeholder for room name as bookings not persisted in repo yet - can't set room object to booking
 		mav.addObject("bookings", bookings);
 		return mav;
 	}
