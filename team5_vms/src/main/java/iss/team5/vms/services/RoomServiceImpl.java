@@ -38,7 +38,7 @@ public class RoomServiceImpl implements RoomService{
 	@Transactional
 	public void changeRoom(Room room) {
 		Room r = findRoom(room.getId());
-		r.setAvailability(room.getAvailability());
+//		r.setAvailability(room.getAvailability());
 		r.setFacilities(room.getFacilities());
 		r.setCapacity(room.getCapacity());
 		r.setRoomName(room.getRoomName());

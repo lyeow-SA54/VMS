@@ -37,13 +37,13 @@ public class SeedDBServiceImpl implements SeedDBService {
 
 	public void createInitialData() {
 		if(!ss.tableExist()){
-		ss.createStudent(new Student("fn1", "email1@u.nus.edu", "user1", "password1"));
+		ss.createStudent(new Student("fn1", "ln1", "email1@u.nus.edu", "user1", "password1"));
 		}
 
-		if(!bs.tableExist()) {
-		bs.createBooking(new Booking("B1", dateTimeInput.dateInput("01/01/2022"), LocalTime.now(), 1));
-		bs.createBooking(new Booking("B2", dateTimeInput.dateInput("01/01/2022"), LocalTime.now(), 1));
-		}
+//		if(!bs.tableExist()) {
+//		bs.createBooking(new Booking("B1", dateTimeInput.dateInput("01/01/2022"), LocalTime.now(), 1));
+//		bs.createBooking(new Booking("B2", dateTimeInput.dateInput("01/01/2022"), LocalTime.now(), 1));
+//		}
 		
 		if(!fs.tableExist()) {
 			Facility f1 = new Facility("F1","Projector");

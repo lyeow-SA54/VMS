@@ -34,7 +34,7 @@ public class Room {
 	          @Parameter(name = IdGenerator.VALUE_PREFIX_PARAMETER, value = "RM"),
 	          @Parameter(name = IdGenerator.NUMBER_FORMAT_PARAMETER, value = "%05d") })
 	private String id;
-	private BookingAvailablity availability;
+	private boolean availability;
 	
 	@ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     @JoinTable(

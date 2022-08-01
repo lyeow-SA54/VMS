@@ -54,13 +54,13 @@
 							<tr>
 								<td><span th:text="#{fieldLabel.availability}"></span></td>
 								<td>
-									<!--<label for="Availability">Availability:</label>-->
+									<!--<label for="Availability">Availability:</label>
 									<select name="availability" th:field="*{availability}">
 										<option
 											th:each="availability : ${T(iss.team5.vms.helper.BookingAvailablity).values()}"
 											th:value="${availability}" th:text="${availability.displayName}"
 											th:selected=${availability.displayName==open}></option>
-									</select>
+									</select>-->
 								</td>
 							</tr>
 							<tr>
