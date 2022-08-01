@@ -31,4 +31,6 @@ public interface BookingService {
 
 	boolean checkBookingByDateTimeRoom(Booking booking, Room room);
 
+	void cancelCourseById(String id);
+
 }

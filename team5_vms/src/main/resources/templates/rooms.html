@@ -1,38 +1,91 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<!--<head th:replace="fragments/general.html :: headerfiles"/>-->
+
+<head>
+	<title>VMS</title>
+	<link rel="stylesheet" th:href="@{/css/simple.css}" />
+</head>
 
 <body>
-	<!--<header th:insert="fragments/general.html :: header"> </header>
-	<div th:replace="fragments/general.html :: menu"></div>-->
+	<div th:if="${#lists.isEmpty(rooms)}">
+		<div class="container">
+			<div class="row">
+				<div class="col-3" style="margin-top: 15px; margin-bottom: 15px;">
+					<h4>Room List</h4>
+				</div>
 
-	<h1>Rooms</h1>
-	<a href="room-form.html" th:href="@{/room/add}">Add Room</a>
+			</div>
+			<div class="row" style="margin-top:100px;">
+				<div class="col" align="center">
+					<img src="/image/no-data.png">
+				</div>
+			</div><br>
+			<div class="row">
+				<div class="col" style="text-align:center;">
+					<h4>There are no rooms yet.</h4>
+					<h5 style="text-decoration: underline;">
+						<a th:href="@{/admin/rooms/create}">Add New Room</a>
+					</h5>
+				</div>
+			</div>
+		</div>
+	</div>
 
-	<h2 th:if="${not #lists.isEmpty(rooms)}">Room List</h2>
-	<table th:if="${not #lists.isEmpty(rooms)}">
-		<tr>
-			<th>Name</th>
-			<th>Facilities</th>
-			<th>Pax</th>
-			<th>Slots</th>
-			<th>Availability</th>
-			<th>Edit Facility</th>
-			<th>Delete Facility</th>
-		</tr>
-		<tr th:each="room:${rooms}">
-			<td th:text=${room.name}></td>
-			<td th:text=${room.facilities}></td>
-			<td th:text=${room.pax}></td>
-			<td th:text=${room.slots}></td>
-			<td th:text=${room.availability}></td>
-			<td><a href="" th:href="@{/room/edit/}+${room.id}">Edit</a></td>
-			<td><a href="" th:href="@{/room/delete/}+${room.id}">Delete</a></td>
-		</tr>
-	</table>
-
-	<br />
-	<!--<div th:replace="fragments/general.html :: footer"></div>-->
+	<div th:if="${not #lists.isEmpty(rooms)}">
+		<div class="container">
+			<div class="row">
+				<div class="col-3" style="margin-top: 15px; margin-bottom: 15px;">
+					<h4>Room List</h4>
+				</div>
+				<div class="col-6">
+					<form action="#" th:action="@{/admin/rooms/search}" method="get">
+						<input type="text" placeholder="Search..." th:value="${searchStr != null} ? ${searchStr} : ''"
+							name="searchRoom" />
+						<input type="submit" value="Search" /><br>
+						<select name="facility">
+							<option th:each="facility : ${checkBoxFacilities}" th:value="${facility.name}"
+								th:text="${facility.name}"></option>
+						</select>
+						<select name="availability">
+							<option value="0">Open</option>
+							<option value="1">Full</option>
+						</select>
+					</form>
+				</div>
+				<div class="col-3" style="margin-top: 20px; margin-bottom: 20px; text-align:right;">
+					<h5 style="text-decoration: underline;"><a th:href="@{/admin/rooms/create}">Add Room</a>
+					</h5>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col">
+					<table class="table table-striped" align="center">
+						<thead>
+							<tr class="listHeading">
+								<th>Name</th>
+								<th>Facilities</th>
+								<th>Capacity</th>
+								<th>Availability</th>
+								<th></th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="room:${rooms}">
+								<td th:text=${room.roomName}></td>
+								<td th:each="fac:${room.facilities}">
+									<span th:text="${fac.name}">&nbsp;</span>
+								</td>
+								<td th:text=${room.capacity}></td>
+								<td th:text=${room.availability}></td>
+								<td><a href="" th:href="@{/admin/rooms/edit/}+${room.id}">Edit</a></td>
+								<td><a href="" th:href="@{/admin/rooms/delete/}+${room.id}">Delete</a></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
-
 </html>

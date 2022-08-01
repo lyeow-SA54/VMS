@@ -36,8 +36,7 @@ public class RoomServiceImpl implements RoomService{
 	@Override
 	@Transactional
 	public Room createRoom(Room room) {
-		return rrepo.saveAndFlush(room
-				);
+		return rrepo.saveAndFlush(room);
 	}
 	
 	@Override
@@ -70,5 +69,14 @@ public class RoomServiceImpl implements RoomService{
 	}
 	
 	
+	@Override
+	public ArrayList<Room> searchRoom(String roomName, String facStr, int ava) {
+		return rrepo.searchRoom(roomName, facStr, ava);
+	}
+
+	@Override
+	public ArrayList<Room> search(String facStr, int ava) {
+		return rrepo.search(facStr, ava);
+	}
 
 }

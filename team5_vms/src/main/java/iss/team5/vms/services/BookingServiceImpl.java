@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import iss.team5.vms.helper.BookingStatus;
 import iss.team5.vms.model.Booking;
 import iss.team5.vms.model.Room;
 import iss.team5.vms.model.Student;
@@ -78,6 +79,17 @@ public class BookingServiceImpl implements BookingService {
 
 		else
 			return "Booking owner mismatch";
+	}
+	
+	@Transactional
+	@Override
+	public void cancelCourseById(String id) {
+		Booking booking = br.findById(id).get();
+		if (booking != null) {
+		booking.setStatus(BookingStatus.CANCELLED);
+		br.saveAndFlush(booking);
+		}
+		else throw new NullPointerException();
 	}
 
 	@Override
