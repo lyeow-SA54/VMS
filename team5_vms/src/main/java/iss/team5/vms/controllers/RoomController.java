@@ -51,28 +51,21 @@ public class RoomController {
 	}
 
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
-	public ModelAndView searchRoom(@RequestParam("searchRoom") String roomName,
-			@RequestParam("facility") String facStr, @RequestParam("availability") String ava, Model model) {
+	public ModelAndView searchRoom(@RequestParam("searchRoom") String roomName, @RequestParam("facility") String facStr,
+			@RequestParam("availability") String ava, Model model) {
 		ModelAndView mav = new ModelAndView("rooms");
 		List<Facility> facilities = (List<Facility>) fService.findAllFacilities();
 		mav.addObject("checkBoxFacilities", facilities);
 		mav.addObject("searchStr", roomName);
 		System.out.println("Facilities" + facStr);
-		if(roomName != "")
-		{
+		if (roomName != "") {
 			mav.addObject("rooms", rService.searchRoom(roomName, facStr, Integer.parseInt(ava)));
-			for(Room r : rService.searchRoom(roomName, facStr, Integer.parseInt(ava)))
-				System.out.println(r);
 		}
-			
-		else
-		{
+
+		else {
 			mav.addObject("rooms", rService.search(facStr, Integer.parseInt(ava)));
-			for(Room r : rService.search(facStr, Integer.parseInt(ava)))
-				System.out.println(r);
 		}
-			
-		
+
 		return mav;
 	}
 
