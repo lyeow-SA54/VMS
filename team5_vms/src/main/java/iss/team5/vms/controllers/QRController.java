@@ -23,9 +23,10 @@ import iss.team5.vms.helper.QRGenerator;
 @RequestMapping("/barcodes")
 public class QRController {
 
-	@PostMapping(value = "/", produces = MediaType.IMAGE_PNG_VALUE)
-    public ResponseEntity<BufferedImage> qrgenQRCode(@RequestBody String barcode) throws Exception {
-        return okResponse(QRGenerator.generateQRCodeImage(barcode));
+	@GetMapping(value = "/{bookingId}", produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<BufferedImage> qrgenQRCode(@PathVariable String bookingId) throws Exception {
+		String data = "localhost:8080/student/checkin/"+bookingId;
+        return okResponse(QRGenerator.generateQRCodeImage(data));
     }
 
 	private ResponseEntity<BufferedImage> okResponse(BufferedImage image) {
