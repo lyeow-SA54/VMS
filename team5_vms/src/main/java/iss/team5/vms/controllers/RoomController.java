@@ -7,11 +7,13 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -48,12 +50,40 @@ public class RoomController {
 		return mav;
 	}
 
+	@RequestMapping(value = "/search", method = RequestMethod.GET)
+	public ModelAndView searchRoom(@RequestParam("searchRoom") String roomName,
+			@RequestParam("facility") String facStr, @RequestParam("availability") String ava, Model model) {
+		ModelAndView mav = new ModelAndView("rooms");
+		List<Facility> facilities = (List<Facility>) fService.findAllFacilities();
+		mav.addObject("checkBoxFacilities", facilities);
+		mav.addObject("searchStr", roomName);
+		System.out.println("Facilities" + facStr);
+		if(roomName != "")
+		{
+			mav.addObject("rooms", rService.searchRoom(roomName, facStr, Integer.parseInt(ava)));
+			for(Room r : rService.searchRoom(roomName, facStr, Integer.parseInt(ava)))
+				System.out.println(r);
+		}
+			
+		else
+		{
+			mav.addObject("rooms", rService.search(facStr, Integer.parseInt(ava)));
+			for(Room r : rService.search(facStr, Integer.parseInt(ava)))
+				System.out.println(r);
+		}
+			
+		
+		return mav;
+	}
+
 	@RequestMapping(value = "/list")
 	@ResponseBody
 	public ModelAndView roomList() {
 		ModelAndView mav = new ModelAndView("rooms");
 		List<Room> rooms = rService.findAllRooms();
 		mav.addObject("rooms", rooms);
+		List<Facility> facilities = (List<Facility>) fService.findAllFacilities();
+		mav.addObject("checkBoxFacilities", facilities);
 		return mav;
 	}
 
@@ -74,6 +104,9 @@ public class RoomController {
 		ModelAndView mav = new ModelAndView("rooms");
 		rService.changeRoom(room);
 		ArrayList<Room> rooms = rService.findAllRooms();
+		List<Facility> facilities = (List<Facility>) fService.findAllFacilities();
+
+		mav.addObject("checkBoxFacilities", facilities);
 		mav.addObject("rooms", rooms);
 		return mav;
 	}

@@ -37,7 +37,21 @@
 				<div class="col-3" style="margin-top: 15px; margin-bottom: 15px;">
 					<h4>Room List</h4>
 				</div>
-				<div class="col-6"></div>
+				<div class="col-6">
+					<form action="#" th:action="@{/admin/rooms/search}" method="get">
+						<input type="text" placeholder="Search..." th:value="${searchStr != null} ? ${searchStr} : ''"
+							name="searchRoom" />
+						<input type="submit" value="Search" /><br>
+						<select name="facility">
+							<option th:each="facility : ${checkBoxFacilities}" th:value="${facility.name}"
+								th:text="${facility.name}"></option>
+						</select>
+						<select name="availability">
+							<option value="0">open</option>
+							<option value="1">full</option>
+						</select>
+					</form>
+				</div>
 				<div class="col-3" style="margin-top: 20px; margin-bottom: 20px; text-align:right;">
 					<h5 style="text-decoration: underline;"><a th:href="@{/admin/rooms/create}">Add Room</a>
 					</h5>
@@ -60,7 +74,7 @@
 							<tr th:each="room:${rooms}">
 								<td th:text=${room.roomName}></td>
 								<td th:each="fac:${room.facilities}">
-								<span th:text="${fac.name}">&nbsp;</span>
+									<span th:text="${fac.name}">&nbsp;</span>
 								</td>
 								<td th:text=${room.capacity}></td>
 								<td th:text=${room.availability}></td>

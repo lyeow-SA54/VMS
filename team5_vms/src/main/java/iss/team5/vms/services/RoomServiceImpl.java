@@ -52,4 +52,14 @@ public class RoomServiceImpl implements RoomService{
 		rrepo.flush();
 	}
 
+	@Override
+	public ArrayList<Room> searchRoom(String roomName, String facStr, int ava) {
+		return rrepo.searchRoom(roomName, facStr, ava);
+	}
+
+	@Override
+	public ArrayList<Room> search(String facStr, int ava) {
+		return rrepo.search(facStr, ava);
+	}
+
 }
