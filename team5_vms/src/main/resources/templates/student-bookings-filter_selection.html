@@ -49,13 +49,13 @@
 					<div class="form-group agileits_form w3_agileits_margin">
 						<div class="wthree_input">
 							<input id="Pax" type="number" name="Number of Pax" class="form-control"
-								placeholder="Number of Pax" required="" value = "" th:field="${room.capacity}" />
+								placeholder="Number of Pax" required="" value="" th:field="${room.capacity}" />
 						</div>
 					</div>
 					<div class="form-group agileits_form w3_agileits_margin">
 						<div class="wthree_input">
 							<input id="Duration" type="number" name="Duration" class="form-control"
-								placeholder="Duration" required="" value = "" th:field="${booking.duration}" />
+								placeholder="Duration" required="" value="" th:field="${booking.duration}" />
 						</div>
 					</div>
 
@@ -67,8 +67,8 @@
 					<h4 class="type">What type of facilities do you need?</h4>
 					<div class="form-group agileits_form w3_agileits_margin">
 						<div class="wthree_input">
-							<input id="Facilities" type="text" name="Facilities" class="form-control" required=""
-								th:field="${room.facilities}" />
+								<input type="checkbox" name="facilities" th:each="facility : ${fList}"
+									th:text="${facility.name}" th:value="${facility.id}" th:field="${room.facilities}" />
 						</div>
 					</div>
 					<!--<div class="form-group agileits_circles">

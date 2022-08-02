@@ -10,9 +10,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import iss.team5.vms.model.Booking;
+import iss.team5.vms.model.Facility;
 import iss.team5.vms.model.Room;
 import iss.team5.vms.model.Student;
 import iss.team5.vms.services.BookingService;
+import iss.team5.vms.services.FacilityService;
 import iss.team5.vms.services.RoomService;
 import iss.team5.vms.services.StudentService;
 
@@ -28,6 +30,9 @@ public class BookingController {
 	
 	@Autowired
 	RoomService rs;
+	
+	@Autowired
+	FacilityService fs;
 
 	@RequestMapping("/checkin/{bookingId}")
 	public ModelAndView bookingCheckin(@PathVariable("bookingId") String bookingId) {
@@ -55,6 +60,8 @@ public class BookingController {
 		Booking booking = new Booking();
 		Room room = new Room();
 		ModelAndView mav = new ModelAndView("student-bookings-filter_selection");
+		List<Facility> facilities = fs.findAllFacilities();
+		mav.addObject("fList", facilities);
 		mav.addObject("booking", booking);
 		mav.addObject("room", room);
 		return mav;

@@ -1,6 +1,8 @@
 package iss.team5.vms.services;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,9 +12,9 @@ import iss.team5.vms.helper.Category;
 import iss.team5.vms.helper.StudentStatus;
 import iss.team5.vms.helper.dateTimeInput;
 import iss.team5.vms.model.Booking;
+import iss.team5.vms.model.Facility;
 import iss.team5.vms.model.Report;
 import iss.team5.vms.model.Room;
-import iss.team5.vms.model.Facility;
 import iss.team5.vms.model.Student;
 import iss.team5.vms.model.User;
 
@@ -66,14 +68,7 @@ public class SeedDBServiceImpl implements SeedDBService {
 		rs.createReport(new Report("The tables and chairs are broken",Category.MISUSE, StudentStatus.NORMAL));
 		rs.createReport(new Report("IS THAT A COCKROACH?!",Category.CLEANLINESS, StudentStatus.NORMAL));
 		}
-		
-		if(!rms.tableExist()) {
-		rms.createRoom(new Room(true ,"Projector and computer","Beacon",5));
-		rms.createRoom(new Room(true ,"Computer","Frontier",8));
-		rms.createRoom(new Room(true ,"Whiteboard","Jupiter",3));
-		rms.createRoom(new Room(true ,"Projector","Mercury",10));
-		rms.createRoom(new Room(true ,"Whiteboard and computer","Venus",6));
-		}	
+			
 		
 		if(!us.tableExist()) {
 		us.createAdmin(new User("admin", " ", "admin@u.nus.edu", "admin", "password"));
@@ -84,12 +79,20 @@ public class SeedDBServiceImpl implements SeedDBService {
 //		}
 		
 		if(!fs.tableExist()) {
-			Facility f1 = new Facility("F1","Projector");
+			Facility f1 = new Facility("Projector");
 			fs.createFacility(f1);
-			Facility f2 = new Facility("F2","White Board");
+			Facility f2 = new Facility("White Board");
 			fs.createFacility(f2);
-			Facility f3 = new Facility("F3","Laptop");
+			Facility f3 = new Facility("Computer");
 			fs.createFacility(f3);
+			}
+		
+		if(!rms.tableExist()) {
+			rms.createRoom(new Room(true ,"Beacon",5));
+			rms.createRoom(new Room(true ,"Frontier",8));
+			rms.createRoom(new Room(true ,"Jupiter",3));
+			rms.createRoom(new Room(true ,"Mercury",10));
+			rms.createRoom(new Room(true ,"Venus",6));
 			}
 	}
 	
@@ -106,6 +109,31 @@ public class SeedDBServiceImpl implements SeedDBService {
 		Room r1 = rms.findRoomById("RM00016");
 		Room r2 = rms.findRoomById("RM00017");
 		Room r3 = rms.findRoomById("RM00018");
+		
+		List<Facility> projecter = fs.findFacilityByName("Projector");
+		List<Facility> wb = fs.findFacilityByName("White Board");
+		List<Facility> pc = fs.findFacilityByName("Computer");
+		
+		List<Facility> fl1 = new ArrayList<Facility>();
+		List<Facility> fl2 = new ArrayList<Facility>();
+		List<Facility> fl3 = new ArrayList<Facility>();
+		
+		fl1.addAll(pc);
+		fl1.addAll(wb);
+		fl1.addAll(projecter);
+		
+		fl2.addAll(wb);
+		fl2.addAll(projecter);
+		
+		fl3.addAll(projecter);
+		
+		r1.setFacilities(fl1);
+		r2.setFacilities(fl2);
+		r3.setFacilities(fl3);
+		
+		rms.createRoom(r3);
+		rms.createRoom(r2);
+		rms.createRoom(r1);
 		
 		bs.addStudent(b1, s1);
 		bs.addStudent(b2, s1);	

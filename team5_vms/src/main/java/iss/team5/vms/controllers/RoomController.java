@@ -83,7 +83,7 @@ public class RoomController {
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
 	public ModelAndView editRoom(@PathVariable String id) {
 		ModelAndView mav = new ModelAndView("room-edit");
-		Room room = rService.findRoom(id);
+		Room room = rService.findRoomById(id);
 		mav.addObject("room", room);
 		List<Facility> facilities = (List<Facility>) fService.findAllFacilities();
 		mav.addObject("fList", facilities);
@@ -96,7 +96,7 @@ public class RoomController {
 			return new ModelAndView("room-edit");
 		ModelAndView mav = new ModelAndView("rooms");
 		rService.changeRoom(room);
-		ArrayList<Room> rooms = rService.findAllRooms();
+		List<Room> rooms = rService.findAllRooms();
 		List<Facility> facilities = (List<Facility>) fService.findAllFacilities();
 
 		mav.addObject("checkBoxFacilities", facilities);
@@ -107,7 +107,7 @@ public class RoomController {
 	@RequestMapping(value = "/delete/{id}")
 	public ModelAndView deleteRoom(@PathVariable("id") String id) {
 		ModelAndView mav = new ModelAndView("forward:/admin/rooms/list");
-		Room room = rService.findRoom(id);
+		Room room = rService.findRoomById(id);
 		rService.removeRoom(room);
 		return mav;
 	}

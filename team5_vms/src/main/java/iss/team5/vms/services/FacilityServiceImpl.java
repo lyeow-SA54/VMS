@@ -29,5 +29,11 @@ public class FacilityServiceImpl implements FacilityService {
 	public void createFacility(Facility facility) {
 		frepo.saveAndFlush(facility);
 	}
+	
+	@Override
+	public List<Facility> findFacilityByName(String name)
+	{
+		return frepo.findByName(name);
+	}
 
 }

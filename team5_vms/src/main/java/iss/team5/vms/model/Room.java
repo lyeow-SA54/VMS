@@ -1,5 +1,6 @@
 package iss.team5.vms.model;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,9 +55,8 @@ public class Room {
 		this.id = id;
 	}
 	
-	public Room(boolean availability, String facilities, String roomName, int capacity) {
+	public Room(boolean availability, String roomName, int capacity) {
 		this.availability=availability;
-		this.facilities=facilities;
 		this.roomName=roomName;
 		this.capacity=capacity;
 	}

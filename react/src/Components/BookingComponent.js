@@ -26,17 +26,26 @@ class Booking extends Component {
             .then(data => this.setState({bookings: data, isLoaded: true}));
     }
 
-    async cancelBooking(id) {
-        await fetch(`/admin/bookings/${id}`, {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(
-            window.location.reload(false)
-        );
+    async cancelBooking(id, status) {
+        if (status!=="REJECTED"&&status!=="CANCELLED")
+        {
+            await fetch(`/admin/bookings/${id}`, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(
+                window.location.reload(false)
+            );
+        }
+
+        else
+        {
+            
+        }
+        
     };
     
 
@@ -69,7 +78,7 @@ class Booking extends Component {
                     <td>{searchedBookings.duration} hour</td>
                     <td>
                     <ButtonGroup>
-                        <Button size="sm" color='danger' onClick={() => this.cancelBooking(searchedBookings.id)}>Cancel Booking<span className="fa fa-times"></span></Button>
+                        <Button size="sm" color='danger' onClick={() => this.cancelBooking(searchedBookings.id, searchedBookings.status)}>Cancel Booking<span className="fa fa-times"></span></Button>
                     </ButtonGroup></td>
                 </tr>
             );

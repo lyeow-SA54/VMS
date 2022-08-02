@@ -41,17 +41,14 @@ public class RoomServiceImpl implements RoomService{
 	
 	@Override
 	@Transactional
-	public Room changeRoom(Room room) {
+	public void changeRoom(Room room) {
 		Room r = findRoomById(room.getId());
 		r.setAvailability(room.isAvailability());
 		r.setFacilities(room.getFacilities());
 		r.setRoomName(room.getRoomName());
 		r.setBlockedStartTime(room.getBlockedStartTime());
 		r.setBlockDuration(room.getBlockDuration());
-		r.setAvailability(room.isAvailability());
-		r.setFacilities(room.getFacilities());
-		r.setRoomName(room.getRoomName());
-		return rrepo.saveAndFlush(r);
+		rrepo.saveAndFlush(r);
 	}
 	
 	@Override
