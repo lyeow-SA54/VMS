@@ -29,5 +29,5 @@ public interface RoomService {
 	
 	ArrayList<Room> search(String facStr, int ava);
 
-	boolean compareRoomAndFacilities(List<Facility> facilities1, List<Facility> facilities2);
+	boolean compareFacilityLists(List<Facility> facilities1, List<Facility> facilities2);
 }

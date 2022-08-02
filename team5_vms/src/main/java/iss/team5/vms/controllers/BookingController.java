@@ -90,6 +90,7 @@ public class BookingController {
 		System.out.println("0 success");
 		return "misuse-report-form";
 	}
+	
 	@RequestMapping("/booking/history")//using pathvariable to get student
 	public ModelAndView bookingHistory(Student student) {
 		/*List<Booking> bookings = bs.findBookingsByStudent(student);*/
@@ -97,8 +98,8 @@ public class BookingController {
 		//once we have login role for this part, add additional if logical part for handle null history
 		/*List<Booking> bookings = new ArrayList<>();*/
 		//hardcoding new student and booking for test;
-		Student s1 = ss.createStudent(new Student("fn6", "ln6", "email6@u.nus.edu", "user6", "password6"));
-		bs.createBooking(new Booking("B6", dateTimeInput.dateInput("08/06/2023"), LocalTime.now(),4, BookingStatus.WAITINGLIST,s1));
+		Student s1 = ss.findStudentById("S00002");
+//		bs.createBooking(new Booking("B6", dateTimeInput.dateInput("08/06/2023"), LocalTime.now(),4, BookingStatus.WAITINGLIST,s1));
 		List<Booking> bookings = bs.findBookingsByStudent(s1);
 		ModelAndView mav = new ModelAndView("student-bookings-list");
 		mav.addObject("bookings",bookings);
