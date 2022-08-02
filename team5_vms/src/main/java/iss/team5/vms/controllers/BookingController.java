@@ -1,10 +1,9 @@
 package iss.team5.vms.controllers;
 
-<<<<<<< Updated upstream
-=======
+
 import java.time.LocalTime;
 import java.util.ArrayList;
->>>>>>> Stashed changes
+
 import java.util.List;
 
 import iss.team5.vms.helper.BookingStatus;
@@ -84,8 +83,6 @@ public class BookingController {
 		return mav;
 	}
 
-<<<<<<< Updated upstream
-=======
 
 	//this is for report form test
 	@RequestMapping("/reportform")
@@ -108,5 +105,4 @@ public class BookingController {
 		return mav;
 	}
 
->>>>>>> Stashed changes
 }
