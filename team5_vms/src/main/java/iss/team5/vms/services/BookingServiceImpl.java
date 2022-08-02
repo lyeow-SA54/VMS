@@ -28,7 +28,7 @@ public class BookingServiceImpl implements BookingService {
 	@Override
 	public Booking findBookingById(String id) {
 		return br.findById(id).get();
-	}
+}
 
 	@Override
 	@Transactional
@@ -48,8 +48,7 @@ public class BookingServiceImpl implements BookingService {
 
 	@Override
 	public List<Booking> findBookingsByStudent(Student student) {
-		// TODO Auto-generated method stub
-		return null;
+		return br.findAllBookingByStudent(student);
 	}
 
 	@Override

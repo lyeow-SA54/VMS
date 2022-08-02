@@ -8,7 +8,13 @@
 
 	<div class="container">
 		<h1>Report Misuse</h1>
-		<form th:action="@{/report/save}" th:object="${report}" method="post" enctype="multipart/form-data">
+		<form action="/report/save"  method="post" enctype="multipart/form-data">
+			<label>details:</label><input type="text" name="details"/><br/>
+			<label>photo</label><input type="file" name="file"/><br/>
+			<input type="submit" value="submit"/>
+		</form>
+
+		<!--<form th:action="@{/report/save}" th:object="${report}" method="post" enctype="multipart/form-data">
 			<label>Photo: </label>
 			<input type="file" name="image" accept="image/png, image/jpeg" />
 			<ul>
@@ -18,9 +24,9 @@
 				</li>
 			</ul>
 			<a href="" th:href="@{/room/edit/}">Submit</a>
-		</form>
+		</form>-->
 		<br />
 		<!--<div th:replace="fragments/general.html :: footer"></div>-->
+	</div>
 </body>
-
 </html>

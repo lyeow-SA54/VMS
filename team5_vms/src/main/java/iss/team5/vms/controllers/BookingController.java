@@ -1,5 +1,6 @@
 package iss.team5.vms.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +49,7 @@ public class BookingController {
 		mav.addObject("outcomeMsg", outcomeMsg);
 		return mav;
 	}
-	
+
 	@RequestMapping(value = "/booking/options", method = RequestMethod.GET)
 	public ModelAndView bookingOptionSelection() {
 
@@ -67,6 +68,24 @@ public class BookingController {
 		List<Booking> bookings = bs.checkBookingAvailable(booking, rooms);
 		ModelAndView mav = new ModelAndView("student-bookings-slot_selection");
 		mav.addObject("bookings", bookings);
+		return mav;
+	}
+
+
+	//this is for report form test
+	@RequestMapping("/reportform")
+	public String reportform(){
+		System.out.println("0 success");
+		return "misuse-report-form";
+	}
+	@RequestMapping("/booking/history")//using pathvariable to get student
+	public ModelAndView bookingHistory(Student student) {
+		/*List<Booking> bookings = bs.findBookingsByStudent(student);*/
+		//no login now, so can not findBookingsByStudent, use a new null list to replacement;
+		//once we have login role for this part, add additional if logical part for handle null history
+		List<Booking> bookings = new ArrayList<>();
+		ModelAndView mav = new ModelAndView("student-bookings-list");
+		mav.addObject("bookings",bookings);
 		return mav;
 	}
 

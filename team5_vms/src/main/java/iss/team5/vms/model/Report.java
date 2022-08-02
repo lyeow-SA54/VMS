@@ -37,6 +37,7 @@ public class Report {
 	private String id;
 	@NotNull
 	private String details;
+	private String imagePath;
 	@OneToOne
 	private Student student;
 	@OneToOne
@@ -54,6 +55,9 @@ public class Report {
 		this.details=details;
 		this.category=category;
 		this.status=status;
+	}
+	public Report(String imagePath) {
+		this.imagePath=imagePath;
 	}
 	
 	
