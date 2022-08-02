@@ -5,8 +5,15 @@
 <body>
 	<!--<header th:insert="fragments/general.html :: header"> </header>
 	<div th:replace="fragments/general.html :: menu"></div>-->
-
 	<div class="container">
+		<h1>Report Misuse</h1>
+		<form action="/report/save"  method="post" enctype="multipart/form-data">
+			<label>details:</label><input type="text" name="details"/><br/>
+			<label>photo</label><input type="file" name="file"/><br/>
+			<input type="submit" value="submit"/>
+		</form>
+	</div>
+	<!--<div class="container">
 		<h1>Report Misuse</h1>
 		<form th:action="@{/report/save}" th:object="${report}" method="post" enctype="multipart/form-data">
 			<label>Photo: </label>
@@ -19,7 +26,7 @@
 			</ul>
 			<a href="" th:href="@{/admin/rooms/edit/}">Submit</a>
 		</form>
-		<br />
+		<br />-->
 		<!--<div th:replace="fragments/general.html :: footer"></div>-->
 </body>
 
