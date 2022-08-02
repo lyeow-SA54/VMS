@@ -24,28 +24,22 @@ public class Facility {
 	}
 
 	@Override
-    public boolean equals(Object obj) {
-//        if (obj == null || this.getName() == null || this.getName().equals(""))  {
-//            return false;
-//        }
-//
-//        if (obj.getClass() != this.getClass()) {
-//            return false;
-//        }
-		System.out.println("in equals method");
-        Facility other = (Facility) obj;
-        if(this.getName().equals(other.getName())) {
-        	System.out.println("is equal");
-        	return true;
-        	
+	public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
         }
-        
-        
-//        if ((this.getName() == null) ? (other.getName() != null) : !this.name.equals(other.name)) {
-//            return false;
-//        }
-        System.out.println("not equal");
-        return false;
+
+        if (obj.getClass() != this.getClass()) {
+            return false;
+        }
+
+        final Facility other = (Facility) obj;
+        if ((this.name == null) ? (other.name != null) : !this.name.equals(other.name)) {
+            System.out.println("not equal");
+        	return false;
+        }
+
+        return true;
     }
 
 	@Override
