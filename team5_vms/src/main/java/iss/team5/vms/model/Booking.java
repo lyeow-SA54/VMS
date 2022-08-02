@@ -69,5 +69,14 @@ public class Booking {
 		this.duration = duration;
 		this.room = room;
 	}
-	
+
+	public Booking (String id, LocalDate date, LocalTime time, int duration, BookingStatus status, Student student)
+	{
+		this.id = id;
+		this.date = date;
+		this.time = time;
+		this.duration = duration;
+		this.status= status;
+		this.student = student;
+	}
 }

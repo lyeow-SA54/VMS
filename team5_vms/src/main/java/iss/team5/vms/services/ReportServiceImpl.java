@@ -67,6 +67,22 @@ public class ReportServiceImpl implements ReportService{
 		return r;
 	}
 	
+<<<<<<< Updated upstream
+=======
+	@Override
+	@Transactional
+	public Report findReportByStudent(Student student) {
+		return rprepo.findReportByStudent(student);
+	}
+	
+	@Override
+	@Transactional
+	public  Report findReportByBooking(Booking booking) {
+		return rprepo.findReportByBooking(booking);
+	}
+
+	
+>>>>>>> Stashed changes
 	
 	
 	

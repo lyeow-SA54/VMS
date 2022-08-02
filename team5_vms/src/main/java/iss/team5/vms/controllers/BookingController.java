@@ -1,7 +1,14 @@
 package iss.team5.vms.controllers;
 
+<<<<<<< Updated upstream
+=======
+import java.time.LocalTime;
+import java.util.ArrayList;
+>>>>>>> Stashed changes
 import java.util.List;
 
+import iss.team5.vms.helper.BookingStatus;
+import iss.team5.vms.helper.dateTimeInput;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -77,4 +84,29 @@ public class BookingController {
 		return mav;
 	}
 
+<<<<<<< Updated upstream
+=======
+
+	//this is for report form test
+	@RequestMapping("/reportform")
+	public String reportform(){
+		System.out.println("0 success");
+		return "misuse-report-form";
+	}
+	@RequestMapping("/booking/history")//using pathvariable to get student
+	public ModelAndView bookingHistory(Student student) {
+		/*List<Booking> bookings = bs.findBookingsByStudent(student);*/
+		//no login now, so can not findBookingsByStudent, use a new null list to replacement;
+		//once we have login role for this part, add additional if logical part for handle null history
+		/*List<Booking> bookings = new ArrayList<>();*/
+		//hardcoding new student and booking for test;
+		Student s1 = ss.createStudent(new Student("fn6", "ln6", "email6@u.nus.edu", "user6", "password6"));
+		bs.createBooking(new Booking("B6", dateTimeInput.dateInput("08/06/2023"), LocalTime.now(),4, BookingStatus.WAITINGLIST,s1));
+		List<Booking> bookings = bs.findBookingsByStudent(s1);
+		ModelAndView mav = new ModelAndView("student-bookings-list");
+		mav.addObject("bookings",bookings);
+		return mav;
+	}
+
+>>>>>>> Stashed changes
 }
