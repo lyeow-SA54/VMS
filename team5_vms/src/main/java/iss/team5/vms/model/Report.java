@@ -56,7 +56,8 @@ public class Report {
 		this.category=category;
 		this.status=status;
 	}
-	public Report(String imagePath) {
+	public Report(String details,String imagePath) {
+		this.details=details;
 		this.imagePath=imagePath;
 	}
 	

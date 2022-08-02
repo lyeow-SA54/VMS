@@ -29,6 +29,7 @@ public class ReportController {
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     private String uploadReport(Report report, @RequestParam(value="file",required=false) MultipartFile file,
+                                @RequestParam(value = "details",required=true) String details,
                                 HttpServletRequest request) throws IOException {
         System.out.println("1 success");
         String name = UUID.randomUUID().toString().replaceAll("-", "");
@@ -38,8 +39,10 @@ public class ReportController {
         String path = "C:/Users/方子悦/Documents/GitHub/VMS/team5_vms/src/main/resources/images/"+name+"."+suffix;
         System.out.println("2 success");
         file.transferTo(new File(path));
+        System.out.println("3 success");
         //add path to report
-        rs.createReport(new Report(path));
+        rs.createReport(new Report(details,path));
+        System.out.println("4 success");
         return "report-success";
 
     }
