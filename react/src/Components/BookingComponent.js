@@ -29,7 +29,8 @@ class Booking extends Component {
     async cancelBooking(id, status) {
         if (status!=="REJECTED"&&status!=="CANCELLED")
         {
-            await fetch(`/admin/bookings/${id}`, {
+            if(window.confirm("Please confirm cancellation"))
+            {await fetch(`/admin/bookings/${id}`, {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
@@ -38,7 +39,7 @@ class Booking extends Component {
             })
             .then(
                 window.location.reload(false)
-            );
+            )};
         }
 
         else
