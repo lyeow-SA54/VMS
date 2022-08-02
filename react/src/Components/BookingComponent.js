@@ -43,9 +43,8 @@ class Booking extends Component {
 
         else
         {
-            
+            window.alert("Booking status invalid for cancellation");
         }
-        
     };
     
 
@@ -65,8 +64,10 @@ class Booking extends Component {
         // });
         const BookingList = bookings.filter(booking => 
             booking.room.roomName.toLowerCase().includes(this.state.roomNameFilter)
-        && (booking.student.user.firstName||booking.student.user.lastName||booking.student.id).toLowerCase().includes(this.state.studentFilter)
-        &&  booking.date.includes(this.state.dateFilter))
+        && (booking.student.user.firstName.toLowerCase().includes(this.state.studentFilter)
+        || booking.student.user.lastName.toLowerCase().includes(this.state.studentFilter)
+        || booking.student.id.toLowerCase().includes(this.state.studentFilter))
+        && booking.date.includes(this.state.dateFilter))
         .map(searchedBookings => {
             return (
                 <tr>
@@ -89,7 +90,7 @@ class Booking extends Component {
                 <div className="float-end">
                 <label for="room">Room name:&nbsp;&nbsp;</label>
                 <input type="text" onChange={this.onChange.roomNameFilter} id="room"/>
-                <label for="studentname">Student name:&nbsp;&nbsp;</label>
+                <label for="studentname">Student search:&nbsp;&nbsp;</label>
                 <input type="text" onChange={this.onChange.studentFilter} id="studentname"/>
                 <label for="date">Date:&nbsp;&nbsp;</label>
                 <input type="date" onChange={this.onChange.dateFilter} id="date" min="2022-01-01" max="2023-12-31"></input>

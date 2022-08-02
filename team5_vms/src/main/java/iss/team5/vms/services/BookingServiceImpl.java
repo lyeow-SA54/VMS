@@ -76,7 +76,6 @@ public class BookingServiceImpl implements BookingService {
 			} else
 				return "Time now is past check in window period";
 		}
-
 		else
 			return "Booking owner mismatch";
 	}
