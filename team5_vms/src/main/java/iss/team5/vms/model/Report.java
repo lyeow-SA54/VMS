@@ -37,7 +37,7 @@ public class Report {
 	private String id;
 	@NotNull
 	private String details;
-	private String path;
+	private String imgPath;
 	@OneToOne
 	private Student student;
 	@OneToOne
@@ -57,9 +57,9 @@ public class Report {
 		this.status=status;
 	}
 	
-	public Report(String details, String path) {
+	public Report(String details, String imgPath) {
 		this.details=details;
-		this.path=path;
+		this.imgPath=imgPath;
 	}
 	
 	

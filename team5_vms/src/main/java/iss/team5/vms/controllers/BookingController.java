@@ -105,5 +105,13 @@ public class BookingController {
 		mav.addObject("bookings",bookings);
 		return mav;
 	}
+	
+	@RequestMapping(value = "/booking/cancel/{bookingId}", method = RequestMethod.GET)
+	public String cancelBooking(@PathVariable String bookingId) {
+		Booking booking = bs.findBookingById(bookingId);
+		booking.setStatus(BookingStatus.CANCELLED);
+		bs.createBooking(booking);
+		return "forward:/student/booking/history";
+	}
 
 }

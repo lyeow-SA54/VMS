@@ -39,12 +39,15 @@ public class ReportController {
         /*String pathRoot = request.getSession().getServletContext().getRealPath("");*/
         File file1 = new File("");
         String filePath = new String(file1.getCanonicalPath());//get app real path in local
-        String path = filePath.replaceAll("\\\\","/")+ "/src/main/resources/images/"+name+"."+suffix;
+        String path = filePath.replaceAll("\\\\","/")+ "/src/main/resources/static/images/"+name+"."+suffix;
         System.out.println("2 success");
         file.transferTo(new File(path));
         System.out.println("3 success");
         //add path to report
-        rs.createReport(new Report(details,path));
+//        rs.createReport(new Report(details,path));
+//        Report report = rs.findReportByPath(path);
+//        Booking booking = 
+//        report.setBooking(null);
         System.out.println("4 success");
         //test for getting real path for app
         /*System.out.println(request.getServletContext().getRealPath("/"));*/ //real path in running environment like local tomcat
