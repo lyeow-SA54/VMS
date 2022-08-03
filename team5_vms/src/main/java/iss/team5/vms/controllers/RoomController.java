@@ -59,13 +59,11 @@ public class RoomController {
 		mav.addObject("searchStr", roomName);
 		System.out.println("Facilities" + facStr);
 		if (roomName != "") {
-			mav.addObject("rooms", rService.searchRoom(roomName, facStr, Integer.parseInt(ava)));
+			mav.addObject("rooms", rService.searchRoomByNameFacilityAvailability(roomName, facStr, Boolean.parseBoolean(ava)));
 		}
-
 		else {
-			mav.addObject("rooms", rService.search(facStr, Integer.parseInt(ava)));
+			mav.addObject("rooms", rService.searchRoomByFacilityAvailability(facStr, Boolean.parseBoolean(ava)));
 		}
-
 		return mav;
 	}
 
@@ -87,6 +85,10 @@ public class RoomController {
 		mav.addObject("room", room);
 		List<Facility> facilities = (List<Facility>) fService.findAllFacilities();
 		mav.addObject("fList", facilities);
+		List<Boolean> availabilities = new ArrayList<>();
+		availabilities.add(Boolean.TRUE);
+		availabilities.add(Boolean.FALSE);
+		mav.addObject("availabilities", availabilities);
 		return mav;
 	}
 
@@ -98,7 +100,6 @@ public class RoomController {
 		rService.changeRoom(room);
 		List<Room> rooms = rService.findAllRooms();
 		List<Facility> facilities = (List<Facility>) fService.findAllFacilities();
-
 		mav.addObject("checkBoxFacilities", facilities);
 		mav.addObject("rooms", rooms);
 		return mav;

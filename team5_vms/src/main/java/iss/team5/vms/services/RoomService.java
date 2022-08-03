@@ -23,11 +23,13 @@ public interface RoomService {
 
 	void removeRoom(Room room);	
 	
+	Room findRoomByRoomName(String name);
+	
 	List<Room> findRoomsByAttributes(Room room);
 	
-	ArrayList<Room> searchRoom(String roomName, String facStr, int ava);
+	ArrayList<Room> searchRoomByNameFacilityAvailability(String roomName, String facStr, boolean ava);
 	
-	ArrayList<Room> search(String facStr, int ava);
+	ArrayList<Room> searchRoomByFacilityAvailability(String facStr, boolean ava);
 
 	boolean compareFacilityLists(List<Facility> facilities1, List<Facility> facilities2);
 }
