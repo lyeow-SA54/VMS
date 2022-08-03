@@ -77,13 +77,17 @@ public class RoomServiceImpl implements RoomService {
 	}
 
 	@Override
-	public ArrayList<Room> searchRoom(String roomName, String facStr, int ava) {
-		return rrepo.searchRoom(roomName, facStr, ava);
+	public ArrayList<Room> searchRoomByNameFacilityAvailability(String roomName, String facStr, boolean ava) {
+		return rrepo.searchRoomByNameFacilityAvailability(roomName, facStr, ava);
 	}
 
 	@Override
-	public ArrayList<Room> search(String facStr, int ava) {
-		return rrepo.search(facStr, ava);
+	public ArrayList<Room> searchRoomByFacilityAvailability(String facStr, boolean ava) {
+		return rrepo.searchRoomByFacilityAvailability(facStr, ava);
 	}
 
+	@Override
+	public Room findRoomByRoomName(String name) {
+		return rrepo.findRoomByRoomName(name);
+	}
 }

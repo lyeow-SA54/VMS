@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import iss.team5.vms.helper.BookingStatus;
@@ -14,6 +15,7 @@ import iss.team5.vms.helper.dateTimeInput;
 import iss.team5.vms.model.Booking;
 import iss.team5.vms.model.Facility;
 import iss.team5.vms.model.Report;
+import iss.team5.vms.model.Role;
 import iss.team5.vms.model.Room;
 import iss.team5.vms.model.Student;
 import iss.team5.vms.model.User;
@@ -46,11 +48,11 @@ public class SeedDBServiceImpl implements SeedDBService {
 
 	public void createInitialData() {
 		if(!ss.tableExist()){
-		ss.createStudent(new Student("fn1", "ln1", "email1@u.nus.edu", "user1", "password1"));
-		ss.createStudent(new Student("fn2", "ln2", "email2@u.nus.edu", "user2", "password2"));
-		ss.createStudent(new Student("fn3", "ln3", "email3@u.nus.edu", "user3", "password3"));
-		ss.createStudent(new Student("fn4", "ln4", "email4@u.nus.edu", "user4", "password4"));
-		ss.createStudent(new Student("fn5", "ln5", "email5@u.nus.edu", "user5", "password5"));
+			ss.createStudent(new Student("fn1", "ln1", "email1@u.nus.edu", "user1"));
+			ss.createStudent(new Student("fn2", "ln2", "email2@u.nus.edu", "user2"));
+			ss.createStudent(new Student("fn3", "ln3", "email3@u.nus.edu", "user3"));
+			ss.createStudent(new Student("fn4", "ln4", "email4@u.nus.edu", "user4"));
+			ss.createStudent(new Student("fn5", "ln5", "email5@u.nus.edu", "user5"));
 		}
 
 		if(!bs.tableExist()) {
@@ -70,9 +72,18 @@ public class SeedDBServiceImpl implements SeedDBService {
 		}
 			
 		
-		if(!us.tableExist()) {
-		us.createAdmin(new User("admin", " ", "admin@u.nus.edu", "admin", "password"));
-		}
+//		if(!us.tableExist()) {
+			Role role = new Role("ADMIN");
+			List<Role> rolelist = List.of(role);
+			User user = new User();
+			user.setEmail("admin@u.nus.edu");
+			user.setFirstName("admin");
+			user.setLastName("");
+			user.setRoles(rolelist);
+			user.setUsername("admin");
+			user.setPassword(new BCryptPasswordEncoder().encode("admin"));
+			us.createAdmin(user);
+//		}
 //		if(!bs.tableExist()) {
 //		bs.createBooking(new Booking("B1", dateTimeInput.dateInput("01/01/2022"), LocalTime.now(), 1));
 //		bs.createBooking(new Booking("B2", dateTimeInput.dateInput("01/01/2022"), LocalTime.now(), 1));
