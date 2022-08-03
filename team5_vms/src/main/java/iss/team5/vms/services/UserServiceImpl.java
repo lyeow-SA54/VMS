@@ -27,9 +27,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User findUser(String id) {
-		// TODO Auto-generated method stub
-		return null;
+	public User findUserByUsername(String username) {
+		return ur.getUserByUsername(username);
 	}
 
 	@Override

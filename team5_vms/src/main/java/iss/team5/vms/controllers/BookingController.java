@@ -4,6 +4,7 @@ package iss.team5.vms.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +21,7 @@ import iss.team5.vms.services.BookingService;
 import iss.team5.vms.services.FacilityService;
 import iss.team5.vms.services.RoomService;
 import iss.team5.vms.services.StudentService;
+import iss.team5.vms.services.UserService;
 
 @Controller
 @RequestMapping("/student")
@@ -36,6 +38,9 @@ public class BookingController {
 	
 	@Autowired
 	FacilityService fs;
+	
+	@Autowired
+	UserService us;
 
 	@RequestMapping("/checkin/{bookingId}")
 	public ModelAndView bookingCheckin(@PathVariable("bookingId") String bookingId) {
@@ -131,15 +136,10 @@ public class BookingController {
 		return "misuse-report-form";
 	}
 	
-	@RequestMapping("/booking/history")//using ss context logged in details to get student
+	@RequestMapping("/booking/history")
 	public ModelAndView bookingHistory(Student student) {
-		/*List<Booking> bookings = bs.findBookingsByStudent(student);*/
-		//no login now, so can not findBookingsByStudent, use a new null list to replacement;
-		//once we have login role for this part, add additional if logical part for handle null history
-		/*List<Booking> bookings = new ArrayList<>();*/
-		//hardcoding new student and booking for test;
-		Student s1 = ss.findStudentById("S00002");
-//		bs.createBooking(new Booking("B6", dateTimeInput.dateInput("08/06/2023"), LocalTime.now(),4, BookingStatus.WAITINGLIST,s1));
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		Student s1 = ss.findStudentByUser(us.findUserByUsername(username));
 		List<Booking> bookings = bs.findBookingsByStudent(s1);
 		ModelAndView mav = new ModelAndView("student-bookings-list");
 		mav.addObject("bookings",bookings);
