@@ -16,5 +16,7 @@ public interface ReportRepo extends JpaRepository<Report,String>{
 	Boolean existsBy();
 	
 	ArrayList<Report> findAllReportByStudent(Student student);
+
+	Report findReportByBooking(Booking booking);
     
 }

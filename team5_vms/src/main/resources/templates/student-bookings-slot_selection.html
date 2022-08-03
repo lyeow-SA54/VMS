@@ -6,18 +6,30 @@
 
 <div th:if="${outcomeMsg!=null}"><span th:text = "${outcomeMsg}"></span></div>
 
+<form th:action="@{/student/booking/save}"  method="post">
 	<table>
 		<tr>
 			<th>Room Name</th>
 			<th>Start Time</th>
 			<th>Duration</th>
 		</tr>
+		<fieldset>
+		<input type="checkbox" name="booking" th:each="booking:${bookings}"
+									th:text="${booking.room.roomName}" th:value="${booking.room.roomName}" th:field="${booking.room.roomName}" />
 		<tr th:each="booking:${bookings}">
 			<td th:text=${booking.room.roomName}></td>
 			<td th:text=${booking.time}></td>
 			<td th:text=${booking.duration}></td>
 		</tr>
+		</fieldset>
 	</table>
+</fieldset>
+
+				<p>
+					<input type="submit" value="Submit Booking" class="btn btn-primary" />
+					
+				</p>
+			</form>
 	<br />
 	<!--<div th:replace="fragments/general.html :: footer"></div>-->
 </body>
