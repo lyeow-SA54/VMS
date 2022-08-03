@@ -66,6 +66,12 @@ public class ReportServiceImpl implements ReportService{
 		ArrayList<Report> r = (ArrayList<Report>)rprepo.findAllReportByStudent(student);
 		return r;
 	}
+
+	@Override
+	public Report findReportByBooking(Booking booking) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	
 	

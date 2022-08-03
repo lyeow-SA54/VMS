@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" xmlns:th="http://www.thymeleaf.org">
+  <head th:fragment="headerfiles">
+    <meta charset="utf-8">
+	<title>Team 5 VMS</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+	<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+	<link rel="stylesheet" th:href="@{/css/simple.css}" />
+
+  </head>
+  
+  <body>
+  <div th:fragment="menu-admin">
+   <div class="container">
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Team 5 VMS</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+      <ul class="navbar-nav me-auto mb-2 mb-md-0">
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/admin/bookings}">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/admin/rooms/create}">Create room</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/admin/rooms/list}">Room List</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+</div>
+  </div>
+  
+  <div th:fragment="menu-admin-room">
+   <div class="container">
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Team 5 VMS</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+      <ul class="navbar-nav me-auto mb-2 mb-md-0">
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/admin/bookings}">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/admin/rooms/create}">Create room</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/admin/rooms/list}">Room List</a>
+        </li>
+      </ul>
+      <div padding-left:100px></div>
+      <form align="left" class="d-flex" role="search" action="#" th:action="@{/admin/rooms/search}" method="get">
+						<input type="text" placeholder="Search..." th:value="${searchStr != null} ? ${searchStr} : ''"
+							name="searchRoom" />
+						<button margin-left:10px class="btn btn-outline-success" type="submit">Search</button>
+						<select margin-left:10px class="nav-item" name="facility">
+							<option th:each="facility : ${checkBoxFacilities}" th:value="${facility.name}"
+								th:text="${facility.name}"></option>
+						</select>
+						<select margin-left:10px class="nav-item" name="availability">
+							<option value="0">Open</option>
+							<option value="1">Full</option>
+						</select>
+					</form>
+    </div>
+  </div>
+</nav>
+</div>
+  </div>
+  </body>
+</html>

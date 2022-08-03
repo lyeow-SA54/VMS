@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<head>
+<head th:replace="fragments/general.html :: headerfiles"/>
 	<title>VMS</title>
 	<link rel="stylesheet" th:href="@{/css/simple.css}" />
 </head>
 
 <body>
+	<div th:replace="fragments/general.html :: menu-admin-room"></div>
 	<div th:if="${#lists.isEmpty(rooms)}">
 		<div class="container">
 			<div class="row">
@@ -37,7 +38,7 @@
 				<div class="col-3" style="margin-top: 15px; margin-bottom: 15px;">
 					<h4>Room List</h4>
 				</div>
-				<div class="col-6">
+				<!--<div class="col-6">
 					<form action="#" th:action="@{/admin/rooms/search}" method="get">
 						<input type="text" placeholder="Search..." th:value="${searchStr != null} ? ${searchStr} : ''"
 							name="searchRoom" />
@@ -55,7 +56,7 @@
 				<div class="col-3" style="margin-top: 20px; margin-bottom: 20px; text-align:right;">
 					<h5 style="text-decoration: underline;"><a th:href="@{/admin/rooms/create}">Add Room</a>
 					</h5>
-				</div>
+				</div>-->
 			</div>
 			<div class="row">
 				<div class="col">
@@ -73,8 +74,10 @@
 						<tbody>
 							<tr th:each="room:${rooms}">
 								<td th:text=${room.roomName}></td>
-								<td th:each="fac:${room.facilities}">
-									<span th:text="${fac.name}">&nbsp;</span>
+								<td>
+									<ul th:each="fac:${room.facilities}">
+										<li th:text="${fac.name}"></li>
+									</ul>
 								</td>
 								<td th:text=${room.capacity}></td>
 								<td th:text=${room.availability}></td>
@@ -87,5 +90,6 @@
 			</div>
 		</div>
 	</div>
+	
 </body>
 </html>
