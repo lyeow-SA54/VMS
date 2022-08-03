@@ -15,7 +15,7 @@
 		</tr>
 		<fieldset>
 		<input type="checkbox" name="booking" th:each="booking:${bookings}"
-									th:text="${booking.name}" th:value="${booking.id}" th:field="${booking.id}" />
+									th:text="${booking.room.roomName}" th:value="${booking.room.roomName}" th:field="${booking.room.roomName}" />
 		<tr th:each="booking:${bookings}">
 			<td th:text=${booking.room.roomName}></td>
 			<td th:text=${booking.time}></td>
@@ -27,6 +27,7 @@
 
 				<p>
 					<input type="submit" value="Submit Booking" class="btn btn-primary" />
+					
 				</p>
 			</form>
 	<br />
