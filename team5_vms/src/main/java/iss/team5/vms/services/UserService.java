@@ -14,8 +14,6 @@ public interface UserService {
 
 	User createUser(User user);
 	
-	User createAdmin(User user);
-	
 	User changeUser(User user);
 
 	void removeUser(User user);	

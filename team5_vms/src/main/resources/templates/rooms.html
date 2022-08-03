@@ -7,6 +7,7 @@
 </head>
 
 <body>
+<a class="nav-link" style="color: gray;" th:href="@{/logout}">Logout</a>
 	<div th:if="${#lists.isEmpty(rooms)}">
 		<div class="container">
 			<div class="row">
@@ -41,7 +42,6 @@
 					<form action="#" th:action="@{/admin/rooms/search}" method="get">
 						<input type="text" placeholder="Search..." th:value="${searchStr != null} ? ${searchStr} : ''"
 							name="searchRoom" />
-						<input type="submit" value="Search" /><br>
 						<select name="facility">
 							<option th:each="facility : ${checkBoxFacilities}" th:value="${facility.name}"
 								th:text="${facility.name}"></option>
@@ -50,6 +50,7 @@
 							<option value="0">Open</option>
 							<option value="1">Full</option>
 						</select>
+						<input type="submit" value="Search" /><br>
 					</form>
 				</div>
 				<div class="col-3" style="margin-top: 20px; margin-bottom: 20px; text-align:right;">
@@ -66,6 +67,8 @@
 								<th>Facilities</th>
 								<th>Capacity</th>
 								<th>Availability</th>
+								<th>Start Time</th>
+								<th>Duration</th>
 								<th></th>
 								<th></th>
 							</tr>
@@ -77,7 +80,9 @@
 									<span th:text="${fac.name}">&nbsp;</span>
 								</td>
 								<td th:text=${room.capacity}></td>
-								<td th:text=${room.availability}></td>
+								<td th:text="${room.availability} ? 'OPEN' : 'FULL'"></td>
+								<td th:text=${room.blockedStartTime}></td>
+								<td th:text=${room.blockDuration}></td>
 								<td><a href="" th:href="@{/admin/rooms/edit/}+${room.id}">Edit</a></td>
 								<td><a href="" th:href="@{/admin/rooms/delete/}+${room.id}">Delete</a></td>
 							</tr>
@@ -88,4 +93,5 @@
 		</div>
 	</div>
 </body>
+
 </html>
