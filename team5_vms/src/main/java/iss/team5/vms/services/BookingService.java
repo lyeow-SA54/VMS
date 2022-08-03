@@ -33,4 +33,6 @@ public interface BookingService {
 
 	void cancelCourseById(String id);
 
+	void scheduleWaitingList(Booking booking, Room room);
+
 }

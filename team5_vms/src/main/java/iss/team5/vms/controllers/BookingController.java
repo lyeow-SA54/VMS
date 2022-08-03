@@ -1,24 +1,17 @@
 package iss.team5.vms.controllers;
 
 
-import java.time.LocalTime;
-import java.util.ArrayList;
-
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
-import iss.team5.vms.helper.BookingStatus;
-import iss.team5.vms.helper.dateTimeInput;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import iss.team5.vms.helper.BookingStatus;
 import iss.team5.vms.model.Booking;
 import iss.team5.vms.model.Facility;
 import iss.team5.vms.model.Room;
@@ -84,52 +77,50 @@ public class BookingController {
 		List<Booking> bookings = bs.checkBookingAvailable(booking, rooms);
 		ModelAndView mav = new ModelAndView("student-bookings-slot_selection");
 		mav.addObject("bookings", bookings);
+		mav.addObject("room", room);
 		return mav;
 	}
 	
 	@RequestMapping(value = "/booking/save", method = RequestMethod.POST)
-	public String bookingNew(Booking booking, Room room) {
-
-		List<Room> rooms = rs.findRoomsByAttributes(room);
-		List<Booking> bookings = bs.checkBookingAvailable(booking, rooms);
+	public String bookingNew(Booking booking, @RequestParam("roomid") String roomString) {
+		Room room = rs.findRoomById(roomString);
+		Student student = ss.findStudentById("S00001");
+		booking.setStudent(student);
+		booking.setRoom(room);
+//		booking.setRoom(rs.findRoomById(room.getId()));
+//		booking.setRoom(rs.findRoomById(booking.getRoom().getId()));
+//		List<Room> rooms = rs.findRoomsByAttributes(room);
+//		List<Booking> bookings = bs.checkBookingAvailable(booking, rooms);
 		if (!bs.checkBookingByDateTimeRoom(booking,room)) {
 			booking.setStatus(BookingStatus.REJECTED);
-			
-			return "forward:/booking/status/{bookingId}";
+			return "forward:/student/booking/status/"+booking.getId();
 		}
-		
-		else if (booking.getStudent().getScore() >= 3)
+		else
 		{
+//			booking.setRoom(rs.findRoomById(room.getId()));
+			if (booking.getStudent().getScore() >= 3)
+			{
 			booking.setStatus(BookingStatus.WAITINGLIST);
-							
-			ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-			Runnable setStatus = () -> {if (bs.checkBookingByDateTimeRoom(booking,room))
-				{booking.setStatus(BookingStatus.SUCCESSFUL);
-				bs.createBooking(booking);}
-			else
-				booking.setStatus(BookingStatus.REJECTED);};
-	
-			executorService.schedule(setStatus, 1, TimeUnit.HOURS);
-			 {
+			bs.scheduleWaitingList(booking, room);
 			bs.createBooking(booking);
-			return "forward:/booking/status/{bookingId}";
+			return "forward:/student/booking/status/"+booking.getId();
 			}
-		}
-		
-		else if (bs.checkBookingByDateTimeRoom(booking,room)) {
+			else
+			{
 			booking.setStatus(BookingStatus.SUCCESSFUL);
 			bs.createBooking(booking);
-			
-			return "forward:/booking/status/{bookingId}";
-		} else
-			return "error";
-		
+			return "forward:/student/booking/status/"+booking.getId();
+			}
+//			return "error";	
+		}
 	}
 
-	@RequestMapping(value = "/status/{bookingId}")
-	public String bookingStatus(@PathVariable("bookingId") String bookingId,Model model) {
-		model.addAttribute("bookings", bs.findBookingById(bookingId));
-		return "bookings-success";
+	@RequestMapping(value = "booking/status/{bookingId}")
+	public ModelAndView bookingStatus(@PathVariable("bookingId") String bookingId) {
+		ModelAndView mav = new ModelAndView("booking-success");
+		Booking booking = bs.findBookingById(bookingId);
+		mav.addObject("booking", booking);
+		return mav;
 	}
 
 
@@ -140,7 +131,7 @@ public class BookingController {
 		return "misuse-report-form";
 	}
 	
-	@RequestMapping("/booking/history")//using pathvariable to get student
+	@RequestMapping("/booking/history")//using ss context logged in details to get student
 	public ModelAndView bookingHistory(Student student) {
 		/*List<Booking> bookings = bs.findBookingsByStudent(student);*/
 		//no login now, so can not findBookingsByStudent, use a new null list to replacement;

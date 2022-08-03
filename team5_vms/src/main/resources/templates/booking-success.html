@@ -6,10 +6,11 @@
 	<!--<header th:insert="fragments/general.html :: header"> </header>
 	<div th:replace="fragments/general.html :: menu"></div>-->
 
-	<h2 th:if="${not #lists.isEmpty(booking)}">Booking Summary</h2>
-	<span th:text="${room.name}" />
-	<a href="" th:href="@{/admin/rooms/edit/}">View Pending Booking</a>
-	<a href="" th:href="@{/admin/rooms/edit/}">Update</a>
+	<h2>Booking Summary</h2>
+	<span th:text="${booking.room.roomName}" /></span>
+	<span th:text="${booking.status}" /></span>
+	<!--<a href="" th:href="@{/admin/rooms/edit/}">View Pending Booking</a>
+	<a href="" th:href="@{/admin/rooms/edit/}">Update</a>-->
 	<br />
 	<!--<div th:replace="fragments/general.html :: footer"></div>-->
 </body>
