@@ -1,5 +1,7 @@
 package iss.team5.vms.model;
 
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,6 +11,7 @@ import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import iss.team5.vms.helper.IdGenerator;
 import lombok.Data;
@@ -32,8 +35,10 @@ public class Student{
 	@OneToOne (cascade = CascadeType.ALL)
 	private User user;
 	
-	public Student(String firstName, String lastName, String email, String username, String password)
+	public Student(String firstName, String lastName, String email, String username)
 	{
-		this.user = new User(firstName, lastName, email, username, password);
+		Role role = new Role("STUDENT");
+		List<Role> rolelist = List.of(role);
+		this.user = new User(firstName, lastName, email, username, rolelist);
 	}
 }

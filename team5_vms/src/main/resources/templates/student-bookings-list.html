@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<!--<head th:replace="fragments/general.html :: headerfiles"/>-->
+<head th:replace="fragments/general.html :: headerfiles"/>
 
 <body>
-
+	<div th:replace="fragments/general.html :: menu-student"></div>
 	<div th:if="${outcomeMsg!=null}"><span th:text="${outcomeMsg}"></span></div>
 
 	<table>

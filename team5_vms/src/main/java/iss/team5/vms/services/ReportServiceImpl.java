@@ -67,11 +67,7 @@ public class ReportServiceImpl implements ReportService{
 		return r;
 	}
 
-	@Override
-	public Report findReportByBooking(Booking booking) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 	
 	
 	

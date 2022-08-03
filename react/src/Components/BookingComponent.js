@@ -25,11 +25,11 @@ class Booking extends Component {
             .then(response => response.json())
             .then(data => this.setState({bookings: data, isLoaded: true}));
     }
-
+    
     async cancelBooking(id, status) {
         if (status!=="REJECTED"&&status!=="CANCELLED")
         {
-            if(window.confirm("Please confirm cancellation"))
+            if(window.confirm("Please confirm cancellation."))
             {await fetch(`/admin/bookings/${id}`, {
                 method: 'POST',
                 headers: {

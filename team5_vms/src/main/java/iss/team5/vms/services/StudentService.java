@@ -3,6 +3,7 @@ package iss.team5.vms.services;
 import java.util.ArrayList;
 
 import iss.team5.vms.model.Student;
+import iss.team5.vms.model.User;
 
 public interface StudentService {
 	
@@ -16,6 +17,8 @@ public interface StudentService {
 
 	Student changeStudent(Student student);
 
-	void removeStudent(Student student);	
+	void removeStudent(Student student);
+
+	Student findStudentByUser(User user);	
 
 }

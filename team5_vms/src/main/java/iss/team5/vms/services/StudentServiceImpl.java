@@ -63,5 +63,10 @@ public class StudentServiceImpl implements StudentService{
 		srepo.delete(student);
 		srepo.flush();
 	}
+	
+	@Override
+	public Student findStudentByUser(User user) {
+		return srepo.getStudentByUser(user);
+	}
 		
 }

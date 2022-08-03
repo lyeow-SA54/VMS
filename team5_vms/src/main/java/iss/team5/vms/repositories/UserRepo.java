@@ -1,12 +1,17 @@
 package iss.team5.vms.repositories;
 
-import java.util.ArrayList;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import iss.team5.vms.model.User;
 
-public interface UserRepo extends JpaRepository<User,Integer>{
+public interface UserRepo extends JpaRepository<User,String>{
 	Boolean existsBy();
+	
+	@Query("SELECT u FROM User u WHERE u.username = :username")
+	User getUserByUsername(@Param("username") String username);
+
+	User getByUsername(String username);
+	
 }

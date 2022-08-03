@@ -70,6 +70,16 @@ public class Booking {
 		this.room = room;
 	}
 
+	public Booking (String id, LocalDate date, LocalTime time, int duration, Room room, Student student)
+	{
+		this.id=id;
+		this.date = date;
+		this.time = time;
+		this.duration = duration;
+		this.room = room;
+		this.student = student;
+	}
+	
 	public Booking (String id, LocalDate date, LocalTime time, int duration, BookingStatus status, Student student)
 	{
 		this.id = id;

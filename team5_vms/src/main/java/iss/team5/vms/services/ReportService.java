@@ -21,7 +21,5 @@ public interface ReportService {
 	void removeReport(Report report);
 	
 	ArrayList<Report> findAllReportByStudent(Student student);
-	
-Report findReportByBooking(Booking booking);
     
 }

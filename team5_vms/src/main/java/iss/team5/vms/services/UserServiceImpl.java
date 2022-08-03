@@ -1,13 +1,12 @@
 package iss.team5.vms.services;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import iss.team5.vms.model.Role;
 import iss.team5.vms.model.User;
 import iss.team5.vms.repositories.UserRepo;
 
@@ -15,10 +14,10 @@ import iss.team5.vms.repositories.UserRepo;
 public class UserServiceImpl implements UserService {
 
 	@Resource
-	private UserRepo urepo;
+	private UserRepo ur;
 	
 	public boolean tableExist() {
-		return urepo.existsBy();
+		return ur.existsBy();
 	}
 	
 	@Override
@@ -28,21 +27,13 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User findUser(String id) {
-		// TODO Auto-generated method stub
-		return null;
+	public User findUserByUsername(String username) {
+		return ur.getUserByUsername(username);
 	}
 
 	@Override
 	public User createUser(User user) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	@Override
-	public User createAdmin(User user) {
-		// TODO Auto-generated method stub
-		return null;
+		return ur.saveAndFlush(user);
 	}
 
 	@Override

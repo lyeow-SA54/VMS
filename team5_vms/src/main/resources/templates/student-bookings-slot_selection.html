@@ -1,35 +1,43 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <!--<head th:replace="fragments/general.html :: headerfiles"/>-->
+<head th:replace="fragments/general.html :: headerfiles"/>
 
 <body>
+	<div th:replace="fragments/general.html :: menu-student"></div>
 
 <div th:if="${outcomeMsg!=null}"><span th:text = "${outcomeMsg}"></span></div>
 
-<form th:action="@{/student/booking/save}"  method="post">
 	<table>
 		<tr>
 			<th>Room Name</th>
 			<th>Start Time</th>
 			<th>Duration</th>
+			<th>Booking Id</th>
+			<th>Selection</th>
 		</tr>
-		<fieldset>
-		<input type="checkbox" name="booking" th:each="booking:${bookings}"
-									th:text="${booking.room.roomName}" th:value="${booking.room.roomName}" th:field="${booking.room.roomName}" />
 		<tr th:each="booking:${bookings}">
 			<td th:text=${booking.room.roomName}></td>
 			<td th:text=${booking.time}></td>
 			<td th:text=${booking.duration}></td>
+			<td th:text=${booking.id}></td>
+			<td>
+			<form action="#" th:action="@{/student/booking/save}" method="post">
+			<input type="hidden" name="roomid" th:value="${booking.room.id}"  />
+			<input type="hidden" th:value="${booking.date}" th:field="${booking.date}" />
+			<input type="hidden" th:value="${booking.time}" th:field="${booking.time}" />
+			<input type="hidden" th:value="${booking.duration}" th:field="${booking.duration}" />
+			<input type="submit" value="Select Booking" class="btn btn-primary" />
+			</form>
+			</td>
 		</tr>
-		</fieldset>
 	</table>
-</fieldset>
 
 				<p>
-					<input type="submit" value="Submit Booking" class="btn btn-primary" />
+					
 					
 				</p>
-			</form>
+
 	<br />
 	<!--<div th:replace="fragments/general.html :: footer"></div>-->
 </body>
