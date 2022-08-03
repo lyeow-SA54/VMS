@@ -65,11 +65,11 @@ public class RoomServiceImpl implements RoomService {
 	@Override
 	public List<Room> findRoomsByAttributes(Room room) {
 		return rrepo.findAll().stream().filter(froom -> (froom.getCapacity() >= room.getCapacity())
-				&& (compareRoomAndFacilities(froom.getFacilities(),room.getFacilities()))).collect(Collectors.toList());
+				&& (compareFacilityLists(froom.getFacilities(),room.getFacilities()))).collect(Collectors.toList());
 	}
 
 	@Override
-	public boolean compareRoomAndFacilities(List<Facility> facilities1, List<Facility> facilities2) {
+	public boolean compareFacilityLists(List<Facility> facilities1, List<Facility> facilities2) {
 		if (facilities1.size() == facilities2.size()) {		
 			return facilities1.stream().allMatch(f -> facilities2.contains(f));
 		}
