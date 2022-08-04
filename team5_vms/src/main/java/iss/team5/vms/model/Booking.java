@@ -51,6 +51,7 @@ public class Booking {
 	@OneToOne
 	private Room room;
 	private boolean checkedIn;
+	private boolean bookingInProgress;
 	
 	public Booking (String id, LocalDate date, LocalTime time, int duration, BookingStatus status)
 	{

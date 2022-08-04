@@ -1,10 +1,12 @@
 package iss.team5.vms.controllers;
 
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
+//import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -138,11 +140,17 @@ public class BookingController {
 	
 	@RequestMapping("/booking/history")
 	public ModelAndView bookingHistory(Student student) {
-		String username = SecurityContextHolder.getContext().getAuthentication().getName();
-		Student s1 = ss.findStudentByUser(us.findUserByUsername(username));
+//		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+//		Student s1 = ss.findStudentByUser(us.findUserByUsername(username));
+		Student s1 = ss.findStudentById("S00003");
 		List<Booking> bookings = bs.findBookingsByStudent(s1);
+		List<Booking> bookings2 = bs.checkBookingInProgress(bookings);
 		ModelAndView mav = new ModelAndView("student-bookings-list");
-		mav.addObject("bookings",bookings);
+		mav.addObject("bookings",bookings2);
+		LocalDate datenow = LocalDate.now();
+		LocalTime timenow = LocalTime.now();
+		mav.addObject("datenow", datenow);
+		mav.addObject("timenow", timenow);
 		return mav;
 	}
 	@RequestMapping(value = "/booking/report/{bookingId}", method = RequestMethod.GET)
@@ -156,6 +164,28 @@ public class BookingController {
 		booking.setStatus(BookingStatus.CANCELLED);
 		bs.createBooking(booking);
 		return "forward:/student/booking/history";
+	}
+	
+	@RequestMapping(value = "/booking/extend/{bookingId}", method = RequestMethod.GET)
+	public ModelAndView extendBooking(@PathVariable String bookingId) {
+		ModelAndView mav = new ModelAndView("booking-success");
+		Booking booking = bs.findBookingById(bookingId);
+		String outcomeMsg = "";
+		Booking extendBooking = new Booking("placeholder", 
+				booking.getDate(), 
+				booking.getTime().plusHours(booking.getDuration()), 
+				1, booking.getRoom());
+		if (!bs.checkBookingByDateTimeRoom(extendBooking,booking.getRoom())) {
+			outcomeMsg = "Booking extension request denied";
+		}
+		else {
+			outcomeMsg = "Booking extension request approved";
+			booking.setDuration(booking.getDuration()+1);
+			bs.createBooking(booking);
+		}
+		mav.addObject("booking", booking);
+		mav.addObject("outcomeMsg", outcomeMsg);
+		return mav;
 	}
 
 }

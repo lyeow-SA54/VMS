@@ -16,10 +16,10 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+//import org.springframework.security.core.GrantedAuthority;
+//import org.springframework.security.core.authority.SimpleGrantedAuthority;
+//import org.springframework.security.core.userdetails.UserDetails;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import iss.team5.vms.helper.IdGenerator;
 import lombok.Data;
@@ -48,7 +48,7 @@ public class User{
 	private String email;
 	@NotNull(message = "Username is mandatory")
 	private String username;
-	@NotNull(message = "Password is mandatory")
+//	@NotNull(message = "Password is mandatory")
 	private String password;
 
 	public User(String firstName, String lastName, String email, String username, List<Role> rolelist)
@@ -58,6 +58,6 @@ public class User{
 		this.email = email;
 		this.username = username;
 		roles = rolelist;
-		this.password = new BCryptPasswordEncoder().encode("password");
+//		this.password = new BCryptPasswordEncoder().encode("password");
 	}
 }

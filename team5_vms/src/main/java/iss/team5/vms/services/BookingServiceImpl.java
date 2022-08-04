@@ -1,8 +1,10 @@
 package iss.team5.vms.services;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -77,47 +79,47 @@ public class BookingServiceImpl implements BookingService {
 				return "Checked in successfully";
 			} else
 				return "Time now is past check in window period";
-		}
-		else
+		} else
 			return "Booking owner mismatch";
 	}
-	
+
 	@Transactional
 	@Override
 	public void cancelCourseById(String id) {
 		Booking booking = br.findById(id).get();
 		if (booking != null) {
-		booking.setStatus(BookingStatus.CANCELLED);
-		br.saveAndFlush(booking);
-		}
-		else throw new NullPointerException();
+			booking.setStatus(BookingStatus.CANCELLED);
+			br.saveAndFlush(booking);
+		} else
+			throw new NullPointerException();
 	}
 
 	@Override
 	public List<Booking> checkBookingAvailable(Booking booking, List<Room> rooms) {
 		LocalTime bstart = booking.getTime();
 		int duration = booking.getDuration();
-		if (duration>2) duration=2;
+		if (duration > 2)
+			duration = 2;
 		LocalTime bend = bstart.plusHours(duration);
-		
-		//rooms with no blocked timings
-		List<Room> nullBlockTimeRooms = rooms.stream().filter(room -> room.getBlockedStartTime()==null).collect(Collectors.toList());
-		
-		//check against room blocked timings if there are
-		List<Room> frooms = rooms.stream()
-				.filter(room -> room.getBlockedStartTime()!=null)
+
+		// rooms with no blocked timings
+		List<Room> nullBlockTimeRooms = rooms.stream().filter(room -> room.getBlockedStartTime() == null)
+				.collect(Collectors.toList());
+
+		// check against room blocked timings if there are
+		List<Room> frooms = rooms.stream().filter(room -> room.getBlockedStartTime() != null)
 				.filter(room -> (room.getBlockedStartTime().isAfter(bend))
 						&& (room.getBlockedStartTime().plusHours(room.getBlockDuration()).isBefore(bstart)))
 				.collect(Collectors.toList());
-		
-		//all rooms that are available in requested timing
+
+		// all rooms that are available in requested timing
 		frooms.addAll(nullBlockTimeRooms);
-		
+
 		List<Booking> bookings = new ArrayList<Booking>();
-		//checking if there are existing bookings overlapping with requested time slot for each room for that day
+		// checking if there are existing bookings overlapping with requested time slot
+		// for each room for that day
 		for (Room r : frooms) {
 			if (checkBookingByDateTimeRoom(booking, r)) {
-				
 				bookings.add(new Booking(r.getRoomName(), booking.getDate(), booking.getTime(), duration, r));
 			}
 		}
@@ -128,27 +130,41 @@ public class BookingServiceImpl implements BookingService {
 	public boolean checkBookingByDateTimeRoom(Booking booking, Room room) {
 		// all the bookings for the day for the specific room
 		List<Booking> bookings = br.findByDateAndRoom(booking.getDate(), room);
-		// check whether each booking for the room overlaps with the requested booking time. if overlap return false
+		// check whether each booking for the room overlaps with the requested booking
+		// time. if overlap return false
 		for (Booking b : bookings) {
 			if (booking.getTime().isBefore(b.getTime().plusHours(b.getDuration()))
-					&& (booking.getTime().plusHours(booking.getDuration()).isAfter(b.getTime()))) {
+					&& (booking.getTime().plusHours(booking.getDuration()).isAfter(b.getTime()))
+					&&b.getStatus().equals(BookingStatus.SUCCESSFUL)) {
 				return false;
 			}
 		}
 		return true;
 	}
-	
+
 	@Override
-	public void scheduleWaitingList(Booking booking, Room room)
-	{
+	public void scheduleWaitingList(Booking booking, Room room) {
 		ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-		Runnable setStatus = () -> {if (checkBookingByDateTimeRoom(booking,room))
-			{booking.setStatus(BookingStatus.SUCCESSFUL);
-			createBooking(booking);}
-		else
-			booking.setStatus(BookingStatus.REJECTED);};
+		Runnable setStatus = () -> {
+			if (checkBookingByDateTimeRoom(booking, room)) {
+				booking.setStatus(BookingStatus.SUCCESSFUL);
+				createBooking(booking);
+			} else
+				booking.setStatus(BookingStatus.REJECTED);
+		};
 
 		executorService.schedule(setStatus, 1, TimeUnit.HOURS);
+	}
+
+	@Override
+	public List<Booking> checkBookingInProgress(List<Booking> bookings) {
+		bookings.stream().filter(b -> b.getDate().equals(LocalDate.now()))
+				.filter(b -> b.getTime().isBefore(LocalTime.now())
+						&& b.getTime().plusHours(b.getDuration()).isAfter(LocalTime.now()))
+				.filter(b -> b.getStatus().equals(BookingStatus.SUCCESSFUL))
+				.forEach(b -> b.setBookingInProgress(true));
+
+		return bookings;
 	}
 
 }

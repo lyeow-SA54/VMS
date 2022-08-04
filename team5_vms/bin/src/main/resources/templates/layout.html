@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="headsection">
+	<meta charset="utf-8">
+	<title>NavBar</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="style.css">
+	<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+</head>
+<body>
+	<nav>
+			<input type="checkbox" id="check">
+			<label for = "check" class="checkbtn">
+				<i class="fas fa-bars"></i>
+			</label>
+			<label class="logo">Team 5</label>
+			<ul>
+				<li>
+				<a  th:href="@{/admin/rooms/create}">Create&nbspa&nbspRoom</a>
+				</li>
+				<li><a  th:href="@{/admin/rooms/search}">Search&nbspRooms</a>
+				</li>
+				<li><a  th:href="@{/admin/rooms/list}">View&nbspAll&nbspRooms</a></li>
+			</ul>
+		</nav>
+</body>
+
+</html>

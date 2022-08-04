@@ -4,7 +4,7 @@
 
 <body>
 	<div th:replace="fragments/general.html :: menu-student"></div>
-<div th:if="${outcomeMsg!=null}"><span th:text="${outcomeMsg}"></span></div>
+
 	<h2>Booking Summary</h2>
 	<span th:text="${booking.room.roomName}" /></span>
 	<span th:text="${booking.status}" /></span>

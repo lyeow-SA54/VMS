@@ -1,14 +1,19 @@
 package iss.team5.vms.services;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import iss.team5.vms.helper.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import iss.team5.vms.helper.BookingStatus;
+import iss.team5.vms.helper.Category;
+import iss.team5.vms.helper.StudentStatus;
+import iss.team5.vms.helper.dateTimeInput;
 import iss.team5.vms.model.Booking;
 import iss.team5.vms.model.Facility;
 import iss.team5.vms.model.Report;
@@ -57,37 +62,31 @@ public class SeedDBServiceImpl implements SeedDBService {
 		bs.createBooking(new Booking("B2", dateTimeInput.dateInput("08/02/2022"), LocalTime.now(), 2, BookingStatus.CANCELLED));
 		bs.createBooking(new Booking("B3", dateTimeInput.dateInput("08/03/2022"), LocalTime.now(), 3, BookingStatus.REJECTED));
 		bs.createBooking(new Booking("B4", dateTimeInput.dateInput("08/04/2022"), LocalTime.now(), 1, BookingStatus.WAITINGLIST));
-		bs.createBooking(new Booking("B5", dateTimeInput.dateInput("08/05/2023"), LocalTime.now(), 2, BookingStatus.WAITINGLIST));
+		bs.createBooking(new Booking("B5", LocalDate.now(), LocalTime.now(), 2, BookingStatus.WAITINGLIST));
 		}
 		
 		if(!rs.tableExist()) {
-		rs.createReport(new Report("Food packages thrown everywhere!",Category.CLEANLINESS, StudentStatus.NORMAL, ReportStatus.PROCESSING));
-		rs.createReport(new Report("Graffiti on walls!",Category.VANDALISE, StudentStatus.NORMAL,ReportStatus.PROCESSING));
-		rs.createReport(new Report("The group inside doesn't want to leave!",Category.HOGGING, StudentStatus.NORMAL,ReportStatus.PROCESSING));
-		rs.createReport(new Report("The tables and chairs are broken",Category.MISUSE, StudentStatus.NORMAL,ReportStatus.PROCESSING));
-		rs.createReport(new Report("IS THAT A COCKROACH?!",Category.CLEANLINESS, StudentStatus.NORMAL,ReportStatus.PROCESSING));
+		rs.createReport(new Report("Food packages thrown everywhere!",Category.CLEANLINESS, StudentStatus.NORMAL));
+		rs.createReport(new Report("Graffiti on walls!",Category.VANDALISE, StudentStatus.NORMAL));
+		rs.createReport(new Report("The group inside doesn't want to leave!",Category.HOGGING, StudentStatus.NORMAL));
+		rs.createReport(new Report("The tables and chairs are broken",Category.MISUSE, StudentStatus.NORMAL));
+		rs.createReport(new Report("IS THAT A COCKROACH?!",Category.CLEANLINESS, StudentStatus.NORMAL));
 		}
 			
 		
 //		if(!us.tableExist()) {
-			Role role = new Role("ADMIN");
-			List<Role> rolelist = List.of(role);
-			User user = new User();
-			user.setEmail("admin@u.nus.edu");
-			user.setFirstName("admin");
-			user.setLastName("");
-			user.setRoles(rolelist);
-			user.setUsername("admin");
-			user.setPassword(new BCryptPasswordEncoder().encode("admin"));
-			us.createUser(user);
+//			Role role = new Role("ADMIN");
+//			List<Role> rolelist = List.of(role);
+//			User user = new User();
+//			user.setEmail("admin@u.nus.edu");
+//			user.setFirstName("admin");
+//			user.setLastName("");
+//			user.setRoles(rolelist);
+//			user.setUsername("admin");
+//			user.setPassword(new BCryptPasswordEncoder().encode("admin"));
+//			us.createUser(user);
 //		}
-/*		if(!bs.tableExist()) {
-		bs.createBooking(new Booking("B1", dateTimeInput.dateInput("01/01/2022"), LocalTime.now(), 1, BookingStatus.CANCELLED));
-		bs.createBooking(new Booking("B2", dateTimeInput.dateInput("01/01/2022"), LocalTime.now(), 1, BookingStatus.REJECTED));
-		bs.createBooking(new Booking("B3", dateTimeInput.dateInput("01/01/2022"), LocalTime.now(), 1, BookingStatus.SUCCESSFUL));
-		bs.createBooking(new Booking("B4", dateTimeInput.dateInput("01/01/2022"), LocalTime.now(), 1, BookingStatus.WAITINGLIST));
-		bs.createBooking(new Booking("B5", dateTimeInput.dateInput("01/01/2022"), LocalTime.now(), 1, BookingStatus.SUCCESSFUL));
-		}*/
+	
 		
 		if(!fs.tableExist()) {
 			Facility f1 = new Facility("Projector");

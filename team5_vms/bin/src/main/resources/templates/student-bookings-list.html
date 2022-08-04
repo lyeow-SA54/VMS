@@ -9,32 +9,20 @@
 	<table>
 		<tr>
 			<!--<th>Room Name</th>-->
-			<th>Date</th>
 			<th>Start Time</th>
 			<th>Duration</th>
 			<th>Status</th>
 			<th>Options</th>
-			<th>Extension</th>
 		</tr>
 		<tr th:each="booking:${bookings}">
-			<td th:text=${booking.date}></td>
+			<!--<td th:text=${booking.room.roomName}></td>-->
 			<td th:text=${booking.time}></td>
 			<td th:text=${booking.duration}></td>
 			<td th:text=${booking.status}></td>
-			<td>
-				<a th:href="@{/student/booking/report/}+${booking.id}">
-					<span th:text="REPORT"></span>
-				</a>
-			</td>
 			<td th:if="${booking.status != T(iss.team5.vms.helper.BookingStatus).REJECTED and booking.status != T(iss.team5.vms.helper.BookingStatus).CANCELLED}">
 				<a th:href="@{/student/booking/cancel/}+${booking.id}">
 					<span th:text="CANCEL"></span>
 				</a>
-			</td>
-
-			<td th:if="${booking.bookingInProgress}">
-			<a th:href="@{/student/booking/extend/}+${booking.id}">
-			<span th:text="EXTEND">
 			</td>
 		</tr>
 	</table>
