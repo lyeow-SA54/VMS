@@ -105,6 +105,12 @@ public class SeedDBServiceImpl implements SeedDBService {
 		Booking b3 = bs.findBookingById("B00008");
 		Booking b4 = bs.findBookingById("B00009");
 		Booking b5 = bs.findBookingById("B00010");
+
+		Report rp1 = rs.findReportById("RE00011");
+		Report rp2 = rs.findReportById("RE00012");
+		Report rp3 = rs.findReportById("RE00013");
+		Report rp4 = rs.findReportById("RE00014");
+		Report rp5 = rs.findReportById("RE00015");
 		
 		Room r1 = rms.findRoomById("RM00016");
 		Room r2 = rms.findRoomById("RM00017");
@@ -139,7 +145,13 @@ public class SeedDBServiceImpl implements SeedDBService {
 		bs.addStudent(b2, s1);	
 		bs.addStudent(b3, s2);	
 		bs.addStudent(b4, s2);	
-		bs.addStudent(b5, s2);	
+		bs.addStudent(b5, s2);
+
+		rs.addBooking(rp1,b1);
+		rs.addBooking(rp2,b2);
+		rs.addBooking(rp3,b3);
+		rs.addBooking(rp4,b4);
+		rs.addBooking(rp5,b5);
 		
 		bs.addRoom(b1, r1);
 		bs.addRoom(b2, r2);
