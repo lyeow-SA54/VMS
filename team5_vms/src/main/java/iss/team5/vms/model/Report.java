@@ -55,10 +55,11 @@ public class Report {
 //	@OneToOne
 //	private Image img;
 	
-	public Report(String details, Category category, StudentStatus status) {
+	public Report(String details, Category category, StudentStatus status, ReportStatus reportStatus) {
 		this.details=details;
 		this.category=category;
 		this.status=status;
+		this.reportStatus=reportStatus;
 	}
 	
 	public Report(String details, String imgPath) {

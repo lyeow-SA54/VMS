@@ -4,14 +4,11 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import iss.team5.vms.helper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import iss.team5.vms.helper.BookingStatus;
-import iss.team5.vms.helper.Category;
-import iss.team5.vms.helper.StudentStatus;
-import iss.team5.vms.helper.dateTimeInput;
 import iss.team5.vms.model.Booking;
 import iss.team5.vms.model.Facility;
 import iss.team5.vms.model.Report;
@@ -64,11 +61,11 @@ public class SeedDBServiceImpl implements SeedDBService {
 		}
 		
 		if(!rs.tableExist()) {
-		rs.createReport(new Report("Food packages thrown everywhere!",Category.CLEANLINESS, StudentStatus.NORMAL));
-		rs.createReport(new Report("Graffiti on walls!",Category.VANDALISE, StudentStatus.NORMAL));
-		rs.createReport(new Report("The group inside doesn't want to leave!",Category.HOGGING, StudentStatus.NORMAL));
-		rs.createReport(new Report("The tables and chairs are broken",Category.MISUSE, StudentStatus.NORMAL));
-		rs.createReport(new Report("IS THAT A COCKROACH?!",Category.CLEANLINESS, StudentStatus.NORMAL));
+		rs.createReport(new Report("Food packages thrown everywhere!",Category.CLEANLINESS, StudentStatus.NORMAL, ReportStatus.PROCESSING));
+		rs.createReport(new Report("Graffiti on walls!",Category.VANDALISE, StudentStatus.NORMAL,ReportStatus.PROCESSING));
+		rs.createReport(new Report("The group inside doesn't want to leave!",Category.HOGGING, StudentStatus.NORMAL,ReportStatus.PROCESSING));
+		rs.createReport(new Report("The tables and chairs are broken",Category.MISUSE, StudentStatus.NORMAL,ReportStatus.PROCESSING));
+		rs.createReport(new Report("IS THAT A COCKROACH?!",Category.CLEANLINESS, StudentStatus.NORMAL,ReportStatus.PROCESSING));
 		}
 			
 		
