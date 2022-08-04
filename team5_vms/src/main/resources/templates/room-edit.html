@@ -40,18 +40,30 @@
 							<tr>
 								<td><span th:text="#{fieldLabel.capacity}"></span></td>
 								<td>
-									<fieldset><input type="number" th:field="*{capacity}" min="0" max="10" /></fieldset>
+									<fieldset><input type="number" th:field="*{capacity}" min="1" max="10" /></fieldset>
 								</td>
 								<td th:if="${#fields.hasErrors('capacity')}" th:errors="*{capacity}"></td>
 							</tr>
 							<tr>
 								<td><span th:text="#{fieldLabel.availability}"></span></td>
 								<td>
-									<!--<select name="availability" th:field="*{availability}">
-										<option
-											th:each="availability : ${T(iss.team5.vms.helper.BookingAvailablity).values()}"
-											th:value="${availability}" th:text="${availability.displayName}"></option>
-									</select>-->
+									<select name="availability" th:field="*{availability}">
+										<option th:each="availability : ${availabilities}" th:value="${availability}"
+											th:text="${availability} ? 'OPEN' : 'FULL'"></option>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td><span th:text="#{fieldLabel.blockedStartTime}"></span></td>
+								<td>
+									<fieldset><input type="time" th:field="*{blockedStartTime}" /></fieldset>
+								</td>
+							</tr>
+							<tr>
+								<td><span th:text="#{fieldLabel.blockDuration}"></span></td>
+								<td>
+									<fieldset><input type="number" th:field="*{blockDuration}" min="1" max="10" />
+									</fieldset>
 								</td>
 							</tr>
 							<tr>
@@ -73,4 +85,5 @@
 		</div>
 	</div>
 </body>
+
 </html>

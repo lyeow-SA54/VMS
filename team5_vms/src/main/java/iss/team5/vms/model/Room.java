@@ -13,11 +13,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
-
-import iss.team5.vms.helper.BookingAvailablity;
+import org.springframework.format.annotation.DateTimeFormat;
 import iss.team5.vms.helper.IdGenerator;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -47,6 +47,7 @@ public class Room {
 	
 	private String roomName;
 	private int capacity;
+	@DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
 	private LocalTime blockedStartTime;
 	private int blockDuration;
 	
@@ -59,5 +60,14 @@ public class Room {
 		this.availability=availability;
 		this.roomName=roomName;
 		this.capacity=capacity;
+	}
+	
+	public Room(String roomName, List<Facility> facList, int capacity, boolean availability, LocalTime startTime, int duration) {
+		this.roomName=roomName;
+		facilities = facList;
+		this.availability=availability;
+		this.capacity=capacity;
+		blockedStartTime = startTime;
+		blockDuration = duration;
 	}
 }

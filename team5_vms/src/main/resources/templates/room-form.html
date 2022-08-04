@@ -1,20 +1,18 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="fragments/general.html :: headerfiles"/>
+<head>
 	<title>VMS</title>
 	<link rel="stylesheet" th:href="@{/css/simple.css}" />
 </head>
 
 <body>
- <div th:replace="fragments/general.html :: menu-admin"></div>
 	<div class="container">
-	
 		<div class="row">
 			<div class="col-3"></div>
 			<div class="col-6">
 				<form action="#" th:action="@{/admin/rooms/create}" th:object="${room}" method="post">
-					<h5>New Room</h5>
+					<h4>New Room Page</h4>
 					<table class="table table-borderless" align="center">
 						<tbody>
 							<tr>
@@ -42,13 +40,12 @@
 											th:field="*{facilities}" />
 									</fieldset>
 								</td>
-								<td th:if="${#fields.hasErrors('facilities')}" th:errors="*{facilities}"></td>
 							</tr>
 							<tr>
 								<td><span th:text="#{fieldLabel.capacity}"></span></td>
 								<td>
 									<fieldset>
-										<input type="number" th:field="*{capacity}" min="0" max="10">
+										<input type="number" th:field="*{capacity}" min="1" max="10">
 									</fieldset>
 								</td>
 								<td th:if="${#fields.hasErrors('capacity')}" th:errors="*{capacity}"></td>
@@ -56,13 +53,23 @@
 							<tr>
 								<td><span th:text="#{fieldLabel.availability}"></span></td>
 								<td>
-									<!--<label for="Availability">Availability:</label>
-									<select name="availability" th:field="*{availability}">
-										<option
-											th:each="availability : ${T(iss.team5.vms.helper.BookingAvailablity).values()}"
-											th:value="${availability}" th:text="${availability.displayName}"
-											th:selected=${availability.displayName==open}></option>
-									</select>-->
+									<select name="availability">
+										<option value="1">Open</option>
+										<option value="0">Full</option>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td><span th:text="#{fieldLabel.blockedStartTime}"></span></td>
+								<td>
+									<fieldset><input type="time" th:field="*{blockedStartTime}" /></fieldset>
+								</td>
+							</tr>
+							<tr>
+								<td><span th:text="#{fieldLabel.blockDuration}"></span></td>
+								<td>
+									<fieldset><input type="number" th:field="*{blockDuration}" min="1" max="10" />
+									</fieldset>
 								</td>
 							</tr>
 							<tr>
@@ -84,7 +91,6 @@
 			<div class="col-3"></div>
 		</div>
 	</div>
- </div>
- </header>
 </body>
+
 </html>

@@ -50,6 +50,7 @@ public class RoomServiceImpl implements RoomService {
 		r.setAvailability(room.isAvailability());
 		r.setFacilities(room.getFacilities());
 		r.setRoomName(room.getRoomName());
+		r.setCapacity(room.getCapacity());
 		r.setBlockedStartTime(room.getBlockedStartTime());
 		r.setBlockDuration(room.getBlockDuration());
 		rrepo.saveAndFlush(r);
@@ -90,4 +91,5 @@ public class RoomServiceImpl implements RoomService {
 	public Room findRoomByRoomName(String name) {
 		return rrepo.findRoomByRoomName(name);
 	}
+
 }
