@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
+import iss.team5.vms.helper.ReportStatus;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -48,6 +49,9 @@ public class Report {
 	@Column(name = "Student_status", columnDefinition = "ENUM('PROBATION','NORMAL')")
 	@Enumerated(EnumType.STRING)
 	private StudentStatus status;
+	@Column(name = "Report_status", columnDefinition = "ENUM('PROCESSING','REJECTED','APPROVED')")
+	@Enumerated(EnumType.STRING)
+	private ReportStatus reportStatus;
 //	@OneToOne
 //	private Image img;
 	
@@ -61,8 +65,17 @@ public class Report {
 		this.details=details;
 		this.imgPath=imgPath;
 	}
-	
-	
+	public Report(String details, String imgPath, Booking booking) {
+		this.details=details;
+		this.imgPath=imgPath;
+		this.booking=booking;
+	}
+	public Report(String details, String imgPath, Booking booking, ReportStatus reportStatus) {
+		this.details=details;
+		this.imgPath=imgPath;
+		this.booking=booking;
+		this.reportStatus=reportStatus;
+	}
 	
 	
 	

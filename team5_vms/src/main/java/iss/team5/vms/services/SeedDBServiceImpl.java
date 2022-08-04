@@ -84,13 +84,13 @@ public class SeedDBServiceImpl implements SeedDBService {
 			user.setPassword(new BCryptPasswordEncoder().encode("admin"));
 			us.createUser(user);
 //		}
-		if(!bs.tableExist()) {
+/*		if(!bs.tableExist()) {
 		bs.createBooking(new Booking("B1", dateTimeInput.dateInput("01/01/2022"), LocalTime.now(), 1, BookingStatus.CANCELLED));
 		bs.createBooking(new Booking("B2", dateTimeInput.dateInput("01/01/2022"), LocalTime.now(), 1, BookingStatus.REJECTED));
 		bs.createBooking(new Booking("B3", dateTimeInput.dateInput("01/01/2022"), LocalTime.now(), 1, BookingStatus.SUCCESSFUL));
 		bs.createBooking(new Booking("B4", dateTimeInput.dateInput("01/01/2022"), LocalTime.now(), 1, BookingStatus.WAITINGLIST));
 		bs.createBooking(new Booking("B5", dateTimeInput.dateInput("01/01/2022"), LocalTime.now(), 1, BookingStatus.SUCCESSFUL));
-		}
+		}*/
 		
 		if(!fs.tableExist()) {
 			Facility f1 = new Facility("Projector");
@@ -113,16 +113,23 @@ public class SeedDBServiceImpl implements SeedDBService {
 	public void loadBookingData() {
 		Student s1 = ss.findStudentById("S00001");
 		Student s2 = ss.findStudentById("S00003");
+
+		Booking b1 = bs.findBookingById("B00006");
+		Booking b2 = bs.findBookingById("B00007");
+		Booking b3 = bs.findBookingById("B00008");
+		Booking b4 = bs.findBookingById("B00009");
+		Booking b5 = bs.findBookingById("B00010");
+
+		Report rp1 = rs.findReportById("RE00011");
+		Report rp2 = rs.findReportById("RE00012");
+		Report rp3 = rs.findReportById("RE00013");
+		Report rp4 = rs.findReportById("RE00014");
+		Report rp5 = rs.findReportById("RE00015");
+
 		
-		Booking b1 = bs.findBookingById("B00011");
-		Booking b2 = bs.findBookingById("B00012");
-		Booking b3 = bs.findBookingById("B00013");
-		Booking b4 = bs.findBookingById("B00014");
-		Booking b5 = bs.findBookingById("B00015");
-		
-		Room r1 = rms.findRoomById("RM00024");
-		Room r2 = rms.findRoomById("RM00022");
-		Room r3 = rms.findRoomById("RM00023");
+		Room r1 = rms.findRoomById("RM00019");
+		Room r2 = rms.findRoomById("RM00017");
+		Room r3 = rms.findRoomById("RM00018");
 		
 		List<Facility> projecter = fs.findFacilityByName("Projector");
 		List<Facility> wb = fs.findFacilityByName("White Board");
@@ -153,7 +160,13 @@ public class SeedDBServiceImpl implements SeedDBService {
 		bs.addStudent(b2, s1);	
 		bs.addStudent(b3, s2);	
 		bs.addStudent(b4, s2);	
-		bs.addStudent(b5, s2);	
+		bs.addStudent(b5, s2);
+
+		rs.addBooking(rp1,b1);
+		rs.addBooking(rp2,b2);
+		rs.addBooking(rp3,b3);
+		rs.addBooking(rp4,b4);
+		rs.addBooking(rp5,b5);
 		
 		bs.addRoom(b1, r1);
 		bs.addRoom(b2, r2);

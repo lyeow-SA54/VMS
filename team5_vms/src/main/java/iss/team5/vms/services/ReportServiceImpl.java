@@ -1,13 +1,14 @@
 package iss.team5.vms.services;
 
 import java.util.ArrayList;
-
+import java.util.List;
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 
+import iss.team5.vms.model.Booking;
+import iss.team5.vms.model.Room;
 import org.springframework.stereotype.Service;
 
-import iss.team5.vms.model.Booking;
 import iss.team5.vms.model.Report;
 import iss.team5.vms.model.Student;
 import iss.team5.vms.repositories.ReportRepo;
@@ -24,8 +25,8 @@ public class ReportServiceImpl implements ReportService{
 	
 	@Override
 	@Transactional
-	public ArrayList<Report> findAllReports(){
-		ArrayList<Report> r = (ArrayList<Report>)rprepo.findAll();
+	public List<Report> findAllReports(){
+		List<Report> r = rprepo.findAll();
 		return r;
 	}
 	
@@ -67,9 +68,13 @@ public class ReportServiceImpl implements ReportService{
 		return r;
 	}
 
-	
-	
-	
+	@Override
+	@Transactional
+	public void addBooking(Report report, Booking booking) {
+		report.setBooking(booking);
+		rprepo.saveAndFlush(report);
+	}
+
 	
 	
 	

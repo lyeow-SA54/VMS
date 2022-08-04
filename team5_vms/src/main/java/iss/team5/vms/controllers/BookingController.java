@@ -164,6 +164,10 @@ public class BookingController {
 		mav.addObject("bookings",bookings);
 		return mav;
 	}
+	@RequestMapping(value = "/booking/report/{bookingId}", method = RequestMethod.GET)
+	public String bookingReport(@PathVariable String bookingId) {
+		return "forward:/student/reportform";
+	}
 	
 	@RequestMapping(value = "/booking/cancel/{bookingId}", method = RequestMethod.GET)
 	public String cancelBooking(@PathVariable String bookingId) {
