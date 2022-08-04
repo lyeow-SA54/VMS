@@ -66,11 +66,11 @@ public class SeedDBServiceImpl implements SeedDBService {
 		}
 		
 		if(!rs.tableExist()) {
-		rs.createReport(new Report("Food packages thrown everywhere!",Category.CLEANLINESS, StudentStatus.NORMAL));
-		rs.createReport(new Report("Graffiti on walls!",Category.VANDALISE, StudentStatus.NORMAL));
-		rs.createReport(new Report("The group inside doesn't want to leave!",Category.HOGGING, StudentStatus.NORMAL));
-		rs.createReport(new Report("The tables and chairs are broken",Category.MISUSE, StudentStatus.NORMAL));
-		rs.createReport(new Report("IS THAT A COCKROACH?!",Category.CLEANLINESS, StudentStatus.NORMAL));
+		rs.createReport(new Report("Food packages thrown everywhere!",Category.CLEANLINESS, StudentStatus.NORMAL, ReportStatus.PROCESSING));
+		rs.createReport(new Report("Graffiti on walls!",Category.VANDALISE, StudentStatus.NORMAL, ReportStatus.PROCESSING));
+		rs.createReport(new Report("The group inside doesn't want to leave!",Category.HOGGING, StudentStatus.NORMAL, ReportStatus.PROCESSING));
+		rs.createReport(new Report("The tables and chairs are broken",Category.MISUSE, StudentStatus.NORMAL, ReportStatus.PROCESSING));
+		rs.createReport(new Report("IS THAT A COCKROACH?!",Category.CLEANLINESS, StudentStatus.NORMAL, ReportStatus.PROCESSING));
 		}
 			
 		
