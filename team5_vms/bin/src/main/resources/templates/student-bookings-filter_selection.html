@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<html xmlns:th="http://www.thymeleaf.org">
+	<title>Room Booking Form Template</title>
+	<!-- custom-theme -->
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false);
+		function hideURLbar(){ window.scrollTo(0,1); } </script>
+	<!-- //custom-theme -->
+	<!-- js -->
+	<script src="/js/jquery.min.js"></script>
+	<!-- //js -->
+	<!-- font-awesome-icons -->
+	<link href="/css/font-awesome.css" rel="stylesheet">
+	<!-- //font-awesome-icons -->
+	<link href="/css/style.css" rel="stylesheet" type="text/css" media="all" />
+	<link
+		href="//fonts.googleapis.com/css?family=Raleway:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&amp;subset=latin-ext"
+		rel="stylesheet">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+	<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+	<link rel="stylesheet" th:href="@{/css/simple.css}" />
+</head>
+
+<body>
+	<div th:replace="fragments/general.html :: menu-student"></div>
+	<div class="main">
+		<h1>Room Booking Form</h1>
+		<div class="w3_agile_main_grids">
+
+			<div id='progress'>
+				<div id='progress-complete'></div>
+			</div>
+
+			<form id="SignupForm" th:action="@{/student/booking/options}" class="agile_form" method="post">
+				<fieldset>
+					<h3>Booking information</h3>
+					<div class="form-group agileits_form w3_agileits_margin">
+						<div class="wthree_input">
+							<input id="Date" type="date" name="Date" class="form-control" placeholder="Date" required=""
+								th:field="${booking.date}" />
+						</div>
+					</div>
+					<div class="form-group agileits_form">
+						<div class="wthree_input">
+							<input id="Time" type="time" name="Time" class="form-control" placeholder="Time" required=""
+								th:field="${booking.time}" />
+						</div>
+					</div>
+					<div class="form-group agileits_form w3_agileits_margin">
+						<div class="wthree_input">
+							<input id="Pax" type="number" name="Number of Pax" class="form-control"
+								placeholder="Number of Pax" required="" value="" th:field="${room.capacity}" />
+						</div>
+					</div>
+					<div class="form-group agileits_form w3_agileits_margin">
+						<div class="wthree_input">
+							<input id="Duration" type="number" name="Duration" class="form-control"
+								placeholder="Duration" required="" value="" th:field="${booking.duration}" />
+						</div>
+					</div>
+
+					<div class="clear"> </div>
+				</fieldset>
+
+				<fieldset>
+					<h3>Facilities</h3>
+					<h4 class="type">What type of facilities do you need?</h4>
+					<div class="form-group agileits_form w3_agileits_margin">
+						<div class="wthree_input">
+								<input type="checkbox" name="facilities" th:each="facility : ${fList}"
+									th:text="${facility.name}" th:value="${facility.id}" th:field="${room.facilities}" />
+						</div>
+					</div>
+					<!--<div class="form-group agileits_circles">
+						<div class="wthree_radio">
+							<span class="fa fa-share-alt" aria-hidden="true"></span>
+							<label class="radio">
+								<input type="radio" name="radio" checked="">
+								<i></i>Projector
+							</label>
+						</div>
+					</div>
+					<div class="form-group agileits_circles">
+						<div class="wthree_radio">
+							<span class="fa fa-laptop" aria-hidden="true"></span>
+							<label class="radio">
+								<input type="radio" name="radio">
+								<i></i>Computer
+							</label>
+						</div>
+					</div>
+					<div class="form-group agileits_circles">
+						<div class="wthree_radio">
+							<span class="fa fa-pencil-square-o" aria-hidden="true"></span>
+							<label class="radio">
+								<input type="radio" name="radio">
+								<i></i>Whiteboard
+							</label>
+						</div>
+					</div>-->
+					<div class="clear"> </div>
+				</fieldset>
+
+				<p>
+					<button id="SaveAccount" class="btn btn-primary agileinfo_primary submit">Submit</button>
+				</p>
+			</form>
+
+
+		</div>
+	</div>
+
+	<script src="/js/jquery.validate.min.js"></script>
+	<script src="/js/jquery.formtowizard.js"></script>
+
+	<script>
+		$(function () {
+			var $signupForm = $('#SignupForm');
+
+			$signupForm.validate({errorElement: 'em'});
+
+			$signupForm.formToWizard({
+				submitButton: 'SaveAccount',
+				nextBtnClass: 'btn btn-primary next',
+				prevBtnClass: 'btn btn-default prev',
+				buttonTag: 'button',
+				validateBeforeNext: function (form, step) {
+					var stepIsValid = true;
+					var validator = form.validate();
+					$(':input', step).each(function (index) {
+						var xy = validator.element(this);
+						stepIsValid = stepIsValid && (typeof xy == 'undefined' || xy);
+					});
+					return stepIsValid;
+				},
+				progress: function (i, count) {
+					$('#progress-complete').width('' + (i / count * 100) + '%');
+				}
+			});
+		});
+	</script>
+</body>
+
+</html>

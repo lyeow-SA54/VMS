@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/general.html :: headerfiles"/>
+	<title>VMS</title>
+	<link rel="stylesheet" th:href="@{/css/simple.css}" />
+</head>
+
+<body>
+ <div th:replace="fragments/general.html :: menu-admin"></div>
+	<div class="container">
+	
+		<div class="row">
+			<div class="col-3"></div>
+			<div class="col-6">
+				<form action="#" th:action="@{/admin/rooms/create}" th:object="${room}" method="post">
+					<h5>New Room</h5>
+					<table class="table table-borderless" align="center">
+						<tbody>
+							<tr>
+								<td>
+									<fieldset>
+										<input type="hidden" th:field="*{id}">
+									</fieldset>
+								</td>
+							</tr>
+							<tr>
+								<td><span th:text="#{fieldLabel.name}"></span></td>
+								<td>
+									<fieldset>
+										<input type="text" th:field="*{roomName}">
+									</fieldset>
+								</td>
+								<td th:if="${#fields.hasErrors('roomName')}" th:errors="*{roomName}"></td>
+							</tr>
+							<tr>
+								<td><span th:text="#{fieldLabel.facilities}"></span></td>
+								<td>
+									<fieldset>
+										<input type="checkbox" name="facilities" th:each="facility : ${fList}"
+											th:text="${facility.name}" th:value="${facility.id}"
+											th:field="*{facilities}" />
+									</fieldset>
+								</td>
+								<td th:if="${#fields.hasErrors('facilities')}" th:errors="*{facilities}"></td>
+							</tr>
+							<tr>
+								<td><span th:text="#{fieldLabel.capacity}"></span></td>
+								<td>
+									<fieldset>
+										<input type="number" th:field="*{capacity}" min="0" max="10">
+									</fieldset>
+								</td>
+								<td th:if="${#fields.hasErrors('capacity')}" th:errors="*{capacity}"></td>
+							</tr>
+							<tr>
+								<td><span th:text="#{fieldLabel.availability}"></span></td>
+								<td>
+									<!--<label for="Availability">Availability:</label>
+									<select name="availability" th:field="*{availability}">
+										<option
+											th:each="availability : ${T(iss.team5.vms.helper.BookingAvailablity).values()}"
+											th:value="${availability}" th:text="${availability.displayName}"
+											th:selected=${availability.displayName==open}></option>
+									</select>-->
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<div style="padding-top:15px;">
+										<a th:href="@{/admin/rooms/list}">Back</a>
+									</div>
+								</td>
+								<td colspan="2">
+									<fieldset>
+										<input type="submit" value="Create" class="btn btn-primary" />
+									</fieldset>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</form>
+			</div>
+			<div class="col-3"></div>
+		</div>
+	</div>
+ </div>
+ </header>
+</body>
+</html>

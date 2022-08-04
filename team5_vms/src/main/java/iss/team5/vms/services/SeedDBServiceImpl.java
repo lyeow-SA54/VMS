@@ -1,11 +1,12 @@
 package iss.team5.vms.services;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import iss.team5.vms.helper.BookingStatus;
@@ -60,7 +61,7 @@ public class SeedDBServiceImpl implements SeedDBService {
 		bs.createBooking(new Booking("B2", dateTimeInput.dateInput("08/02/2022"), LocalTime.now(), 2, BookingStatus.CANCELLED));
 		bs.createBooking(new Booking("B3", dateTimeInput.dateInput("08/03/2022"), LocalTime.now(), 3, BookingStatus.REJECTED));
 		bs.createBooking(new Booking("B4", dateTimeInput.dateInput("08/04/2022"), LocalTime.now(), 1, BookingStatus.WAITINGLIST));
-		bs.createBooking(new Booking("B5", dateTimeInput.dateInput("08/05/2023"), LocalTime.now(), 2, BookingStatus.WAITINGLIST));
+		bs.createBooking(new Booking("B5", LocalDate.now(), LocalTime.now(), 2, BookingStatus.WAITINGLIST));
 		}
 		
 		if(!rs.tableExist()) {
@@ -73,24 +74,18 @@ public class SeedDBServiceImpl implements SeedDBService {
 			
 		
 //		if(!us.tableExist()) {
-			Role role = new Role("ADMIN");
-			List<Role> rolelist = List.of(role);
-			User user = new User();
-			user.setEmail("admin@u.nus.edu");
-			user.setFirstName("admin");
-			user.setLastName("");
-			user.setRoles(rolelist);
-			user.setUsername("admin");
-			user.setPassword(new BCryptPasswordEncoder().encode("admin"));
-			us.createUser(user);
+//			Role role = new Role("ADMIN");
+//			List<Role> rolelist = List.of(role);
+//			User user = new User();
+//			user.setEmail("admin@u.nus.edu");
+//			user.setFirstName("admin");
+//			user.setLastName("");
+//			user.setRoles(rolelist);
+//			user.setUsername("admin");
+//			user.setPassword(new BCryptPasswordEncoder().encode("admin"));
+//			us.createUser(user);
 //		}
-		if(!bs.tableExist()) {
-		bs.createBooking(new Booking("B1", dateTimeInput.dateInput("01/01/2022"), LocalTime.now(), 1, BookingStatus.CANCELLED));
-		bs.createBooking(new Booking("B2", dateTimeInput.dateInput("01/01/2022"), LocalTime.now(), 1, BookingStatus.REJECTED));
-		bs.createBooking(new Booking("B3", dateTimeInput.dateInput("01/01/2022"), LocalTime.now(), 1, BookingStatus.SUCCESSFUL));
-		bs.createBooking(new Booking("B4", dateTimeInput.dateInput("01/01/2022"), LocalTime.now(), 1, BookingStatus.WAITINGLIST));
-		bs.createBooking(new Booking("B5", dateTimeInput.dateInput("01/01/2022"), LocalTime.now(), 1, BookingStatus.SUCCESSFUL));
-		}
+	
 		
 		if(!fs.tableExist()) {
 			Facility f1 = new Facility("Projector");

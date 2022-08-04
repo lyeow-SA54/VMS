@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!--<head th:replace="fragments/general.html :: headerfiles"/>-->
+
+<body>
+	<!--<header th:insert="fragments/general.html :: header"> </header>
+	<div th:replace="fragments/general.html :: menu"></div>-->
+
+	<h2 th:if="${not #lists.isEmpty(facilities)}">Booking List</h2>
+	<label for="Room">Room:</label>
+		<select th:field="*{room}">
+			<option th:each="room : ${rooms}" th:value="${room}"
+				th:text="#{${'seedstarter.type.' + room}}"></option>
+		</select>
+		<label for="Date">Date:</label>
+		<select th:field="*{date}">
+			<option th:each="date : ${dates}" th:value="${date}"
+				th:text="#{${'seedstarter.type.' + date}}"></option>
+		</select>
+		<label for="Status">Status:</label>
+		<select th:field="*{stat}">
+			<option th:each="stat : ${status}" th:value="${stat}"
+				th:text="#{${'seedstarter.type.' + stat}}"></option>
+		</select>
+	<table>
+		<tr>
+			<th>Room Name</th>
+			<th>Slot</th>
+			<th>Status</th>
+		</tr>
+		<tr th:each="booking:${bookings}">
+			<td th:text=${}></td>
+			<td th:text=${}></td>
+			<td th:text=${booking.status}></td>
+		</tr>
+	</table>
+	<br />
+	<!--<div th:replace="fragments/general.html :: footer"></div>-->
+</body>
+
+</html>

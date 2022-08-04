@@ -35,4 +35,6 @@ public interface BookingService {
 
 	void scheduleWaitingList(Booking booking, Room room);
 
+	List<Booking> checkBookingInProgress(List<Booking> bookings);
+
 }

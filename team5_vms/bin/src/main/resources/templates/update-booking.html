@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!--<head th:replace="fragments/general.html :: headerfiles"/>-->
+
+<body>
+	<!--<header th:insert="fragments/general.html :: header"> </header>
+	<div th:replace="fragments/general.html :: menu"></div>-->
+
+	<div class="container">
+		<h1>Booking Form</h1>
+		<form action="#" th:object="${booking}" th:action="@{/booking/update}" method="post">
+			<fieldset>
+				<input type="hidden" th:field="*{id}">
+			</fieldset>
+			<fieldset>
+				Date <input type="text" th:field="*{availability}">
+				<p th:if="${#fields.hasErrors('availability')}" th:errors="*{availability}"></p>
+			</fieldset>
+			<fieldset>
+				<label for="Time Slot">Time Slot:</label>
+				<select th:field="*{type}">
+					<option th:each="type : ${allTypes}" th:value="${type}" th:text="#{${'seedstarter.type.' + type}}">
+						Wireframe</option>
+				</select>
+			</fieldset>
+			<fieldset>
+				Number of Pax <input type="number" th:field="*{facilities}">
+				<p th:if="${#fields.hasErrors('facilities')}" th:errors="*{facilities}"></p>
+			</fieldset>
+			<fieldset>
+				<label for="Facility">Facility:</label>
+				<select th:field="*{facility}">
+					<option th:each="facility : ${facilities}" th:value="${facility}"
+						th:text="#{${'facility.' + facility}}"></option>
+				</select>
+			</fieldset>
+			<fieldset>
+				<ul>
+					<li th:each="room : ${rooms}">
+						<input type="radio" th:field="*{type}" th:value="${room}" />
+						<label th:for="${#ids.prev('type')}" th:text="#{${'seedstarter.type.’ + room}}"></label>
+					</li>
+				</ul>
+			</fieldset>
+			<a href="" th:href="@{/admin/rooms/edit/}">Update Booking</a>
+		</form>
+		<br />
+		<!--<div th:replace="fragments/general.html :: footer"></div>-->
+</body>
+
+</html>

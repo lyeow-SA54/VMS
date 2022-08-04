@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!--<head th:replace="fragments/general.html :: headerfiles"/>-->
+
+<body>
+	<!--<header th:insert="fragments/general.html :: header"> </header>
+	<div th:replace="fragments/general.html :: menu"></div>-->
+
+	<div class="container">
+		<h1>Booking Form</h1>
+		Date <input type="date" th:field="*{availability}">
+		<label for="Time Slot">Time Slot:</label>
+		<select th:field="*{slot}">
+			<option th:each="slot : ${slots}" th:value="${slot}" th:text="#{${'seedstarter.type.' + slot}}"></option>
+		</select>
+		Number of Pax <input type="number" th:field="*{facilities}">
+		<p th:if="${#fields.hasErrors('facilities')}" th:errors="*{facilities}"></p>
+		<label for="Facility">Facility:</label>
+		<select th:field="*{facility}">
+			<option th:each="facility : ${facilities}" th:value="${facility}"
+				th:text="#{${'seedstarter.type.' + facility}}"></option>
+		</select>
+		<ul>
+			<li th:each="room : ${rooms}">
+				<input type="radio" th:field="*{type}" th:value="${room}" />
+				<label th:for="${#ids.prev('type')}" th:text="#{${'seedstarter.type.’ + room}}"></label>
+			</li>
+		</ul>
+		<a href="" th:href="@{/booking/update/}">Update Booking</a>
+		<br />
+		<!--<div th:replace="fragments/general.html :: footer"></div>-->
+</body>
+
+</html>

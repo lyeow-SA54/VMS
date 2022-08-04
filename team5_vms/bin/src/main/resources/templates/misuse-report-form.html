@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/general.html :: headerfiles"/>
+
+<body>
+	<div th:replace="fragments/general.html :: menu-student"></div>
+	<div class="container">
+		<h1>Report Misuse</h1>
+		<form action="/report/save"  method="post" enctype="multipart/form-data">
+			<label>details:</label><input type="text" name="details"/><br/>
+			<label>photo</label><input type="file" name="file"/><br/>
+			<input type="submit" value="submit"/>
+		</form>
+	</div>
+	<!--<div class="container">
+		<h1>Report Misuse</h1>
+		<form th:action="@{/report/save}" th:object="${report}" method="post" enctype="multipart/form-data">
+			<label>Photo: </label>
+			<input type="file" name="image" accept="image/png, image/jpeg" />
+			<ul>
+				<li th:each="desc : ${descriptions}">
+					<input type="checkbox" th:field="*{}" th:value="${desc}" />
+					<label th:for="${#ids.prev('type')}" th:text="#{${'seedstarter.type.' + desc}}"></label>
+				</li>
+			</ul>
+			<a href="" th:href="@{/admin/rooms/edit/}">Submit</a>
+		</form>
+		<br />-->
+		<!--<div th:replace="fragments/general.html :: footer"></div>-->
+</body>
+
+</html>
