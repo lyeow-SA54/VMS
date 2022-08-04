@@ -72,7 +72,8 @@ public class BookingServiceImpl implements BookingService {
 
 	@Override
 	public String checkIn(Student student, Booking booking) {
-		if (booking.getStudent().getId().equals(student.getId())) {
+//		if (booking.getStudent().getId().equals(student.getId())) {
+		if (booking.getStudent().getId() == student.getId()) {
 			if (booking.getTime().plusMinutes(10).compareTo(LocalTime.now()) > 0) {
 				booking.setCheckedIn(true);
 				br.saveAndFlush(booking);

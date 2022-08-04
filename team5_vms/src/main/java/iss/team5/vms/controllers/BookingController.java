@@ -50,7 +50,7 @@ public class BookingController {
 		// pending login implementation
 		// hardcoded student object for now, final implementation should retrieve from
 		// logged in context
-		Student student = ss.findStudentById("S00001");
+		Student student = ss.findStudentById(1);
 		// pending proper url to be forwarded to on check-in completion
 		ModelAndView mav = new ModelAndView("student-bookings-list");
 		Booking booking = bs.findBookingById(bookingId);
@@ -91,7 +91,7 @@ public class BookingController {
 	@RequestMapping(value = "/booking/save", method = RequestMethod.POST)
 	public String bookingNew(Booking booking, @RequestParam("roomid") String roomString) {
 		Room room = rs.findRoomById(roomString);
-		Student student = ss.findStudentById("S00001");
+		Student student = ss.findStudentById(1);
 		booking.setStudent(student);
 		booking.setRoom(room);
 //		booking.setRoom(rs.findRoomById(room.getId()));
@@ -142,7 +142,7 @@ public class BookingController {
 	public ModelAndView bookingHistory(Student student) {
 //		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 //		Student s1 = ss.findStudentByUser(us.findUserByUsername(username));
-		Student s1 = ss.findStudentById("S00003");
+		Student s1 = ss.findStudentById(3);
 		List<Booking> bookings = bs.findBookingsByStudent(s1);
 		List<Booking> bookings2 = bs.checkBookingInProgress(bookings);
 		ModelAndView mav = new ModelAndView("student-bookings-list");

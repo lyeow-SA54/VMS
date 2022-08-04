@@ -35,7 +35,7 @@ public class StudentServiceImpl implements StudentService{
 	}
 	
 	@Override
-	public Student findStudentById(String Id) {
+	public Student findStudentById(int Id) {
 		return srepo.findById(Id).orElse(null);
 	}
 	

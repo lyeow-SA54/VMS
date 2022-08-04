@@ -26,13 +26,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Booking {
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "custom_id_gen")
-	  @GenericGenerator(
-	      name = "custom_id_gen",      strategy = "iss.team5.vms.helper.IdGenerator", 
-	      parameters = {
-	          @Parameter(name = IdGenerator.INCREMENT_PARAM, value = "1"),
-	          @Parameter(name = IdGenerator.VALUE_PREFIX_PARAMETER, value = "B"),
-	          @Parameter(name = IdGenerator.NUMBER_FORMAT_PARAMETER, value = "%05d") })
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "booking_id_gen")
+	@GenericGenerator(name = "booking_id_gen", strategy = "iss.team5.vms.helper.BookingIdGenerator")
 	private String id;
 //	@OnDelete(action = OnDeleteAction.CASCADE)
 	@OneToOne

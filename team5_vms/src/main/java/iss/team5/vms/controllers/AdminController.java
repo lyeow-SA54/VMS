@@ -55,4 +55,10 @@ public class AdminController {
         System.out.println("5 success");
         return "/admin/reports";
     }*/
+	
+	@GetMapping("/index")
+	public ModelAndView home() {
+		ModelAndView mav = new ModelAndView("admin-index");
+		return mav;
+	}
 }

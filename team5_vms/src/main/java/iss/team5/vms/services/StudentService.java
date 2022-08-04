@@ -11,7 +11,7 @@ public interface StudentService {
 	
 	ArrayList<Student> findAllStudents();
 	
-	Student findStudentById(String Id);
+	Student findStudentById(int Id);
 
 	Student createStudent(Student student);
 
