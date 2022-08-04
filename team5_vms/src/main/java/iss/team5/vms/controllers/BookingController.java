@@ -2,9 +2,13 @@ package iss.team5.vms.controllers;
 
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +21,7 @@ import iss.team5.vms.model.Booking;
 import iss.team5.vms.model.Facility;
 import iss.team5.vms.model.Room;
 import iss.team5.vms.model.Student;
+import iss.team5.vms.repositories.StudentRepo;
 import iss.team5.vms.services.BookingService;
 import iss.team5.vms.services.FacilityService;
 import iss.team5.vms.services.RoomService;
@@ -41,6 +46,9 @@ public class BookingController {
 	
 	@Autowired
 	UserService us;
+	
+	@Autowired
+	StudentRepo srepo;
 
 	@RequestMapping("/checkin/{bookingId}")
 	public ModelAndView bookingCheckin(@PathVariable("bookingId") String bookingId) {
@@ -88,8 +96,19 @@ public class BookingController {
 	
 	@RequestMapping(value = "/booking/save", method = RequestMethod.POST)
 	public String bookingNew(Booking booking, @RequestParam("roomid") String roomString) {
+		
+		Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+		List <Student> sList = ss.findAllStudents(); 
+		List <Student> findStu = sList.stream()
+				.filter(s-> s.getUser().getUsername().equalsIgnoreCase(loggedInUser.getName()))
+				.collect(Collectors.toList());
+		
+		if (findStu.size() != 1) { 
+		    throw new IllegalStateException();
+		}
+		
+		Student student = findStu.get(0);   
 		Room room = rs.findRoomById(roomString);
-		Student student = ss.findStudentById("S00001");
 		booking.setStudent(student);
 		booking.setRoom(room);
 //		booking.setRoom(rs.findRoomById(room.getId()));
@@ -151,6 +170,9 @@ public class BookingController {
 		Booking booking = bs.findBookingById(bookingId);
 		booking.setStatus(BookingStatus.CANCELLED);
 		bs.createBooking(booking);
+		Room room = booking.getRoom();
+		room.setBlockDuration(0);
+		room.setBlockedStartTime(null);
 		return "forward:/student/booking/history";
 	}
 
