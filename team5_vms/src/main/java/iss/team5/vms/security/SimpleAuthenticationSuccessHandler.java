@@ -36,7 +36,7 @@ public class SimpleAuthenticationSuccessHandler implements AuthenticationSuccess
 			}
 			else if(authority.getAuthority().equals("STUDENT")) {
 				try {
-					redirectStrategy.sendRedirect(arg0, arg1, "/student/booking/options");
+					redirectStrategy.sendRedirect(arg0, arg1, "/student/home");
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

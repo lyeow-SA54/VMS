@@ -114,22 +114,22 @@ public class SeedDBServiceImpl implements SeedDBService {
 		Student s1 = ss.findStudentById("S00001");
 		Student s2 = ss.findStudentById("S00003");
 
-		Booking b1 = bs.findBookingById("B00006");
-		Booking b2 = bs.findBookingById("B00007");
-		Booking b3 = bs.findBookingById("B00008");
-		Booking b4 = bs.findBookingById("B00009");
-		Booking b5 = bs.findBookingById("B00010");
+		Booking b1 = bs.findBookingById("B00011");
+		Booking b2 = bs.findBookingById("B00012");
+		Booking b3 = bs.findBookingById("B00013");
+		Booking b4 = bs.findBookingById("B00014");
+		Booking b5 = bs.findBookingById("B00015");
 
-		Report rp1 = rs.findReportById("RE00011");
-		Report rp2 = rs.findReportById("RE00012");
-		Report rp3 = rs.findReportById("RE00013");
-		Report rp4 = rs.findReportById("RE00014");
-		Report rp5 = rs.findReportById("RE00015");
+		Report rp1 = rs.findReportById("RE00016");
+		Report rp2 = rs.findReportById("RE00017");
+		Report rp3 = rs.findReportById("RE00018");
+		Report rp4 = rs.findReportById("RE00019");
+		Report rp5 = rs.findReportById("RE00020");
 
 		
-		Room r1 = rms.findRoomById("RM00019");
-		Room r2 = rms.findRoomById("RM00017");
-		Room r3 = rms.findRoomById("RM00018");
+		Room r1 = rms.findRoomById("RM00024");
+		Room r2 = rms.findRoomById("RM00022");
+		Room r3 = rms.findRoomById("RM00023");
 		
 		List<Facility> projecter = fs.findFacilityByName("Projector");
 		List<Facility> wb = fs.findFacilityByName("White Board");

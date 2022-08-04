@@ -1,6 +1,8 @@
 package iss.team5.vms.controllers;
 
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,6 +51,40 @@ public class BookingController {
 	
 	@Autowired
 	StudentRepo srepo;
+	
+	@RequestMapping("/home")
+	public ModelAndView studentHome() {
+		
+		List<Room> rooms = rs.findAllRooms();
+		Booking bookingForTheDay = new Booking();
+		bookingForTheDay.setDate(LocalDate.now());
+		bookingForTheDay.setTime(LocalTime.now());
+		List<Booking> availableBookings = bs.checkBookingAvailable(bookingForTheDay, rooms);
+		
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		Student s1 = ss.findStudentByUser(us.findUserByUsername(username));
+		List<Booking> sBooking = bs.findBookingsByStudent(s1); 
+		
+		List<Booking> findTodayBooking=sBooking.stream()
+		.filter(b-> b.getDate()==LocalDate.now() && b.getStatus().toString().equalsIgnoreCase("SUCCESSFUL") )
+		.collect(Collectors.toList());
+		
+		if (findTodayBooking.size() == 1) { 
+			Booking bookingOfTheDay = findTodayBooking.get(0);
+			ModelAndView mav = new ModelAndView("student-home-page");
+			mav.addObject("bookingOfTheDay",bookingOfTheDay);
+			mav.addObject("bookings",availableBookings);
+			
+			return mav;
+		} else {
+		
+		
+		ModelAndView mav = new ModelAndView("student-home-page");
+		mav.addObject("bookings",availableBookings);
+		return mav;}	
+		
+	}
+	
 
 	@RequestMapping("/checkin/{bookingId}")
 	public ModelAndView bookingCheckin(@PathVariable("bookingId") String bookingId) {
@@ -56,7 +92,9 @@ public class BookingController {
 		// pending login implementation
 		// hardcoded student object for now, final implementation should retrieve from
 		// logged in context
-		Student student = ss.findStudentById("S00001");
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		Student student = ss.findStudentByUser(us.findUserByUsername(username));
+		//Student student = ss.findStudentById("S00001");
 		// pending proper url to be forwarded to on check-in completion
 		ModelAndView mav = new ModelAndView("student-bookings-list");
 		Booking booking = bs.findBookingById(bookingId);

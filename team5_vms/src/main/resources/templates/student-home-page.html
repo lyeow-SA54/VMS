@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/general.html :: headerfiles"/>
+
+<body>
+	<div th:replace="fragments/general.html :: menu-student"></div>
+	<div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+      <h1 class="display-4">Booking</h1>
+    </div>
+    
+	<div class="container">
+      <div class="card-deck mb-3 text-center">
+        <div class="card mb-4 box-shadow" th:each="booking:${bookings}">
+          <div class="card-header">
+            <h4 class="my-0 font-weight-normal" th:text="${booking.room.roomName}"></h4>
+          </div>
+          <div class="card-body">
+            <p class="card-text text-center" th:if="${booking.room.facilities == null}">
+                    <span>NA</span></p>
+	<span "card-text text-center" th:if="${booking.room.facilities != null}">
+	<span class="card-text text-center">Facilities: 
+      <ul class="list-unstyled mt-3 mb-4" th:each="fac:${booking.room.facilities}">
+		<li th:text="${fac.name}"></li>
+	</ul>
+	</span> </span>
+	<span class="card-text text-center" th:text="#{fieldLabel.rmcapacity} + ${booking.room.capacity}" ></span>
+          </div></div></div></div>
+                
+                
+                <div class="container">
+      <div class="card-deck mb-3 text-center">
+        <div class="card mb-4 box-shadow">
+          <div class="card-header">
+            <h4 class="my-0 font-weight-normal">New Booking</h4>
+          </div>
+          <div class="card-body">
+            <h6 class="card-title">Create booking base on</h6>
+            <ul class="list-unstyled mt-3 mb-4">
+              <li>Date</li>
+              <li>Time</li>
+              <li>Duration</li>
+              <li>Capacity</li>
+              <li>Facilities</li>
+            </ul>
+            <a class="btn btn-lg btn-block btn-outline-primary" th:href="@{/student/booking/options}" role="button">Create Booking</a>
+          </div>
+        </div>
+        <div class="card mb-4 box-shadow">
+          <div class="card-header">
+            <h4 class="my-0 font-weight-normal">File a Report</h4>
+          </div>
+          <div class="card-body">
+            <h6 class="card-title">Report base on</h6>
+            <ul class="list-unstyled mt-3 mb-4">
+              <li>Cleanliness</li>
+              <li>Misuse</li>
+              <li>Hogging of room</li>
+              <li>Vandalism</li>
+            </ul>
+            <a class="btn btn-lg btn-block btn-outline-primary" th:href="@{/report/save}" role="button">Create Report</a></div>
+        </div>
+        <div class="card mb-4 box-shadow">
+          <div class="card-header">
+            <h4 class="my-0 font-weight-normal">Room Check-In</h4>
+          </div>
+          <div class="card-body">
+            <h6 class="card-title">Register Upon Arrival</h6>
+            <ul class="list-unstyled mt-3 mb-4">
+              <li>Be puntucal</li>
+              <li>Keep the room clean</li>
+              <li th:if="${bookingOfTheDay == null}">No Booking to Check-In</li>            
+            </ul>
+            <a th:if="${bookingOfTheDay != null}" class="btn btn-lg btn-block btn-outline-primary" th:href="@{/barcodes/{bookingId}(bookingId=${bookingOfTheDay.id})}" role="button">Check-In</a></div>
+          </div>
+          <div class="card mb-4 box-shadow">
+          <div class="card-header">
+            <h4 class="my-0 font-weight-normal">Booking History</h4>
+          </div>
+          <div class="card-body">
+            <h6 class="card-title">List of Booking History</h6>
+            <ul class="list-unstyled mt-3 mb-4">
+              <li>Details of all bookings</li>            
+            </ul>
+            <a class="btn btn-lg btn-block btn-outline-primary" th:href="@{/student/booking/history}" role="button">History Details</a></div>
+          </div>
+        </div>
+      </div>
+
+	<!--<div th:replace="fragments/general.html :: footer"></div>-->
+</body>
+
+</html>
