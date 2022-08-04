@@ -1,22 +1,26 @@
 package iss.team5.vms.services;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import iss.team5.vms.model.Report;
 import iss.team5.vms.model.Booking;
+import iss.team5.vms.model.Room;
 import iss.team5.vms.model.Student;
 
 public interface ReportService {
 	
 	boolean tableExist();
 	
-	ArrayList<Report> findAllReports();
+	List<Report> findAllReports();
 	
 	Report findReportById(String id);
 
 	Report createReport(Report report);
 
 	Report changeReport(Report report);
+
+	void addBooking(Report report,Booking booking);
 
 	void removeReport(Report report);
 	
