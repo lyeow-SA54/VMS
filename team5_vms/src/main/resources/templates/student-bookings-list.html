@@ -1,44 +1,59 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/general.html :: headerfiles"/>
+
+<head th:replace="fragments/general.html :: headerfiles" />
 
 <body>
 	<div th:replace="fragments/general.html :: menu-student"></div>
 	<div th:if="${outcomeMsg!=null}"><span th:text="${outcomeMsg}"></span></div>
-
-	<table>
-		<tr>
-			<!--<th>Room Name</th>-->
-			<th>Date</th>
-			<th>Start Time</th>
-			<th>Duration</th>
-			<th>Status</th>
-			<th>Report</th>
-			<th>Cancel</th>
-			<th>Extension</th>
-		</tr>
-		<tr th:each="booking:${bookings}">
-			<td th:text=${booking.date}></td>
-			<td th:text=${booking.time}></td>
-			<td th:text=${booking.duration}></td>
-			<td th:text=${booking.status}></td>
-			<td th:if="${booking.bookingInProgress}">
-				<a th:href="@{/student/booking/report/}+${booking.id}">
-					<span th:text="REPORT"></span>
-				</a>
-			</td>
-			<td th:if="${booking.status != T(iss.team5.vms.helper.BookingStatus).REJECTED and booking.status != T(iss.team5.vms.helper.BookingStatus).CANCELLED}">
-				<a th:href="@{/student/booking/cancel/}+${booking.id}">
-					<span th:text="CANCEL"></span>
-				</a>
-			</td>
-			<td th:if="${booking.bookingInProgress}">
-			<a th:href="@{/student/booking/extend/}+${booking.id}">
-			<span th:text="EXTEND">
-			</td>
-		</tr>
-	</table>
-	<br />
+	<div class="container">
+		<div class="row">
+			<div class="col-3" style="margin-top: 15px; margin-bottom: 15px;">
+				<h4>Bookings</h4>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col">
+				<table class="table table-striped" align="center">
+					<thead>
+						<tr class="listHeading">
+							<!--<th>Room Name</th>-->
+							<th>Date</th>
+							<th>Start Time</th>
+							<th>Duration</th>
+							<th>Status</th>
+							<th>Report</th>
+							<th>Cancel</th>
+							<th>Extension</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="booking:${bookings}">
+							<td th:text=${booking.date}></td>
+							<td th:text=${booking.time}></td>
+							<td th:text=${booking.duration}></td>
+							<td th:text=${booking.status}></td>
+							<td th:if="${booking.bookingInProgress}">
+								<a th:href="@{/student/booking/report/}+${booking.id}">
+									<span th:text="REPORT"></span>
+								</a>
+							</td>
+							<td
+								th:if="${booking.status != T(iss.team5.vms.helper.BookingStatus).REJECTED and booking.status != T(iss.team5.vms.helper.BookingStatus).CANCELLED}">
+								<a th:href="@{/student/booking/cancel/}+${booking.id}">
+									<span th:text="CANCEL"></span>
+								</a>
+							</td>
+							<td th:if="${booking.bookingInProgress}">
+								<a th:href="@{/student/booking/extend/}+${booking.id}">
+									<span th:text="EXTEND">
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
 	<!--<div th:replace="fragments/general.html :: footer"></div>-->
 </body>
 
