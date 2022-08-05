@@ -4,8 +4,10 @@ package iss.team5.vms.controllers;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.security.core.Authentication;
 //import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +22,7 @@ import iss.team5.vms.model.Facility;
 import iss.team5.vms.model.Report;
 import iss.team5.vms.model.Room;
 import iss.team5.vms.model.Student;
+import iss.team5.vms.repositories.StudentRepo;
 import iss.team5.vms.services.BookingService;
 import iss.team5.vms.services.FacilityService;
 import iss.team5.vms.services.RoomService;
@@ -44,6 +47,45 @@ public class BookingController {
 	
 	@Autowired
 	UserService us;
+	
+	@Autowired
+	StudentRepo srepo;
+	
+	@RequestMapping("/home")
+	public ModelAndView studentHome() {
+		
+		List<Room> rooms = rs.findAllRooms();
+		Booking bookingForTheDay = new Booking();
+		bookingForTheDay.setDate(LocalDate.now());
+		bookingForTheDay.setTime(LocalTime.now());
+		List<Booking> availableBookings = bs.checkBookingAvailable(bookingForTheDay, rooms);
+		
+		//String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		//Student s1 = ss.findStudentByUser(us.findUserByUsername(username));
+		Student s1 = ss.findStudentById(3);
+	
+		List<Booking> sBooking = bs.findBookingsByStudent(s1); 
+		
+		List<Booking> findTodayBooking=sBooking.stream()
+		.filter(b-> b.getDate()==LocalDate.now() && b.getStatus().toString().equalsIgnoreCase("SUCCESSFUL") )
+		.collect(Collectors.toList());
+		
+		if (findTodayBooking.size() == 1) { 
+			Booking bookingOfTheDay = findTodayBooking.get(0);
+			ModelAndView mav = new ModelAndView("student-home-page");
+			mav.addObject("bookingOfTheDay",bookingOfTheDay);
+			mav.addObject("bookings",availableBookings);
+			
+			return mav;
+		} else {
+		
+		
+		ModelAndView mav = new ModelAndView("student-home-page");
+		mav.addObject("bookings",availableBookings);
+		return mav;}	
+		
+	}
+	
 
 	@RequestMapping("/checkin/{bookingId}")
 	public ModelAndView bookingCheckin(@PathVariable("bookingId") String bookingId) {
@@ -51,7 +93,10 @@ public class BookingController {
 		// pending login implementation
 		// hardcoded student object for now, final implementation should retrieve from
 		// logged in context
-		Student student = ss.findStudentById("S00001");
+		//String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		//Student student = ss.findStudentByUser(us.findUserByUsername(username));
+		//Student student = ss.findStudentById("S00001");
+		Student student = ss.findStudentById(3);
 		// pending proper url to be forwarded to on check-in completion
 		ModelAndView mav = new ModelAndView("student-bookings-list");
 		Booking booking = bs.findBookingById(bookingId);
@@ -91,8 +136,22 @@ public class BookingController {
 	
 	@RequestMapping(value = "/booking/save", method = RequestMethod.POST)
 	public String bookingNew(Booking booking, @RequestParam("roomid") String roomString) {
+		
+//		Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+//		List <Student> sList = ss.findAllStudents(); 
+//		List <Student> findStu = sList.stream()
+//				.filter(s-> s.getUser().getUsername().equalsIgnoreCase(loggedInUser.getName()))
+//				.collect(Collectors.toList());
+//		
+//		if (findStu.size() != 1) { 
+//		    throw new IllegalStateException();
+//		}
+//		
+//		Student student = findStu.get(0);
+		Student student = ss.findStudentById(3);
 		Room room = rs.findRoomById(roomString);
-		Student student = ss.findStudentById("S00001");
+
+
 		booking.setStudent(student);
 		booking.setRoom(room);
 //		booking.setRoom(rs.findRoomById(room.getId()));
@@ -143,7 +202,7 @@ public class BookingController {
 	public ModelAndView bookingHistory(Student student) {
 //		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 //		Student s1 = ss.findStudentByUser(us.findUserByUsername(username));
-		Student s1 = ss.findStudentById("S00003");
+		Student s1 = ss.findStudentById(3);
 		List<Booking> bookings = bs.findBookingsByStudent(s1);
 		List<Booking> bookings2 = bs.checkBookingInProgress(bookings);
 		ModelAndView mav = new ModelAndView("student-bookings-list");
@@ -168,6 +227,9 @@ public class BookingController {
 		Booking booking = bs.findBookingById(bookingId);
 		booking.setStatus(BookingStatus.CANCELLED);
 		bs.createBooking(booking);
+		Room room = booking.getRoom();
+		room.setBlockDuration(0);
+		room.setBlockedStartTime(null);
 		return "forward:/student/booking/history";
 	}
 	

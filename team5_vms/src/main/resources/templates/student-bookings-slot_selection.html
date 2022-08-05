@@ -5,6 +5,29 @@
 
 <body>
 	<div th:replace="fragments/general.html :: menu-student"></div>
+	<div th:if="${#lists.isEmpty(bookings)}">
+		<div class="container">
+			<div class="row">
+				<div class="col-3" style="margin-top: 15px; margin-bottom: 15px;">
+					<h4>Room List</h4>
+				</div>
+
+			</div>
+			<div class="row" style="margin-top:100px;">
+				<div class="col" align="center">
+					<img src="/image/no-data.png">
+				</div>
+			</div><br>
+			<div class="row">
+				<div class="col" style="text-align:center;">
+					<h4>There are no rooms available.</h4>
+					<h5 style="text-decoration: underline;">
+						<a th:href="@{/student/booking/options}" class="btn btn-primary">New Booking</a>
+					</h5>
+				</div>
+			</div>
+		</div>
+	</div>
 
 <div th:if="${outcomeMsg!=null}"><span th:text = "${outcomeMsg}"></span></div>
 
@@ -24,6 +47,7 @@
 			<td>
 			<form action="#" th:action="@{/student/booking/save}" method="post">
 			<input type="hidden" name="roomid" th:value="${booking.room.id}"  />
+			<input type="hidden" th:value="${booking.room.roomName}" th:field="${booking.room.roomName}" />
 			<input type="hidden" th:value="${booking.date}" th:field="${booking.date}" />
 			<input type="hidden" th:value="${booking.time}" th:field="${booking.time}" />
 			<input type="hidden" th:value="${booking.duration}" th:field="${booking.duration}" />
