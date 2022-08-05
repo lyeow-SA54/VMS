@@ -17,7 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 @RestController
 @RequestMapping(path = "/admin", produces = "application/json")
 @CrossOrigin(origins = "http://localhost:3000")
-public class AdminController {
+public class RestAdminController {
 
 	@Autowired BookingService bs;
 

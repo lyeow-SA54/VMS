@@ -12,7 +12,7 @@ public interface StudentRepo extends JpaRepository<Student, Integer>{
 
 	Boolean existsBy();
 	
-	Student getStudentByUser(User user);
+	Student findStudentByUser(User user);
 	
 	
 	

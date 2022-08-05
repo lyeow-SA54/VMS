@@ -65,9 +65,10 @@ class Booking extends Component {
         // });
         const BookingList = bookings.filter(booking => 
             booking.room.roomName.toLowerCase().includes(this.state.roomNameFilter)
-        && (booking.student.user.firstName.toLowerCase().includes(this.state.studentFilter)
-        || booking.student.user.lastName.toLowerCase().includes(this.state.studentFilter)
-        || booking.student.id.toLowerCase().includes(this.state.studentFilter))
+        && (
+            booking.student.user.firstName.toLowerCase().includes(this.state.studentFilter)
+         || booking.student.user.lastName.toLowerCase().includes(this.state.studentFilter)
+        )
         && booking.date.includes(this.state.dateFilter))
         .map(searchedBookings => {
             return (

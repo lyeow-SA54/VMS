@@ -50,11 +50,11 @@ public class SeedDBServiceImpl implements SeedDBService {
 
 	public void createInitialData() {
 		if(!ss.tableExist()){
-			ss.createStudent(new Student("fn1", "ln1", "email1@u.nus.edu", "user1"));
-			ss.createStudent(new Student("fn2", "ln2", "email2@u.nus.edu", "user2"));
-			ss.createStudent(new Student("fn3", "ln3", "email3@u.nus.edu", "user3"));
-			ss.createStudent(new Student("fn4", "ln4", "email4@u.nus.edu", "user4"));
-			ss.createStudent(new Student("fn5", "ln5", "email5@u.nus.edu", "user5"));
+			ss.createStudent(new Student("Trevor", "Green", "email1@u.nus.edu", "user1"));
+			ss.createStudent(new Student("Tori", "Howe", "email2@u.nus.edu", "user2"));
+			ss.createStudent(new Student("Lula", "Thorpe", "email3@u.nus.edu", "user3"));
+			ss.createStudent(new Student("Manal", "White", "email4@u.nus.edu", "user4"));
+			ss.createStudent(new Student("Vanesa", "Reese", "email5@u.nus.edu", "user5"));
 		}
 
 		if(!bs.tableExist()) {
