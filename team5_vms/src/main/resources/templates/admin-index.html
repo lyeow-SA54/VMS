@@ -1,79 +1,97 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-	<head>
-		<meta charset="ISO-8859-1">
-		<title>Team 5 VMS</title>
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
-		<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
-		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
-		<style type="text/css">
+
+<head>
+	<meta charset="ISO-8859-1">
+	<title>Team 5 VMS</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+	<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+		integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+	<style type="text/css">
 		.container-fluid {
-		padding: 60px 50px;
+			padding: 60px 50px;
 		}
-		.mylink a{
+
+		.mylink a {
 			text-decoration: none;
 			color: gray;
 		}
-		.mylink a:hover{
+
+		.mylink a:hover {
 			color: black;
 		}
-		</style>
-	</head>
-	<body>
-		<nav class="navbar navbar-expand-sm bg-light navbar-light">
-			<a class="navbar-brand" href="#">Team 5 VMS</a>
-			<nav class="my_menu navbar navbar-expand-sm navbar-light bg-light">
-				<div class="d-flex w-100">
-					<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar9">
+	</style>
+</head>
+
+<body>
+	<nav class="navbar navbar-expand-sm bg-light navbar-light">
+		<a class="navbar-brand" href="#">Team 5 VMS</a>
+		<nav class="my_menu navbar navbar-expand-sm navbar-light bg-light">
+			<div class="d-flex w-100">
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar9">
 					<span class="navbar-toggler-icon"></span>
-					</button>
-				</div>
-				<div class="d-flex w-100">
-					&nbsp;
-				</div>
-			</nav>
-			<span class="navbar-nav ml-auto">
-				Welcome
-			</span>
-			<a class="nav-link" style="color: gray;" th:href="@{/logout}">Logout</a>
+				</button>
+			</div>
+			<div class="d-flex w-100">
+				&nbsp;
+			</div>
 		</nav>
-		<!-- Container (Services Section) -->
-		<div class="container-fluid text-center">
-			<!-- <h2>SERVICES</h2>
+		<span class="navbar-nav ml-auto">
+			Welcome
+		</span>
+		<a class="nav-link" style="color: gray;" th:href="@{/logout}">Logout</a>
+	</nav>
+	<!-- Container (Services Section) -->
+	<div class="container-fluid text-center">
+		<!-- <h2>SERVICES</h2>
 			<h4>What we offer</h4> -->
-			<br>
-			<div class="row">
-				<div class="col-sm-4">
-				</div>
-				<div class="col-sm-4 mylink">
-					<a th:href="@{/admin/rooms/list}">
-						<i class='fas fa-book-reader' style='font-size:36px'></i>
-						<h4>ROOMS</h4>
-					</a>
-					<p>Manage Rooms</p>
-				</div>
+		<br>
+		<div class="row">
+			<div class="col-sm-4">
 			</div>
-			<br><br>
-			<div class="row">
-				<div class="col-sm-6 mylink">
-					<a th:href="@{/admin/bookings}">
-						<i class='fas fa-book' style='font-size:36px'></i>
-						<h4>BOOKINGS</h4>
-					</a>
-					<p>Manage Bookings</p>
-				</div>
-				<div class="col-sm-6 mylink">
-					<a th:href="@{/admin/reports}">
-						<i class='fas fa-edit' style='font-size:36px'></i>
-						<h4>REPORTS</h4>
-					</a>
-					<p>Manage Reports</p>
-				</div>
+			<div class="col-sm-4 mylink">
+				<a th:href="@{/admin/rooms/list}">
+					<i class='fas fa-book-reader' style='font-size:36px'></i>
+					<h4>ROOMS</h4>
+				</a>
+				<p>Manage Rooms</p>
 			</div>
-			<footer class="text-center py-4 text-muted" style="margin-top: 100px;">
-				CAPS Copyright &copy; 2022
-			</footer>
-		</body>
-	</html>
+		</div>
+		<br><br>
+		<div class="row">
+			<div class="col-sm-6 mylink">
+				<a href="#" id="bookings">
+					<i class='fas fa-book' style='font-size:36px'></i>
+					<h4>BOOKINGS</h4>
+				</a>
+				<p>Manage Bookings</p>
+			</div>
+			<div class="col-sm-6 mylink">
+				<!--<a onclick="location.href='http://localhost:3000/admin/reports'">-->
+				<a href="#" id="reports">
+					<i class='fas fa-edit' style='font-size:36px'></i>
+					<h4>REPORTS</h4>
+				</a>
+				<p>Manage Reports</p>
+			</div>
+		</div>
+		<footer class="text-center py-4 text-muted" style="margin-top: 100px;">
+			CAPS Copyright &copy; 2022
+		</footer>
+</body>
+<script>
+	$("#bookings").on('click', function () {
+		location.href = "http://localhost:3000/admin/bookings";
+	});
+	$("#reports").on('click', function () {
+		location.href = "http://localhost:3000/admin/reports";
+	});
+</script>
+
+</html>
