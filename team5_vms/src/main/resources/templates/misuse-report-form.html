@@ -9,6 +9,7 @@
 		<form action="/report/save"  method="post" enctype="multipart/form-data">
 			<label>details:</label><input type="text" name="details"/><br/>
 			<label>photo</label><input type="file" name="file"/><br/>
+			<input type="hidden" name="bookingid" th:value="${booking.id}"  />
 			<input type="submit" value="submit"/>
 		</form>
 	</div>

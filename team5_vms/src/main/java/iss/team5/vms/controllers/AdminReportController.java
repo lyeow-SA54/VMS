@@ -27,8 +27,8 @@ public class AdminReportController {
         return mav;
     }
     @RequestMapping(value = "/reports/reject/{reportId}", method = RequestMethod.GET)
-    public String rejectReport(@PathVariable String reportId) {
-        Report report = rs.findReportById(reportId);
+    public String rejectReport(Report report) {
+//        Report report = rs.findReportById(reportId);
         report.setReportStatus(ReportStatus.REJECTED);
         rs.createReport(report);
         System.out.println("5 success");

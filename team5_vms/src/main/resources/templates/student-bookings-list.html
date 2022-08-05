@@ -13,7 +13,8 @@
 			<th>Start Time</th>
 			<th>Duration</th>
 			<th>Status</th>
-			<th>Options</th>
+			<th>Report</th>
+			<th>Cancel</th>
 			<th>Extension</th>
 		</tr>
 		<tr th:each="booking:${bookings}">
@@ -21,7 +22,7 @@
 			<td th:text=${booking.time}></td>
 			<td th:text=${booking.duration}></td>
 			<td th:text=${booking.status}></td>
-			<td>
+			<td th:if="${booking.bookingInProgress}">
 				<a th:href="@{/student/booking/report/}+${booking.id}">
 					<span th:text="REPORT"></span>
 				</a>
@@ -31,7 +32,6 @@
 					<span th:text="CANCEL"></span>
 				</a>
 			</td>
-
 			<td th:if="${booking.bookingInProgress}">
 			<a th:href="@{/student/booking/extend/}+${booking.id}">
 			<span th:text="EXTEND">

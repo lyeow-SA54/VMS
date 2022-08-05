@@ -135,7 +135,7 @@ public class BookingServiceImpl implements BookingService {
 		for (Booking b : bookings) {
 			if (booking.getTime().isBefore(b.getTime().plusHours(b.getDuration()))
 					&& (booking.getTime().plusHours(booking.getDuration()).isAfter(b.getTime()))
-					&&b.getStatus().equals(BookingStatus.SUCCESSFUL)) {
+					&& b.getStatus().equals(BookingStatus.SUCCESSFUL)) {
 				return false;
 			}
 		}
@@ -161,8 +161,12 @@ public class BookingServiceImpl implements BookingService {
 		bookings.stream().filter(b -> b.getDate().equals(LocalDate.now()))
 				.filter(b -> b.getTime().isBefore(LocalTime.now())
 						&& b.getTime().plusHours(b.getDuration()).isAfter(LocalTime.now()))
-				.filter(b -> b.getStatus().equals(BookingStatus.SUCCESSFUL))
-				.forEach(b -> b.setBookingInProgress(true));
+				.filter(b -> b.getStatus().equals(BookingStatus.SUCCESSFUL)).forEach(b -> b.setBookingInProgress(true));
+
+		bookings.stream()
+				.filter(b -> !b.getDate().equals(LocalDate.now()) || b.getTime().isAfter(LocalTime.now())
+						|| b.getTime().plusHours(b.getDuration()).isBefore(LocalTime.now()))
+				.forEach(b -> b.setBookingInProgress(false));
 
 		return bookings;
 	}

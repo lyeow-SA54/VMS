@@ -17,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 import iss.team5.vms.helper.BookingStatus;
 import iss.team5.vms.model.Booking;
 import iss.team5.vms.model.Facility;
+import iss.team5.vms.model.Report;
 import iss.team5.vms.model.Room;
 import iss.team5.vms.model.Student;
 import iss.team5.vms.services.BookingService;
@@ -131,12 +132,12 @@ public class BookingController {
 	}
 
 
-	//this is for report form test
-	@RequestMapping("/reportform")
-	public String reportform(){
-		System.out.println("0 success");
-		return "misuse-report-form";
-	}
+//	//this is for report form test
+//	@RequestMapping("/reportform")
+//	public String reportform(){
+//		System.out.println("0 success");
+//		return "misuse-report-form";
+//	}
 	
 	@RequestMapping("/booking/history")
 	public ModelAndView bookingHistory(Student student) {
@@ -153,9 +154,13 @@ public class BookingController {
 		mav.addObject("timenow", timenow);
 		return mav;
 	}
+	
 	@RequestMapping(value = "/booking/report/{bookingId}", method = RequestMethod.GET)
-	public String bookingReport(@PathVariable String bookingId) {
-		return "forward:/student/reportform";
+	public ModelAndView bookingReport(@PathVariable String bookingId) {
+		ModelAndView mav = new ModelAndView("misuse-report-form");
+		Booking booking = bs.findBookingById(bookingId);
+		mav.addObject("booking", booking);
+		return mav;
 	}
 	
 	@RequestMapping(value = "/booking/cancel/{bookingId}", method = RequestMethod.GET)

@@ -43,6 +43,7 @@ public class ReportController {
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     private String uploadReport(@RequestParam(value="file",required=false) MultipartFile file,
                                 @RequestParam(value = "details",required=true) String details,
+                                @RequestParam("bookingid") String bookingString,
                                 HttpServletRequest request) throws IOException {
         System.out.println("1 success");
         String path = "";
@@ -61,7 +62,7 @@ public class ReportController {
         }
 
         //add path to report
-        Booking booking = bs.findBookingById("B00006");
+        Booking booking = bs.findBookingById(bookingString);
         rs.createReport(new Report(details,path,booking, ReportStatus.PROCESSING));
         System.out.println("4 success");
         //test for getting real path for app
