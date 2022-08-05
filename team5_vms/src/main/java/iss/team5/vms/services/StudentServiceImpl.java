@@ -66,7 +66,7 @@ public class StudentServiceImpl implements StudentService{
 	
 	@Override
 	public Student findStudentByUser(User user) {
-		return srepo.getStudentByUser(user);
+		return srepo.findStudentByUser(user);
 	}
 		
 }

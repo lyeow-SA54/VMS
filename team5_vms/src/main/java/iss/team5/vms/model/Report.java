@@ -26,9 +26,8 @@ import lombok.NoArgsConstructor;
 
 public class Report {
 	@Id
-	
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "custom_id_gen")
-  @GenericGenerator(
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "custom_id_gen")
+	@GenericGenerator(
       name = "custom_id_gen",      strategy = "iss.team5.vms.helper.IdGenerator", 
       parameters = {
           @Parameter(name = IdGenerator.INCREMENT_PARAM, value = "1"),
@@ -62,10 +61,8 @@ public class Report {
 		this.imgPath=imgPath;
 	}
 	
-	
-	
-	
-	
-	
-	
+	public Report(String id) {
+		this.id=id;
+	}
+
 }

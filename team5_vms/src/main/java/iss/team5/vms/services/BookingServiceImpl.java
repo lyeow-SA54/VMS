@@ -52,7 +52,7 @@ public class BookingServiceImpl implements BookingService {
 
 	@Override
 	public List<Booking> findBookingsByStudent(Student student) {
-		return br.findAllBookingByStudent(student);
+		return br.findAllBookingsByStudent(student);
 	}
 
 	@Override

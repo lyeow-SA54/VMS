@@ -19,4 +19,6 @@ public interface RoomRepo extends JpaRepository<Room,String>{
 	public ArrayList<Room> searchRoomByFacilityAvailability(@Param("fname") String facStr, @Param("ava") boolean ava);
 	
 	public Room findRoomByRoomName(String name);
+	
+	
 }

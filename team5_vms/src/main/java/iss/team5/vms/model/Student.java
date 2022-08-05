@@ -41,4 +41,8 @@ public class Student{
 		List<Role> rolelist = List.of(role);
 		this.user = new User(firstName, lastName, email, username, rolelist);
 	}
+	
+	public Student(String Id) {
+		this.Id=Id;
+	}
 }

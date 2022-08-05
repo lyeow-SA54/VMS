@@ -15,7 +15,7 @@ public interface BookingRepo extends JpaRepository<Booking,String>{
 	
 	List<Booking> findAllBookingsByRoom(Room room);
 	
-	List<Booking> findAllBookingByStudent(Student student);
+	List<Booking> findAllBookingsByStudent(Student student);
 
 	List<Booking> findAllByRoom(Room room);
 	

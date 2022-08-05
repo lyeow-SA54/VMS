@@ -8,7 +8,7 @@ import iss.team5.vms.model.User;
 public interface StudentRepo extends JpaRepository<Student,String>{
 	Boolean existsBy();
 	
-	Student getStudentByUser(User user);
+	Student findStudentByUser(User user);
 	
 //	<Optional>Student findById(String id);
 }

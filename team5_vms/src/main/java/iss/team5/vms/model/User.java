@@ -51,13 +51,19 @@ public class User{
 	@NotNull(message = "Password is mandatory")
 	private String password;
 
-	public User(String firstName, String lastName, String email, String username, List<Role> rolelist)
-	{
+	public User(String firstName, String lastName, String email, String username, List<Role> rolelist, String password) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
 		this.username = username;
 		roles = rolelist;
-		this.password = new BCryptPasswordEncoder().encode("password");
+		this.password = "password";
+//		this.password = new BCryptPasswordEncoder().encode("password");
 	}
+	
+	public User(String id) {
+		this.id=id;
+	}
+	
+	
 }
