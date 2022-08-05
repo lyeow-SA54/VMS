@@ -1,11 +1,13 @@
 package iss.team5.vms.services;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import iss.team5.vms.helper.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import iss.team5.vms.helper.BookingStatus;
@@ -60,37 +62,31 @@ public class SeedDBServiceImpl implements SeedDBService {
 		bs.createBooking(new Booking("B2", dateTimeInput.dateInput("08/02/2022"), LocalTime.now(), 2, BookingStatus.CANCELLED));
 		bs.createBooking(new Booking("B3", dateTimeInput.dateInput("08/03/2022"), LocalTime.now(), 3, BookingStatus.REJECTED));
 		bs.createBooking(new Booking("B4", dateTimeInput.dateInput("08/04/2022"), LocalTime.now(), 1, BookingStatus.WAITINGLIST));
-		bs.createBooking(new Booking("B5", dateTimeInput.dateInput("08/05/2023"), LocalTime.now(), 2, BookingStatus.WAITINGLIST));
+		bs.createBooking(new Booking("B5", LocalDate.now(), LocalTime.now(), 2, BookingStatus.WAITINGLIST));
 		}
 		
 		if(!rs.tableExist()) {
-		rs.createReport(new Report("Food packages thrown everywhere!",Category.CLEANLINESS, StudentStatus.NORMAL));
-		rs.createReport(new Report("Graffiti on walls!",Category.VANDALISE, StudentStatus.NORMAL));
-		rs.createReport(new Report("The group inside doesn't want to leave!",Category.HOGGING, StudentStatus.NORMAL));
-		rs.createReport(new Report("The tables and chairs are broken",Category.MISUSE, StudentStatus.NORMAL));
-		rs.createReport(new Report("IS THAT A COCKROACH?!",Category.CLEANLINESS, StudentStatus.NORMAL));
+		rs.createReport(new Report("Food packages thrown everywhere!",Category.CLEANLINESS, StudentStatus.NORMAL, ReportStatus.PROCESSING));
+		rs.createReport(new Report("Graffiti on walls!",Category.VANDALISE, StudentStatus.NORMAL, ReportStatus.PROCESSING));
+		rs.createReport(new Report("The group inside doesn't want to leave!",Category.HOGGING, StudentStatus.NORMAL, ReportStatus.PROCESSING));
+		rs.createReport(new Report("The tables and chairs are broken",Category.MISUSE, StudentStatus.NORMAL, ReportStatus.PROCESSING));
+		rs.createReport(new Report("IS THAT A COCKROACH?!",Category.CLEANLINESS, StudentStatus.NORMAL, ReportStatus.PROCESSING));
 		}
 			
 		
 //		if(!us.tableExist()) {
-			Role role = new Role("ADMIN");
-			List<Role> rolelist = List.of(role);
-			User user = new User();
-			user.setEmail("admin@u.nus.edu");
-			user.setFirstName("admin");
-			user.setLastName("");
-			user.setRoles(rolelist);
-			user.setUsername("admin");
-			user.setPassword(new BCryptPasswordEncoder().encode("admin"));
-			us.createUser(user);
+//			Role role = new Role("ADMIN");
+//			List<Role> rolelist = List.of(role);
+//			User user = new User();
+//			user.setEmail("admin@u.nus.edu");
+//			user.setFirstName("admin");
+//			user.setLastName("");
+//			user.setRoles(rolelist);
+//			user.setUsername("admin");
+//			user.setPassword(new BCryptPasswordEncoder().encode("admin"));
+//			us.createUser(user);
 //		}
-/*		if(!bs.tableExist()) {
-		bs.createBooking(new Booking("B1", dateTimeInput.dateInput("01/01/2022"), LocalTime.now(), 1, BookingStatus.CANCELLED));
-		bs.createBooking(new Booking("B2", dateTimeInput.dateInput("01/01/2022"), LocalTime.now(), 1, BookingStatus.REJECTED));
-		bs.createBooking(new Booking("B3", dateTimeInput.dateInput("01/01/2022"), LocalTime.now(), 1, BookingStatus.SUCCESSFUL));
-		bs.createBooking(new Booking("B4", dateTimeInput.dateInput("01/01/2022"), LocalTime.now(), 1, BookingStatus.WAITINGLIST));
-		bs.createBooking(new Booking("B5", dateTimeInput.dateInput("01/01/2022"), LocalTime.now(), 1, BookingStatus.SUCCESSFUL));
-		}*/
+	
 		
 		if(!fs.tableExist()) {
 			Facility f1 = new Facility("Projector");
@@ -111,25 +107,25 @@ public class SeedDBServiceImpl implements SeedDBService {
 	}
 	
 	public void loadBookingData() {
-		Student s1 = ss.findStudentById("S00001");
-		Student s2 = ss.findStudentById("S00003");
+		Student s1 = ss.findStudentById(1);
+		Student s2 = ss.findStudentById(3);
 
-		Booking b1 = bs.findBookingById("B00011");
-		Booking b2 = bs.findBookingById("B00012");
-		Booking b3 = bs.findBookingById("B00013");
-		Booking b4 = bs.findBookingById("B00014");
-		Booking b5 = bs.findBookingById("B00015");
+		Booking b1 = bs.findBookingById("B1001");
+		Booking b2 = bs.findBookingById("B1002");
+		Booking b3 = bs.findBookingById("B1003");
+		Booking b4 = bs.findBookingById("B1004");
+		Booking b5 = bs.findBookingById("B1005");
 
-		Report rp1 = rs.findReportById("RE00016");
-		Report rp2 = rs.findReportById("RE00017");
-		Report rp3 = rs.findReportById("RE00018");
-		Report rp4 = rs.findReportById("RE00019");
-		Report rp5 = rs.findReportById("RE00020");
+		Report rp1 = rs.findReportById("RE1001");
+		Report rp2 = rs.findReportById("RE1002");
+		Report rp3 = rs.findReportById("RE1003");
+		Report rp4 = rs.findReportById("RE1004");
+		Report rp5 = rs.findReportById("RE1005");
 
 		
-		Room r1 = rms.findRoomById("RM00024");
-		Room r2 = rms.findRoomById("RM00022");
-		Room r3 = rms.findRoomById("RM00023");
+		Room r1 = rms.findRoomById("RM00001");
+		Room r2 = rms.findRoomById("RM00002");
+		Room r3 = rms.findRoomById("RM00003");
 		
 		List<Facility> projecter = fs.findFacilityByName("Projector");
 		List<Facility> wb = fs.findFacilityByName("White Board");
@@ -176,5 +172,3 @@ public class SeedDBServiceImpl implements SeedDBService {
 		
 	}
 }
-	
-

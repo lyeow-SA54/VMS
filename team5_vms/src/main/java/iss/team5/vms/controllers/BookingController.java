@@ -7,10 +7,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
+//import org.springframework.security.core.Authentication;
+//import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -61,8 +59,10 @@ public class BookingController {
 		bookingForTheDay.setTime(LocalTime.now());
 		List<Booking> availableBookings = bs.checkBookingAvailable(bookingForTheDay, rooms);
 		
-		String username = SecurityContextHolder.getContext().getAuthentication().getName();
-		Student s1 = ss.findStudentByUser(us.findUserByUsername(username));
+		//String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		//Student s1 = ss.findStudentByUser(us.findUserByUsername(username));
+		Student s1 = ss.findStudentById(3);
+	
 		List<Booking> sBooking = bs.findBookingsByStudent(s1); 
 		
 		List<Booking> findTodayBooking=sBooking.stream()
@@ -92,9 +92,10 @@ public class BookingController {
 		// pending login implementation
 		// hardcoded student object for now, final implementation should retrieve from
 		// logged in context
-		String username = SecurityContextHolder.getContext().getAuthentication().getName();
-		Student student = ss.findStudentByUser(us.findUserByUsername(username));
+		//String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		//Student student = ss.findStudentByUser(us.findUserByUsername(username));
 		//Student student = ss.findStudentById("S00001");
+		Student student = ss.findStudentById(3);
 		// pending proper url to be forwarded to on check-in completion
 		ModelAndView mav = new ModelAndView("student-bookings-list");
 		Booking booking = bs.findBookingById(bookingId);
@@ -135,18 +136,21 @@ public class BookingController {
 	@RequestMapping(value = "/booking/save", method = RequestMethod.POST)
 	public String bookingNew(Booking booking, @RequestParam("roomid") String roomString) {
 		
-		Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
-		List <Student> sList = ss.findAllStudents(); 
-		List <Student> findStu = sList.stream()
-				.filter(s-> s.getUser().getUsername().equalsIgnoreCase(loggedInUser.getName()))
-				.collect(Collectors.toList());
-		
-		if (findStu.size() != 1) { 
-		    throw new IllegalStateException();
-		}
-		
-		Student student = findStu.get(0);   
+//		Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+//		List <Student> sList = ss.findAllStudents(); 
+//		List <Student> findStu = sList.stream()
+//				.filter(s-> s.getUser().getUsername().equalsIgnoreCase(loggedInUser.getName()))
+//				.collect(Collectors.toList());
+//		
+//		if (findStu.size() != 1) { 
+//		    throw new IllegalStateException();
+//		}
+//		
+//		Student student = findStu.get(0);
+		Student student = ss.findStudentById(3);
 		Room room = rs.findRoomById(roomString);
+
+
 		booking.setStudent(student);
 		booking.setRoom(room);
 //		booking.setRoom(rs.findRoomById(room.getId()));
@@ -195,11 +199,17 @@ public class BookingController {
 	
 	@RequestMapping("/booking/history")
 	public ModelAndView bookingHistory(Student student) {
-		String username = SecurityContextHolder.getContext().getAuthentication().getName();
-		Student s1 = ss.findStudentByUser(us.findUserByUsername(username));
+//		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+//		Student s1 = ss.findStudentByUser(us.findUserByUsername(username));
+		Student s1 = ss.findStudentById(3);
 		List<Booking> bookings = bs.findBookingsByStudent(s1);
+		List<Booking> bookings2 = bs.checkBookingInProgress(bookings);
 		ModelAndView mav = new ModelAndView("student-bookings-list");
-		mav.addObject("bookings",bookings);
+		mav.addObject("bookings",bookings2);
+		LocalDate datenow = LocalDate.now();
+		LocalTime timenow = LocalTime.now();
+		mav.addObject("datenow", datenow);
+		mav.addObject("timenow", timenow);
 		return mav;
 	}
 	@RequestMapping(value = "/booking/report/{bookingId}", method = RequestMethod.GET)
@@ -216,6 +226,28 @@ public class BookingController {
 		room.setBlockDuration(0);
 		room.setBlockedStartTime(null);
 		return "forward:/student/booking/history";
+	}
+	
+	@RequestMapping(value = "/booking/extend/{bookingId}", method = RequestMethod.GET)
+	public ModelAndView extendBooking(@PathVariable String bookingId) {
+		ModelAndView mav = new ModelAndView("booking-success");
+		Booking booking = bs.findBookingById(bookingId);
+		String outcomeMsg = "";
+		Booking extendBooking = new Booking("placeholder", 
+				booking.getDate(), 
+				booking.getTime().plusHours(booking.getDuration()), 
+				1, booking.getRoom());
+		if (!bs.checkBookingByDateTimeRoom(extendBooking,booking.getRoom())) {
+			outcomeMsg = "Booking extension request denied";
+		}
+		else {
+			outcomeMsg = "Booking extension request approved";
+			booking.setDuration(booking.getDuration()+1);
+			bs.createBooking(booking);
+		}
+		mav.addObject("booking", booking);
+		mav.addObject("outcomeMsg", outcomeMsg);
+		return mav;
 	}
 
 }

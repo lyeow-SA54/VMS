@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<head>
-	<meta charset="ISO-8859-1">
+<head th:replace="fragments/general.html :: headerfiles"/>
 	<title>VMS</title>
 	<link rel="stylesheet" th:href="@{/css/simple.css}" />
 </head>
 
 <body>
+	<div th:replace="fragments/general.html :: menu-admin"></div>
 	<div class="container">
 		<div class="row">
 			<div class="col-3"></div>

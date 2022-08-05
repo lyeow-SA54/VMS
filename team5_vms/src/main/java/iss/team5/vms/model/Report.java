@@ -27,14 +27,8 @@ import lombok.NoArgsConstructor;
 
 public class Report {
 	@Id
-	
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "custom_id_gen")
-  @GenericGenerator(
-      name = "custom_id_gen",      strategy = "iss.team5.vms.helper.IdGenerator", 
-      parameters = {
-          @Parameter(name = IdGenerator.INCREMENT_PARAM, value = "1"),
-          @Parameter(name = IdGenerator.VALUE_PREFIX_PARAMETER, value = "RE"),
-          @Parameter(name = IdGenerator.NUMBER_FORMAT_PARAMETER, value = "%05d") })
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "report_id_gen")
+	@GenericGenerator(name = "report_id_gen", strategy = "iss.team5.vms.helper.ReportIdGenerator")
 	private String id;
 	@NotNull
 	private String details;
@@ -55,10 +49,11 @@ public class Report {
 //	@OneToOne
 //	private Image img;
 	
-	public Report(String details, Category category, StudentStatus status) {
+	public Report(String details, Category category, StudentStatus status, ReportStatus reportStatus) {
 		this.details=details;
 		this.category=category;
 		this.status=status;
+		this.reportStatus=reportStatus;
 	}
 	
 	public Report(String details, String imgPath) {
@@ -76,9 +71,4 @@ public class Report {
 		this.booking=booking;
 		this.reportStatus=reportStatus;
 	}
-	
-	
-	
-	
-	
 }

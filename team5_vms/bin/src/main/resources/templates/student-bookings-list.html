@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/general.html :: headerfiles"/>
+
+<body>
+	<div th:replace="fragments/general.html :: menu-student"></div>
+	<div th:if="${outcomeMsg!=null}"><span th:text="${outcomeMsg}"></span></div>
+
+	<table>
+		<tr>
+			<!--<th>Room Name</th>-->
+			<th>Start Time</th>
+			<th>Duration</th>
+			<th>Status</th>
+			<th>Options</th>
+		</tr>
+		<tr th:each="booking:${bookings}">
+			<!--<td th:text=${booking.room.roomName}></td>-->
+			<td th:text=${booking.time}></td>
+			<td th:text=${booking.duration}></td>
+			<td th:text=${booking.status}></td>
+			<td th:if="${booking.status != T(iss.team5.vms.helper.BookingStatus).REJECTED and booking.status != T(iss.team5.vms.helper.BookingStatus).CANCELLED}">
+				<a th:href="@{/student/booking/cancel/}+${booking.id}">
+					<span th:text="CANCEL"></span>
+				</a>
+			</td>
+		</tr>
+	</table>
+	<br />
+	<!--<div th:replace="fragments/general.html :: footer"></div>-->
+</body>
+
+</html>

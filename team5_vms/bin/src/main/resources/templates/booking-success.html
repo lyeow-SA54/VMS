@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/general.html :: headerfiles"/>
+
+<body>
+	<div th:replace="fragments/general.html :: menu-student"></div>
+
+	<h2>Booking Summary</h2>
+	<span th:text="${booking.room.roomName}" /></span>
+	<span th:text="${booking.status}" /></span>
+	<!--<a href="" th:href="@{/admin/rooms/edit/}">View Pending Booking</a>
+	<a href="" th:href="@{/admin/rooms/edit/}">Update</a>-->
+	<br />
+	<!--<div th:replace="fragments/general.html :: footer"></div>-->
+</body>
+
+</html>
