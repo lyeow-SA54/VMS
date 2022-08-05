@@ -1,17 +1,55 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/general.html :: headerfiles"/>
+
+<head th:replace="fragments/general.html :: headerfiles" />
 
 <body>
 	<div th:replace="fragments/general.html :: menu-student"></div>
 	<div class="container">
-		<h1>Report Misuse</h1>
-		<form action="/report/save"  method="post" enctype="multipart/form-data">
-			<label>details:</label><input type="text" name="details"/><br/>
-			<label>photo</label><input type="file" name="file"/><br/>
-			<input type="hidden" name="bookingid" th:value="${booking.id}"  />
-			<input type="submit" value="submit"/>
-		</form>
+		<div class="row">
+			<div class="col-3"></div>
+			<div class="col-6">
+				<h4>Report Misuse</h4>
+				<form action="/report/save" method="post" enctype="multipart/form-data">
+					<table class="table table-borderless" align="center">
+						<tbody>
+							<tr>
+								<td>
+									<fieldset>
+										<input type="hidden" name="bookingid" th:value="${booking.id}" />
+									</fieldset>
+								</td>
+							</tr>
+							<tr>
+								<td><span th:text="Details"></span></td>
+								<td>
+									<fieldset>
+										<input type="text" name="details" />
+									</fieldset>
+								</td>
+							</tr>
+							<tr>
+								<td><span th:text="Photo"></span></td>
+								<td>
+									<fieldset>
+										<input type="file" name="file" />
+									</fieldset>
+								</td>
+							</tr>
+							<tr>
+								<td></td>
+								<td>
+									<fieldset>
+										<input type="submit" value="submit" class="btn btn-primary" />
+									</fieldset>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</form>
+			</div>
+			<div class="col-3"></div>
+		</div>
 	</div>
 	<!--<div class="container">
 		<h1>Report Misuse</h1>
@@ -27,7 +65,7 @@
 			<a href="" th:href="@{/admin/rooms/edit/}">Submit</a>
 		</form>
 		<br />-->
-		<!--<div th:replace="fragments/general.html :: footer"></div>-->
+	<!--<div th:replace="fragments/general.html :: footer"></div>-->
 </body>
 
 </html>
