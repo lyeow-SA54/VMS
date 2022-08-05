@@ -29,6 +29,11 @@ public class RestAdminController {
         return bs.findAllBookings();
 	}
 	
+	@GetMapping("/reports")
+    public List<Report> getReports(){
+        return rs.findAllReports();
+	}
+	
 	@PostMapping(value="/bookings/{id}")
     public ResponseEntity cancelBooking(@PathVariable String id){
         try{
@@ -40,21 +45,30 @@ public class RestAdminController {
         }
     }
 
-    /*@RequestMapping("/reports")
-    public ModelAndView getReports() {
-        List<Report> reports = rs.findAllReports();
-        ModelAndView mav = new ModelAndView("reports");
-        mav.addObject("reports",reports);
-        return mav;
-    }
-    @RequestMapping(value = "/reports/reject/{reportId}", method = RequestMethod.GET)
-    public String rejectReport(@PathVariable String reportId) {
+	@PostMapping(value = "/reports/reject/{reportId}")
+    public ResponseEntity rejectReport(@PathVariable String reportId) {
+		try {
         Report report = rs.findReportById(reportId);
         report.setReportStatus(ReportStatus.REJECTED);
         rs.createReport(report);
-        System.out.println("5 success");
-        return "/admin/reports";
-    }*/
+        return ResponseEntity.ok().build();
+		}
+		catch (Exception e){
+            return ResponseEntity.badRequest().body("Report couldn't be updated");
+        }
+    }
+    @PostMapping(value = "/reports/approval/{reportId}")
+    public ResponseEntity approvalReport(@PathVariable String reportId) {
+        try {
+    	Report report = rs.findReportById(reportId);
+        report.setReportStatus(ReportStatus.APPROVED);
+        rs.createReport(report);
+        return ResponseEntity.ok().build();
+        }
+        catch (Exception e){
+            return ResponseEntity.badRequest().body("Report couldn't be updated");
+        }
+    }
 	
 	@GetMapping("/index")
 	public ModelAndView home() {
