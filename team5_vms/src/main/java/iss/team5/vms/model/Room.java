@@ -56,6 +56,13 @@ public class Room {
 		this.id = id;
 	}
 	
+	public Room(String id, int capacity, List<Facility> facilities)
+	{
+		this.capacity = capacity;
+		this.id = id;
+		this.facilities = facilities;
+	}
+	
 	public Room(boolean availability, String roomName, int capacity) {
 		this.availability=availability;
 		this.roomName=roomName;

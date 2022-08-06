@@ -12,4 +12,6 @@ public interface FacilityService {
 	void createFacility(Facility facility);
 	
 	List<Facility> findFacilityByName(String name);
+
+	List<Facility> jsonToFacilityList(String jsonarray);
 }
