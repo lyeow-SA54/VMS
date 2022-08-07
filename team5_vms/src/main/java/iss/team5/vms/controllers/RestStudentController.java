@@ -7,11 +7,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import iss.team5.vms.helper.BookingStatus;
 import iss.team5.vms.model.Booking;
@@ -54,7 +56,9 @@ public class RestStudentController {
 	}
 
 	@PostMapping(value = "/booking/options")
-	public List<Booking> bookingOptions(@RequestBody Map<String, Object> payload) {
+	public List<Booking> bookingOptions(@RequestBody List<Map<String, Object>> rawPayload) {
+		Map<String, Object> payload = rawPayload.get(0);
+
 		LocalDate date = LocalDate.parse((String) payload.get("date"), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 		LocalTime time = LocalTime.parse((String) payload.get("time"));
 
@@ -63,7 +67,7 @@ public class RestStudentController {
 
 		List<Room> rooms = rs.findRoomsByAttributes(room);
 		List<Booking> bookings = bs.checkBookingAvailable(booking, rooms);
-//		
+		
 //		System.out.println(payload.get("facilities"));
 //		System.out.println(payload.get("date"));
 //		System.out.println(payload.get("time"));
