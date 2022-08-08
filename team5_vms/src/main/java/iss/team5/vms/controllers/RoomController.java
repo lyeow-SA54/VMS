@@ -19,8 +19,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import iss.team5.vms.model.Facility;
 import iss.team5.vms.model.Room;
+import iss.team5.vms.model.User;
 import iss.team5.vms.services.FacilityService;
 import iss.team5.vms.services.RoomService;
+import iss.team5.vms.services.UserSessionService;
 
 @Controller
 @RequestMapping(value = "/admin/rooms")
@@ -31,9 +33,17 @@ public class RoomController {
 
 	@Autowired
 	private FacilityService fService;
+	
+	@Autowired
+	private UserSessionService userSessionService;
 
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	public ModelAndView newRoom() {
+		User user = userSessionService.findUserBySession();
+		if(!user.getRole().equals("ADMIN")) {
+			ModelAndView mav = new ModelAndView("unauthorized-student");
+			return mav;
+		}
 		ModelAndView mav = new ModelAndView("room-form");
 		mav.addObject("room", new Room());
 		List<Facility> facilities = (List<Facility>) fService.findAllFacilities();
@@ -43,6 +53,11 @@ public class RoomController {
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
 	public ModelAndView createRoom(@ModelAttribute @Valid Room room, BindingResult result) {
+		User user = userSessionService.findUserBySession();
+		if(!user.getRole().equals("ADMIN")) {
+			ModelAndView mav = new ModelAndView("unauthorized-student");
+			return mav;
+		}
 		if (result.hasErrors())
 			return new ModelAndView("room-form");
 		ModelAndView mav = new ModelAndView("forward:/admin/rooms/list");
@@ -53,6 +68,11 @@ public class RoomController {
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
 	public ModelAndView searchRoom(@RequestParam("searchRoom") String roomName, @RequestParam("facility") String facStr,
 			@RequestParam("availability") String ava, Model model) {
+		User user = userSessionService.findUserBySession();
+		if(!user.getRole().equals("ADMIN")) {
+			ModelAndView mav = new ModelAndView("unauthorized-student");
+			return mav;
+		}
 		ModelAndView mav = new ModelAndView("rooms");
 		List<Facility> facilities = (List<Facility>) fService.findAllFacilities();
 		mav.addObject("checkBoxFacilities", facilities);
@@ -70,6 +90,11 @@ public class RoomController {
 	@RequestMapping(value = "/list")
 	@ResponseBody
 	public ModelAndView roomList() {
+		User user = userSessionService.findUserBySession();
+		if(!user.getRole().equals("ADMIN")) {
+			ModelAndView mav = new ModelAndView("unauthorized-student");
+			return mav;
+		}
 		ModelAndView mav = new ModelAndView("rooms");
 		List<Room> rooms = rService.findAllRooms();
 		mav.addObject("rooms", rooms);
@@ -80,6 +105,11 @@ public class RoomController {
 
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
 	public ModelAndView editRoom(@PathVariable String id) {
+		User user = userSessionService.findUserBySession();
+		if(!user.getRole().equals("ADMIN")) {
+			ModelAndView mav = new ModelAndView("unauthorized-student");
+			return mav;
+		}
 		ModelAndView mav = new ModelAndView("room-edit");
 		Room room = rService.findRoomById(id);
 		mav.addObject("room", room);
@@ -94,6 +124,11 @@ public class RoomController {
 
 	@RequestMapping(value = "/edit", method = RequestMethod.POST)
 	public ModelAndView editRoom(@ModelAttribute @Valid Room room, BindingResult result) {
+		User user = userSessionService.findUserBySession();
+		if(!user.getRole().equals("ADMIN")) {
+			ModelAndView mav = new ModelAndView("unauthorized-student");
+			return mav;
+		}
 		if (result.hasErrors())
 			return new ModelAndView("room-edit");
 		ModelAndView mav = new ModelAndView("rooms");
@@ -107,6 +142,11 @@ public class RoomController {
 
 	@RequestMapping(value = "/delete/{id}")
 	public ModelAndView deleteRoom(@PathVariable("id") String id) {
+		User user = userSessionService.findUserBySession();
+		if(!user.getRole().equals("ADMIN")) {
+			ModelAndView mav = new ModelAndView("unauthorized-student");
+			return mav;
+		}
 		ModelAndView mav = new ModelAndView("forward:/admin/rooms/list");
 		Room room = rService.findRoomById(id);
 		rService.removeRoom(room);

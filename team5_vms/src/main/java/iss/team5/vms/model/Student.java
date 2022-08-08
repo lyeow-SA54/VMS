@@ -29,8 +29,6 @@ public class Student {
 	private User user;
 
 	public Student(String firstName, String lastName, String email, String username) {
-		Role role = new Role("STUDENT");
-		List<Role> rolelist = List.of(role);
-		this.user = new User(firstName, lastName, email, username, rolelist);
+		this.user = new User(firstName, lastName, email, username);
 	}
 }

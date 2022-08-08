@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="ISO-8859-1">
+
+    <title>VMS</title>
+
+    <link rel="stylesheet" th:href="@{/css/simple.css}" />
+
+    <style>
+            div{text-align: center; padding: 100px;}
+            p{color:red;}
+    </style>
+
+</head>
+
+
+
+<body>
+
+<div>
+
+    <h1>Login</h1>
+
+    <form role="form" th:action = "@{/login/authenticate}" method="post" th:object=${account}>
+    <p th:if="${repeatlogin}">*Incorrect Username or password</p>
+
+    Username： <input type="text" th:field="*{username}"> <br>
+
+    Password： <input type="password" th:field="*{password}"> <br>
+
+    <input type="submit" id = "login" value = "login">
+
+</form>
+
+</div>
+
+</body>
+
+</html>

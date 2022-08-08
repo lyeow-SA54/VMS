@@ -5,19 +5,19 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import iss.team5.vms.helper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import iss.team5.vms.helper.BookingStatus;
 import iss.team5.vms.helper.Category;
+import iss.team5.vms.helper.HashStringGenerator;
+import iss.team5.vms.helper.ReportStatus;
 import iss.team5.vms.helper.StudentStatus;
 import iss.team5.vms.helper.dateTimeInput;
 import iss.team5.vms.model.Booking;
 import iss.team5.vms.model.Facility;
 import iss.team5.vms.model.Report;
-import iss.team5.vms.model.Role;
 import iss.team5.vms.model.Room;
 import iss.team5.vms.model.Student;
 import iss.team5.vms.model.User;
@@ -76,16 +76,14 @@ public class SeedDBServiceImpl implements SeedDBService {
 			
 		
 //		if(!us.tableExist()) {
-//			Role role = new Role("ADMIN");
-//			List<Role> rolelist = List.of(role);
-//			User user = new User();
-//			user.setEmail("admin@u.nus.edu");
-//			user.setFirstName("admin");
-//			user.setLastName("");
-//			user.setRoles(rolelist);
-//			user.setUsername("admin");
-//			user.setPassword(new BCryptPasswordEncoder().encode("admin"));
-//			us.createUser(user);
+		User user = new User();
+		user.setEmail("admin@u.nus.edu");
+		user.setFirstName("admin");
+		user.setLastName("");
+		user.setRole("ADMIN");
+		user.setUsername("admin");
+		user.setPassword(HashStringGenerator.getHash("admin", "admin"));
+		us.createUser(user);
 //		}
 	
 		
