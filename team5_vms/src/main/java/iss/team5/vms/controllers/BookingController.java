@@ -22,12 +22,14 @@ import iss.team5.vms.model.Facility;
 import iss.team5.vms.model.Report;
 import iss.team5.vms.model.Room;
 import iss.team5.vms.model.Student;
+import iss.team5.vms.model.User;
 import iss.team5.vms.repositories.StudentRepo;
 import iss.team5.vms.services.BookingService;
 import iss.team5.vms.services.FacilityService;
 import iss.team5.vms.services.RoomService;
 import iss.team5.vms.services.StudentService;
 import iss.team5.vms.services.UserService;
+import iss.team5.vms.services.UserSessionService;
 
 @Controller
 @RequestMapping("/student")
@@ -51,9 +53,16 @@ public class BookingController {
 	@Autowired
 	StudentRepo srepo;
 	
+	@Autowired
+	private UserSessionService userSessionService;
+	
 	@RequestMapping("/home")
 	public ModelAndView studentHome() {
-		
+		User user = userSessionService.findUserBySession();
+		if(!user.getRole().equals("STUDENT")) {
+			ModelAndView mav = new ModelAndView("unauthorized-admin");
+			return mav;
+		}
 		List<Room> rooms = rs.findAllRooms();
 		Booking bookingForTheDay = new Booking();
 		bookingForTheDay.setDate(LocalDate.now());
@@ -89,7 +98,11 @@ public class BookingController {
 
 	@RequestMapping("/checkin/{bookingId}")
 	public ModelAndView bookingCheckin(@PathVariable("bookingId") String bookingId) {
-
+		User user = userSessionService.findUserBySession();
+		if(!user.getRole().equals("STUDENT")) {
+			ModelAndView mav = new ModelAndView("unauthorized-admin");
+			return mav;
+		}
 		// pending login implementation
 		// hardcoded student object for now, final implementation should retrieve from
 		// logged in context
@@ -112,7 +125,11 @@ public class BookingController {
 	
 	@RequestMapping(value = "/booking/options", method = RequestMethod.GET)
 	public ModelAndView bookingOptionSelection() {
-
+		User user = userSessionService.findUserBySession();
+		if(!user.getRole().equals("STUDENT")) {
+			ModelAndView mav = new ModelAndView("unauthorized-admin");
+			return mav;
+		}
 		Booking booking = new Booking();
 		Room room = new Room();
 		ModelAndView mav = new ModelAndView("student-bookings-filter_selection");
@@ -125,7 +142,11 @@ public class BookingController {
 	
 	@RequestMapping(value = "/booking/options", method = RequestMethod.POST)
 	public ModelAndView bookingOptionSelected(Booking booking, Room room) {
-
+		User user = userSessionService.findUserBySession();
+		if(!user.getRole().equals("STUDENT")) {
+			ModelAndView mav = new ModelAndView("unauthorized-admin");
+			return mav;
+		}
 		List<Room> rooms = rs.findRoomsByAttributes(room);
 		List<Booking> bookings = bs.checkBookingAvailable(booking, rooms);
 		ModelAndView mav = new ModelAndView("student-bookings-slot_selection");
@@ -184,6 +205,11 @@ public class BookingController {
 
 	@RequestMapping(value = "booking/status/{bookingId}")
 	public ModelAndView bookingStatus(@PathVariable("bookingId") String bookingId) {
+		User user = userSessionService.findUserBySession();
+		if(!user.getRole().equals("STUDENT")) {
+			ModelAndView mav = new ModelAndView("unauthorized-admin");
+			return mav;
+		}
 		ModelAndView mav = new ModelAndView("booking-success");
 		Booking booking = bs.findBookingById(bookingId);
 		mav.addObject("booking", booking);
@@ -200,6 +226,11 @@ public class BookingController {
 	
 	@RequestMapping("/booking/history")
 	public ModelAndView bookingHistory(Student student) {
+		User user = userSessionService.findUserBySession();
+		if(!user.getRole().equals("STUDENT")) {
+			ModelAndView mav = new ModelAndView("unauthorized-admin");
+			return mav;
+		}
 //		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 //		Student s1 = ss.findStudentByUser(us.findUserByUsername(username));
 		Student s1 = ss.findStudentById(3);
@@ -216,6 +247,11 @@ public class BookingController {
 	
 	@RequestMapping(value = "/booking/report/{bookingId}", method = RequestMethod.GET)
 	public ModelAndView bookingReport(@PathVariable String bookingId) {
+		User user = userSessionService.findUserBySession();
+		if(!user.getRole().equals("STUDENT")) {
+			ModelAndView mav = new ModelAndView("unauthorized-admin");
+			return mav;
+		}
 		ModelAndView mav = new ModelAndView("misuse-report-form");
 		Booking booking = bs.findBookingById(bookingId);
 		mav.addObject("booking", booking);
@@ -235,6 +271,11 @@ public class BookingController {
 	
 	@RequestMapping(value = "/booking/extend/{bookingId}", method = RequestMethod.GET)
 	public ModelAndView extendBooking(@PathVariable String bookingId) {
+		User user = userSessionService.findUserBySession();
+		if(!user.getRole().equals("STUDENT")) {
+			ModelAndView mav = new ModelAndView("unauthorized-admin");
+			return mav;
+		}
 		ModelAndView mav = new ModelAndView("booking-success");
 		Booking booking = bs.findBookingById(bookingId);
 		String outcomeMsg = "";

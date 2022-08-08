@@ -91,10 +91,12 @@ public class RoomController {
 	@ResponseBody
 	public ModelAndView roomList() {
 		User user = userSessionService.findUserBySession();
-		if(!user.getRole().equals("ADMIN")) {
-			ModelAndView mav = new ModelAndView("unauthorized-student");
-			return mav;
-		}
+		if(user != null) {
+			if(!user.getRole().equals("ADMIN")) {
+				ModelAndView mav = new ModelAndView("unauthorized-student");
+				return mav;
+			}
+		}		
 		ModelAndView mav = new ModelAndView("rooms");
 		List<Room> rooms = rService.findAllRooms();
 		mav.addObject("rooms", rooms);

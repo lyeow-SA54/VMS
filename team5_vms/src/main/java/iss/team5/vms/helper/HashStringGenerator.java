@@ -13,24 +13,20 @@ public class HashStringGenerator {
 	
 	public static byte[] getHash(String username, String password) {
 		byte[] hash = null;
-		String combinedString = username + password;
-		
+		String combinedString = username + password;		
 		try {
 			MessageDigest mg = MessageDigest.getInstance("SHA-256");
 			hash = mg.digest(combinedString.getBytes(StandardCharsets.UTF_8));
 		}
 		catch(NoSuchAlgorithmException e) {
 			LOGGER.error("No SHA-256 algorithm");
-			LOGGER.error(e);
-			
-		}
-		
+			LOGGER.error(e);			
+		}		
 		return hash;
 	}
 	
 	public static String convertByteToHex(byte[] hash) {
-		StringBuilder hexDisplay = new StringBuilder(2 * hash.length);
-		
+		StringBuilder hexDisplay = new StringBuilder(2 * hash.length);		
 		for(int i = 0; i < hash.length; i++) {
 			String hex = Integer.toHexString(0xff & hash[i]);
 			if(hex.length() == 1) {
@@ -38,7 +34,6 @@ public class HashStringGenerator {
 			}
 			hexDisplay.append(hex);
 		}
-		
 		return hexDisplay.toString();
 	}
 }
