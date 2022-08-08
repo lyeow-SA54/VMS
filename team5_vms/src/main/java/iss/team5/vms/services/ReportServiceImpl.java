@@ -2,13 +2,13 @@ package iss.team5.vms.services;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 
-import iss.team5.vms.model.Booking;
-import iss.team5.vms.model.Room;
 import org.springframework.stereotype.Service;
 
+import iss.team5.vms.model.Booking;
 import iss.team5.vms.model.Report;
 import iss.team5.vms.model.Student;
 import iss.team5.vms.repositories.ReportRepo;

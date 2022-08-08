@@ -5,7 +5,10 @@ import java.util.List;
 import iss.team5.vms.helper.BookingStatus;
 import iss.team5.vms.helper.ReportStatus;
 import iss.team5.vms.model.Report;
+import iss.team5.vms.model.User;
 import iss.team5.vms.services.ReportService;
+import iss.team5.vms.services.UserSessionService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +26,9 @@ public class RestAdminController {
 
     @Autowired
     ReportService rs;
+    
+    @Autowired
+	private UserSessionService userSessionService;
 	
 	@GetMapping("/bookings")
     public List<Booking> getBookings(){
@@ -72,6 +78,11 @@ public class RestAdminController {
 	
 	@GetMapping("/index")
 	public ModelAndView home() {
+		User user = userSessionService.findUserBySession();
+		if(!user.getRole().equals("ADMIN")) {
+			ModelAndView mav = new ModelAndView("unauthorized-student");
+			return mav;
+		}
 		ModelAndView mav = new ModelAndView("admin-index");
 		return mav;
 	}
