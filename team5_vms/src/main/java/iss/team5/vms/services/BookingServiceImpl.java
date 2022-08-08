@@ -171,5 +171,28 @@ public class BookingServiceImpl implements BookingService {
 
 		return bookings;
 	}
+	
+	@Override
+	public Booking findStudentCurrentBooking(Student student) {
+		List<Booking> bookings = br.findAllBookingByStudent(student);
+		bookings = checkBookingInProgress(bookings);
+		return bookings.stream().filter(b->b.isBookingInProgress()).findFirst().get();
 
+	}
+
+	@Override
+	public Booking findLastBooking(Booking booking) {
+		Room room = booking.getRoom();
+		String id = booking.getId();
+		LocalDate date = booking.getDate();
+		List<Booking> bookingList = br.findByDateAndRoom(date, room);
+		for (int i = 0; i < bookingList.size(); i++) {
+			Booking booking1 = bookingList.get(i);
+			if (booking1.getId().equals(id)) {
+				booking = bookingList.get(i - 1);
+				break;
+			}
+		}
+		return booking;
+	}
 }

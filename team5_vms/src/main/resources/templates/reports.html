@@ -4,45 +4,47 @@
 
 <body>
 
-<div th:if="${outcomeMsg!=null}"><span th:text="${outcomeMsg}"></span></div>
+	<div th:if="${outcomeMsg!=null}"><span th:text="${outcomeMsg}"></span></div>
 
-<table>
-    <tr>
-        <th>Report Id</th>
-        <th>Image</th>
-        <th>Details</th>
-        <th>Booking Date</th>
-        <th>Booking Time</th>
-        <th>Booking Duration</th>
-        <th>Status</th>
-        <th>Options</th>
-        <th></th>
+	<table>
+		<tr>
+			<th>Report Id</th>
+			<th>Image</th>
+			<th>Details</th>
+			<th>Booking Date</th>
+			<th>Booking Time</th>
+			<th>Booking Duration</th>
+			<th>Status</th>
+			<th>Options</th>
+			<th></th>
 
-    </tr>
-    <tr th:each="report:${reports}">
-        <td th:text=${report.id}></td>
-        <td th:text=${report.imgPath}></td>
-        <td th:text=${report.details}></td>
-        <td th:text=${report.booking.date}></td>
-        <td th:text=${report.booking.time}></td>
-        <td th:text=${report.booking.duration}></td>
-        <td th:text=${report.reportStatus}></td>
-        <td th:if="${report.reportStatus == T(iss.team5.vms.helper.ReportStatus).PROCESSING}">
-            <a th:href="@{/ar/reports/reject/}+${report.id}">
-                <span th:text="REJECT"></span>
-            </a>
-            <a th:href="@{/ar/reports/approval/}+${report.id}">
-                <span th:text="APPROVAL"></span>
-            </a>
-        </td>
-        <!--<td th:text=${report.booking.duration}></td>
+		</tr>
+		<tr th:each="report:${reports}">
+			<td th:text=${report.id}></td>
+			<td><a th:href="@{/img/}+${report.imgPath}">
+					<span th:text="IMG"></span>
+				</a> </td>
+			<td th:text=${report.details}></td>
+			<td th:text=${report.booking.date}></td>
+			<td th:text=${report.booking.time}></td>
+			<td th:text=${report.booking.duration}></td>
+			<td th:text=${report.reportStatus}></td>
+			<td th:if="${report.reportStatus == T(iss.team5.vms.helper.ReportStatus).PROCESSING}">
+				<a th:href="@{/ar/reports/reject/}+${report.id}">
+					<span th:text="REJECT"></span>
+				</a>
+				<a th:href="@{/ar/reports/approval/}+${report.id}">
+					<span th:text="APPROVAL"></span>
+				</a>
+			</td>
+			<!--<td th:text=${report.booking.duration}></td>
         <td th:text=${report.booking.time}></td>
         <td th:text=${report.booking.date}></td>-->
-        </td>
-    </tr>
-</table>
-<br />
-<!--<div th:replace="fragments/general.html :: footer"></div>-->
+			</td>
+		</tr>
+	</table>
+	<br />
+	<!--<div th:replace="fragments/general.html :: footer"></div>-->
 </body>
 
 </html>

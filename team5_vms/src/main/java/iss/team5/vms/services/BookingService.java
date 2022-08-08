@@ -37,4 +37,8 @@ public interface BookingService {
 
 	List<Booking> checkBookingInProgress(List<Booking> bookings);
 
+	Booking findStudentCurrentBooking(Student student);
+	
+	Booking findLastBooking(Booking booking);
+
 }
