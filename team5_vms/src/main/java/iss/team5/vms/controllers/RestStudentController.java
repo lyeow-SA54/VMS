@@ -6,20 +6,23 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import iss.team5.vms.helper.Account;
 import iss.team5.vms.helper.BookingStatus;
 import iss.team5.vms.helper.Category;
 import iss.team5.vms.helper.ReportStatus;
@@ -27,13 +30,15 @@ import iss.team5.vms.model.Booking;
 import iss.team5.vms.model.Report;
 import iss.team5.vms.model.Room;
 import iss.team5.vms.model.Student;
-import iss.team5.vms.repositories.StudentRepo;
+import iss.team5.vms.model.User;
+import iss.team5.vms.services.AccountAuthenticateService;
 import iss.team5.vms.services.BookingService;
 import iss.team5.vms.services.FacilityService;
 import iss.team5.vms.services.ReportService;
 import iss.team5.vms.services.RoomService;
 import iss.team5.vms.services.StudentService;
 import iss.team5.vms.services.UserService;
+import iss.team5.vms.services.UserSessionService;
 
 @RestController
 @RequestMapping(path = "api/student", produces = "application/json")
@@ -58,24 +63,59 @@ public class RestStudentController {
 	UserService us;
 
 	@Autowired
-	StudentRepo srepo;
+	private AccountAuthenticateService accAuthService;
+
+	@PostMapping(value = "/login")
+	public Map<String, Object> loginAndroid(@RequestBody Account account) {
+		Map<String, Object> response = new HashMap<String, Object>();
+		Map<Student, String> map = accAuthService.getMap();
+		User user = accAuthService.authenticateAccount(account);
+		if (user == null) {
+			System.out.println("invalid login");
+			response.put("response", "Invalid login");
+			return response;
+		} else {
+			String token = accAuthService.generateNewToken();
+			if (map.containsKey(ss.findStudentByUser(user))) {
+				map.replace(ss.findStudentByUser(user), token);
+			} else {
+				map.put(ss.findStudentByUser(user), token);
+			}
+			response.put("response", token);
+			System.out.println(map.get(ss.findStudentByUser(user)));
+			return response;
+		}
+	}
+	
+	@PostMapping(value = "/logout/{token}")
+	public Map<String, Object> loginAndroid(@PathVariable String token) {
+		Map<String, Object> response = new HashMap<String, Object>();
+		Map<Student, String> map = accAuthService.getMap();
+		Student s = map.entrySet().stream().filter(m -> m.getValue().equals(token)).map(Map.Entry::getKey).findFirst().get();
+		map.remove(s);
+		System.out.println(s);
+		response.put("response", HttpStatus.CONTINUE);
+		return response;
+	}
 
 	@RequestMapping("/booking/history")
-	public List<Booking> bookingHistory(Student student) {
+	public List<Booking> bookingHistoryAndroid(Student student) {
 		Student s1 = ss.findStudentById(3);
 		List<Booking> bookings = bs.findBookingsByStudent(s1);
 		return bs.checkBookingInProgress(bookings);
 	}
 
 	@PostMapping(value = "/booking/options")
-	public List<Booking> bookingOptions(@RequestBody List<Map<String, Object>> rawPayload) {
+	public List<Booking> bookingOptionsAndroid(@RequestBody List<Map<String, Object>> rawPayload) {
 		Map<String, Object> payload = rawPayload.get(0);
 
 		LocalDate date = LocalDate.parse((String) payload.get("date"), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 		LocalTime time = LocalTime.parse((String) payload.get("time"));
 
-		Booking booking = new Booking("1", date, time, Integer.parseInt((String)payload.get("duration")), BookingStatus.WAITINGLIST);
-		Room room = new Room("1", Integer.parseInt((String)payload.get("capacity")), fs.jsonToFacilityList((String) payload.get("facilities")));
+		Booking booking = new Booking("1", date, time, Integer.parseInt((String) payload.get("duration")),
+				BookingStatus.WAITINGLIST);
+		Room room = new Room("1", Integer.parseInt((String) payload.get("capacity")),
+				fs.jsonToFacilityList((String) payload.get("facilities")));
 
 		List<Room> rooms = rms.findRoomsByAttributes(room);
 		List<Booking> bookings = bs.checkBookingAvailable(booking, rooms);
@@ -126,7 +166,7 @@ public class RestStudentController {
 //		System.out.println("report success");
 		return "report-success";
 	}
-	
+
 	@PostMapping(value = "/booking/save")
 	public List<HttpStatus> newBookingAndroid(@RequestBody List<Map<String, Object>> rawPayload) {
 		Map<String, Object> payload = rawPayload.get(0);
@@ -136,7 +176,7 @@ public class RestStudentController {
 
 		LocalDate date = LocalDate.parse((String) payload.get("date"), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 		LocalTime time = LocalTime.parse((String) payload.get("time"));
-		Booking booking = new Booking("1", date, time, Integer.parseInt((String)payload.get("duration")), room);
+		Booking booking = new Booking("1", date, time, Integer.parseInt((String) payload.get("duration")), room);
 		booking.setStudent(student);
 		List<HttpStatus> response = new ArrayList<HttpStatus>();
 //		booking.setRoom(room);
@@ -144,26 +184,21 @@ public class RestStudentController {
 //		booking.setRoom(rs.findRoomById(booking.getRoom().getId()));
 //		List<Room> rooms = rs.findRoomsByAttributes(room);
 //		List<Booking> bookings = bs.checkBookingAvailable(booking, rooms);
-		if (!bs.checkBookingByDateTimeRoom(booking,room)) {
+		if (!bs.checkBookingByDateTimeRoom(booking, room)) {
 			booking.setStatus(BookingStatus.REJECTED);
 			response.add(HttpStatus.EXPECTATION_FAILED);
-		}
-		else
-		{
+		} else {
 //			booking.setRoom(rs.findRoomById(room.getId()));
-			if (booking.getStudent().getScore() >= 3)
-			{
-			booking.setStatus(BookingStatus.WAITINGLIST);
-			bs.scheduleWaitingList(booking, room);
-			bs.createBooking(booking);
-			response.add(HttpStatus.ACCEPTED);
+			if (booking.getStudent().getScore() >= 3) {
+				booking.setStatus(BookingStatus.WAITINGLIST);
+				bs.scheduleWaitingList(booking, room);
+				bs.createBooking(booking);
+				response.add(HttpStatus.ACCEPTED);
+			} else {
+				booking.setStatus(BookingStatus.SUCCESSFUL);
+				bs.createBooking(booking);
+				response.add(HttpStatus.ACCEPTED);
 			}
-			else
-			{
-			booking.setStatus(BookingStatus.SUCCESSFUL);
-			bs.createBooking(booking);
-			response.add(HttpStatus.ACCEPTED);
-			}	
 		}
 		return response;
 	}
