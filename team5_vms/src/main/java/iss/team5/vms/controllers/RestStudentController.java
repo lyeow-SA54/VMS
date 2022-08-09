@@ -74,8 +74,8 @@ public class RestStudentController {
 		LocalDate date = LocalDate.parse((String) payload.get("date"), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 		LocalTime time = LocalTime.parse((String) payload.get("time"));
 
-		Booking booking = new Booking("1", date, time, 2, BookingStatus.WAITINGLIST);
-		Room room = new Room("1", 2, fs.jsonToFacilityList((String) payload.get("facilities")));
+		Booking booking = new Booking("1", date, time, Integer.parseInt((String)payload.get("duration")), BookingStatus.WAITINGLIST);
+		Room room = new Room("1", Integer.parseInt((String)payload.get("capacity")), fs.jsonToFacilityList((String) payload.get("facilities")));
 
 		List<Room> rooms = rms.findRoomsByAttributes(room);
 		List<Booking> bookings = bs.checkBookingAvailable(booking, rooms);
