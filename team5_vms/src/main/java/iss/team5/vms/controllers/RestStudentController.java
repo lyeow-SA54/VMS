@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -12,6 +13,8 @@ import java.util.UUID;
 import org.apache.commons.io.FileUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -77,10 +80,10 @@ public class RestStudentController {
 		List<Room> rooms = rms.findRoomsByAttributes(room);
 		List<Booking> bookings = bs.checkBookingAvailable(booking, rooms);
 
-		System.out.println(payload.get("facilities"));
-		System.out.println(payload.get("date"));
-		System.out.println(payload.get("time"));
-		System.out.println(payload.get("capacity"));
+//		System.out.println(payload.get("facilities"));
+//		System.out.println(payload.get("date"));
+//		System.out.println(payload.get("time"));
+//		System.out.println(payload.get("capacity"));
 
 		return bookings;
 	}
@@ -113,15 +116,56 @@ public class RestStudentController {
 
 		rs.createReport(new Report((String) payload.get("details"), name + imageType, lastBooking,
 				ReportStatus.PROCESSING, Category.valueOf((String) payload.get("category"))));
-		System.out.println("4 success");
+//		System.out.println("4 success");
 		// test for getting real path for app
 		System.out.println(filePath + name + imageType);// real path in local
 		/*
 		 * ms.sendSimpleMail("e0838388@u.nus.edu","report test","new report generated!"
 		 * );
 		 */
-		System.out.println("report success");
+//		System.out.println("report success");
 		return "report-success";
+	}
+	
+	@PostMapping(value = "/booking/save")
+	public List<HttpStatus> newBookingAndroid(@RequestBody List<Map<String, Object>> rawPayload) {
+		Map<String, Object> payload = rawPayload.get(0);
+
+		Student student = ss.findStudentById(3);
+		Room room = rms.findRoomById((String) payload.get("roomId"));
+
+		LocalDate date = LocalDate.parse((String) payload.get("date"), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+		LocalTime time = LocalTime.parse((String) payload.get("time"));
+		Booking booking = new Booking("1", date, time, Integer.parseInt((String)payload.get("duration")), room);
+		booking.setStudent(student);
+		List<HttpStatus> response = new ArrayList<HttpStatus>();
+//		booking.setRoom(room);
+//		booking.setRoom(rs.findRoomById(room.getId()));
+//		booking.setRoom(rs.findRoomById(booking.getRoom().getId()));
+//		List<Room> rooms = rs.findRoomsByAttributes(room);
+//		List<Booking> bookings = bs.checkBookingAvailable(booking, rooms);
+		if (!bs.checkBookingByDateTimeRoom(booking,room)) {
+			booking.setStatus(BookingStatus.REJECTED);
+			response.add(HttpStatus.EXPECTATION_FAILED);
+		}
+		else
+		{
+//			booking.setRoom(rs.findRoomById(room.getId()));
+			if (booking.getStudent().getScore() >= 3)
+			{
+			booking.setStatus(BookingStatus.WAITINGLIST);
+			bs.scheduleWaitingList(booking, room);
+			bs.createBooking(booking);
+			response.add(HttpStatus.ACCEPTED);
+			}
+			else
+			{
+			booking.setStatus(BookingStatus.SUCCESSFUL);
+			bs.createBooking(booking);
+			response.add(HttpStatus.ACCEPTED);
+			}	
+		}
+		return response;
 	}
 
 }
