@@ -14,7 +14,9 @@ public class LoginHandlerInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         HttpSession session = request.getSession();
         if(session.getAttribute("loginUser") == null){
-            request.getRequestDispatcher("/login").forward(request, response);
+        	System.out.println(request.getRequestURL());
+//            request.getRequestDispatcher("/login").forward(request, response);
+        	response.sendRedirect("http://localhost:8080/login");
             return false;
         }else {
             return true;
