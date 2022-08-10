@@ -37,7 +37,9 @@ public class RestAdminController {
 	
 	@GetMapping("/reports")
     public List<Report> getReports(){
-        return rs.findAllReports();
+		List<Report> reports = rs.findAllReports();
+		reports.stream().forEach(r -> r.setImgPath("/img/"+r.getImgPath()));
+        return reports;
 	}
 	
 	@PostMapping(value="/bookings/{id}")

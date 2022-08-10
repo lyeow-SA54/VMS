@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import { Button, ButtonGroup, Container } from 'reactstrap';
 import { Link } from 'react-router-dom';
 
+
+
 class Report extends Component {
+
     constructor(props) {
         super(props);
         this.state = {
@@ -69,6 +72,7 @@ class Report extends Component {
             return <p>Loading...</p>;
         }
 
+        // const ReportListProcessed = reports.forEach(x => x.imgPath = "/img/"+x.imgPath);
         const ReportList = reports
         .filter(report =>
             // (
@@ -80,7 +84,7 @@ class Report extends Component {
                 return (
                     <tr>
                         <td>{searchedReports.id}</td>
-                        <td>{searchedReports.imgPath}</td>
+                        <td> <img src ={searchedReports.imgPath}></img></td>
                         <td>{searchedReports.details}</td>
                         <td>{searchedReports.booking.date} / {searchedReports.booking.time}</td>
                         <td>{searchedReports.booking.duration} hour</td>

@@ -75,14 +75,16 @@ public class RestStudentController {
 			response.put("response", "Invalid login");
 			return response;
 		} else {
+			Student s = ss.findStudentByUser(user);
 			String token = accAuthService.generateNewToken();
 			if (map.containsKey(ss.findStudentByUser(user))) {
 				map.replace(ss.findStudentByUser(user), token);
 			} else {
-				map.put(ss.findStudentByUser(user), token);
+				map.put(s, token);
 			}
 			response.put("response", token);
-			System.out.println(map.get(ss.findStudentByUser(user)));
+			response.put("studentId", s.getId());
+			System.out.println(map.get(s));
 			return response;
 		}
 	}
@@ -98,11 +100,21 @@ public class RestStudentController {
 		return response;
 	}
 
-	@RequestMapping("/booking/history")
-	public List<Booking> bookingHistoryAndroid(Student student) {
-		Student s1 = ss.findStudentById(3);
-		List<Booking> bookings = bs.findBookingsByStudent(s1);
+	@PostMapping("/booking/history/{token}")
+	public List<Booking> bookingHistoryAndroid(@PathVariable String token, @RequestBody List<Map<String, Object>> rawPayload) {
+//		
+//		String token = (String) payload.get("token");
+//		System.out.println(token);
+		if (accAuthService.getMap().containsValue(token)) {
+			Map<String, Object> payload = rawPayload.get(0);
+		Student s = ss.findStudentById(Integer.parseInt((String) payload.get("studentId")));
+		System.out.println(payload.get("studentId"));
+		List<Booking> bookings = bs.findBookingsByStudent(s);
+		System.out.println("returning list");
 		return bs.checkBookingInProgress(bookings);
+		}
+		
+		else return null;
 	}
 
 	@PostMapping(value = "/booking/options")
