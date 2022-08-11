@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
@@ -25,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import iss.team5.vms.helper.Account;
 import iss.team5.vms.helper.BookingStatus;
 import iss.team5.vms.helper.Category;
+import iss.team5.vms.helper.JWTGenerator;
 import iss.team5.vms.helper.ReportStatus;
 import iss.team5.vms.model.Booking;
 import iss.team5.vms.model.Report;
@@ -38,7 +38,6 @@ import iss.team5.vms.services.ReportService;
 import iss.team5.vms.services.RoomService;
 import iss.team5.vms.services.StudentService;
 import iss.team5.vms.services.UserService;
-import iss.team5.vms.services.UserSessionService;
 
 @RestController
 @RequestMapping(path = "api/student", produces = "application/json")
@@ -67,26 +66,39 @@ public class RestStudentController {
 
 	@PostMapping(value = "/login")
 	public Map<String, Object> loginAndroid(@RequestBody Account account) {
-		Map<String, Object> response = new HashMap<String, Object>();
-		Map<Student, String> map = accAuthService.getMap();
-		User user = accAuthService.authenticateAccount(account);
-		if (user == null) {
-//			System.out.println("invalid login");
-			response.put("response", "Invalid login");
-			return response;
-		} else {
-			Student s = ss.findStudentByUser(user);
-			String token = accAuthService.generateNewToken();
-			if (map.containsKey(s)) {
-				map.replace(s, token);
-			} else {
-				map.put(s, token);
-			}
-			response.put("response", token);
-			response.put("studentId", s.getId());
-			System.out.println(map.get(s));
-			return response;
+		try {
+			User user = accAuthService.authenticateAccount(account);
+			String id = String.valueOf(user.getId());
+			String accessToken = JWTGenerator.generateJWT(id, "jwtauthenticator", account.getUsername(), 604800000);
+			JWTGenerator.verifyJWT(accessToken);
+			Map<String, Object> mapResponse = new HashMap<String, Object>();
+			mapResponse.put(id.toString(), accessToken);
+			return mapResponse;
 		}
+		catch(Exception e) {
+			return null;
+		}
+
+//		Map<String, Object> response = new HashMap<String, Object>();
+//		Map<Student, String> map = accAuthService.getMap();
+//		User user = accAuthService.authenticateAccount(account);
+//		if (user == null) {
+//			System.out.println("invalid login");
+//			response.put("response", "Invalid login");
+//			return response;
+//		} else {
+//			Student s = ss.findStudentByUser(user);
+//			String token = accAuthService.generateNewToken();
+//			if (map.containsKey(ss.findStudentByUser(user))) {
+//				map.replace(ss.findStudentByUser(user), token);
+//			} else {
+//				map.put(s, token);
+//			}
+//			response.put("response", token);
+//			response.put("studentId", s.getId());
+//			System.out.println(map.get(s));
+//			return response;
+//		}
 	}
 
 	@PostMapping(value = "/logout/{token}")
@@ -106,16 +118,16 @@ public class RestStudentController {
 			@RequestBody List<Map<String, Object>> rawPayload) {
 //		String token = (String) payload.get("token");
 //		System.out.println(token);
-		if (accAuthService.getMap().containsValue(token)) {
+		if (token != null) {
+			JWTGenerator.verifyJWT(token);
+			System.out.println();
 			Map<String, Object> payload = rawPayload.get(0);
 			Student s = ss.findStudentById(Integer.parseInt((String) payload.get("studentId")));
 			System.out.println(payload.get("studentId"));
 			List<Booking> bookings = bs.findBookingsByStudent(s);
 			System.out.println("returning list");
 			return bs.checkBookingInProgress(bookings);
-		}
-
-		else
+		} else
 			return null;
 	}
 

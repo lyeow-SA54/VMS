@@ -35,21 +35,21 @@ public class RestAdminController {
 	@Autowired
 	private UserSessionService userSessionService;
 
-	@GetMapping("/bookings")
-    public List<Booking> getBookings(HttpServletRequest request, HttpServletResponse response) throws Exception{
-        return bs.findAllBookings();
-	}
-
 //	@GetMapping("/bookings")
-//	public ResponseEntity<?> getBookings(HttpServletRequest request, HttpServletResponse response) throws Exception {
-//		User user = userSessionService.findUserBySession();
-//		if (user == null) {
-//			// react need to redirect to login page (window.location.reload something like
-//			// that), if it gets 401 response
-//			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-//		}
-//		return ResponseEntity.ok().body(bs.findAllBookings());
+//    public List<Booking> getBookings(HttpServletRequest request, HttpServletResponse response) throws Exception{
+//        return bs.findAllBookings();
 //	}
+
+	@GetMapping("/bookings")
+	public ResponseEntity<?> getBookings(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		User user = userSessionService.findUserBySession();
+		if (user == null) {
+			// react need to redirect to login page (window.location.reload something like
+			// that), if it gets 401 response
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+		}
+		return ResponseEntity.ok().body(bs.findAllBookings());
+	}
 
 	@GetMapping("/reports")
 	public List<Report> getReports() {

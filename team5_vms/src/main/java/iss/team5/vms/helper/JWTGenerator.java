@@ -6,14 +6,14 @@ import io.jsonwebtoken.*;
 import java.util.Date;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.Claims;
-public class GenerateJWT {
+public class JWTGenerator {
 	public static String generateJWT(String id, String issuer, String subject, long ttlMillis) {
 		 
 	    //The JWT signature algorithm we will be using to sign the token
 	    SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 	 
 	    long nowMillis = System.currentTimeMillis();
-	    Date now = new Date(nowMillis);
+	    Date now = new Date(ttlMillis);
 	 
 	    //We will sign our JWT with our ApiKey secret
 	    byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary("asldf81721lk2h1o291AUjUUn");
