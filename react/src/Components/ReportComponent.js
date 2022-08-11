@@ -91,9 +91,9 @@ class Report extends Component {
                         <td>{searchedReports.reportStatus}</td>
                         {/* <td>{searchedReports.room.roomName}</td> */}
                         <td>
-                            <ButtonGroup style={ { display: searchedReports.reportStatus==="PROCESSING" ? 'block' : 'none' } }>
-                                <Button size="sm" color='primary' onClick={() => this.updateReport(searchedReports.id, "APPROVE")}>Approve<span className="fa fa-thumbs-up"></span></Button>
-                                <Button size="sm" color='danger' onClick={() => this.updateReport(searchedReports.id, "REJECT")}>Reject<span className="fa fa-times"></span></Button>
+                            <ButtonGroup>
+                                <Button size="sm" color='primary' onClick={() => this.updateReport(searchedReports.id, "APPROVE")} style={ { display: (searchedReports.reportStatus==="PROCESSING")||(searchedReports.reportStatus==="REJECTED") ? 'block' : 'none' } }>Approve<span className="fa fa-thumbs-up"></span></Button>
+                                <Button size="sm" color='danger' onClick={() => this.updateReport(searchedReports.id, "REJECT")} style={ { display: (searchedReports.reportStatus==="PROCESSING")||(searchedReports.reportStatus==="APPROVED") ? 'block' : 'none' } }>Reject<span className="fa fa-times"></span></Button>
                             </ButtonGroup></td>
                     </tr>
                 );

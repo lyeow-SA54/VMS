@@ -114,7 +114,6 @@ public class RestStudentController {
 			System.out.println("returning list");
 			return bs.checkBookingInProgress(bookings);
 		}
-
 		else
 			return null;
 	}

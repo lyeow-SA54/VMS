@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import iss.team5.vms.helper.BookingStatus;
 import iss.team5.vms.helper.ReportStatus;
@@ -34,7 +35,7 @@ public class RestAdminController {
 
 	@Autowired
 	private UserSessionService userSessionService;
-
+	
 	@GetMapping("/bookings")
     public List<Booking> getBookings(HttpServletRequest request, HttpServletResponse response) throws Exception{
         return bs.findAllBookings();

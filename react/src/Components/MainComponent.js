@@ -20,7 +20,7 @@ class Main extends Component {
         <Switch>
           <Route path="/admin/reports" exact={true} component={Report} />
           <Route path="/admin/bookings" exact={true} component={Booking} />
-          <Redirect to="/admin/bookings" />
+          <Redirect to="http:localhost:8080/admin/index" />
         </Switch>
       </div>
 
