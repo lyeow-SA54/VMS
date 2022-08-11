@@ -9,130 +9,137 @@
 	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
 	<link rel="stylesheet" th:href="@{/css/simple.css}" />
+	<style type="text/css">
+		.btnorange {
+			background-color: #F27C36;
+			color: white;
+		}
 
+		.btnorange:hover {
+			background-color: white;
+			color: #F27C36;
+			border-color: #F27C36;
+		}
+		.btnblue {
+			background-color: #003062;
+			color: white;
+		}
+		.btnblue:hover {
+			background-color: white;
+			color: #003062;
+			border-color: #003062;
+		}
+	</style>
 </head>
 
 <body>
 	<div th:fragment="menu-student">
-		<div class="container-fluid">
-			<nav class="navbar navbar-expand-md navbar-dark bg-dark">
-				<div class="container-fluid">
-					<a class="navbar-brand" href="#">Team 5 VMS</a>
-					<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-						data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false"
-						aria-label="Toggle navigation">
-						<span class="navbar-toggler-icon"></span>
-					</button>
-					<div class="collapse navbar-collapse" id="navbarCollapse">
-						<ul class="navbar-nav me-auto mb-2 mb-md-0">
-							<li class="nav-item">
-								<a class="nav-link" th:href="@{/student/home}">Home</a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link" th:href="@{/student/booking/options}">New Booking</a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link" th:href="@{/student/booking/history}">Booking History</a>
-							</li>
-							<!--<li class="nav-item">
+		<nav class="navbar navbar-expand-md navbar-light bg-light">
+			<div class="container-fluid">
+				<img src="/image/logo.png" height="60px" style="vertical-align:middle;">
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+					aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarCollapse">
+					<ul class="navbar-nav me-auto mb-2 mb-md-0">
+						<li class="nav-item">
+							<a class="nav-link" th:href="@{/student/home}">&nbsp;&nbsp;Home</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" th:href="@{/student/booking/options}">New Booking</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" th:href="@{/student/booking/history}">Booking History</a>
+						</li>
+						<!--<li class="nav-item">
           <a class="nav-link" th:href="@{/report/save}">File a report</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" th:href="@{/student/checkin/{bookingId}(bookingId=${booking.id})}">Check-In</a>
         </li>-->
-						</ul>
-						<ul class="navbar-nav ml-auto">
-							<li class="nav-item">
-								<a class="btn btn-danger" th:href="@{/logout}">Logout</a>
-							</li>
-					</div>
+					</ul>
+					<ul class="navbar-nav ml-auto">
+						<li class="nav-item">
+							<a class="btn btnorange" th:href="@{/logout}">Logout</a>
+						</li>
 				</div>
-			</nav>
-		</div>
+			</div>
+		</nav>
 	</div>
 
 	<div th:fragment="menu-admin">
-		<div class="container-fluid">
-			<nav class="navbar navbar-expand-md navbar-dark bg-dark">
-				<div class="container-fluid">
-					<a class="navbar-brand" href="#">Team 5 VMS</a>
-					<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-						data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false"
-						aria-label="Toggle navigation">
-						<span class="navbar-toggler-icon"></span>
-					</button>
-					<div class="collapse navbar-collapse" id="navbarCollapse">
-						<ul class="navbar-nav me-auto mb-2 mb-md-0">
-							<li class="nav-item">
-								<a class="nav-link" th:href="@{/admin/index}">Home</a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link" th:href="@{/admin/rooms/create}">Create room</a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link" th:href="@{/admin/rooms/list}">Room List</a>
-							</li>
-						</ul>
-						<ul class="navbar-nav ml-auto">
-							<li class="nav-item">
-
-								<a class="btn btn-danger" th:href="@{/logout}">Logout</button>
-							</li>
-					</div>
+		<nav class="navbar navbar-expand-md navbar-light bg-light">
+			<div class="container-fluid">
+				<img src="/image/logo.png" height="60px" style="vertical-align:middle;">
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+					aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarCollapse">
+					<ul class="navbar-nav me-auto mb-2 mb-md-0">
+						<li class="nav-item">
+							<a class="nav-link" th:href="@{/admin/index}">&nbsp;&nbsp;Home</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" th:href="@{/admin/rooms/create}">Create room</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" th:href="@{/admin/rooms/list}">Room List</a>
+						</li>
+					</ul>
+					<ul class="navbar-nav ml-auto">
+						<li class="nav-item">
+							<a class="btn btnorange" th:href="@{/logout}">Logout</a>
+						</li>
+					</ul>
 				</div>
-			</nav>
-		</div>
+			</div>
+		</nav>
 	</div>
 
 	<div th:fragment="menu-admin-room">
-		<div class="container-fluid">
-			<nav class="navbar navbar-expand-md navbar-dark bg-dark">
-				<div class="container-fluid">
-					<a class="navbar-brand" href="#">Team 5 VMS</a>
-					<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-						data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false"
-						aria-label="Toggle navigation">
-						<span class="navbar-toggler-icon"></span>
-					</button>
-					<div class="collapse navbar-collapse" id="navbarCollapse">
-						<ul class="navbar-nav me-auto mb-2 mb-md-0">
-							<li class="nav-item">
-								<a class="nav-link" th:href="@{/admin/index}">Home</a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link" th:href="@{/admin/rooms/create}">Create room</a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link" th:href="@{/admin/rooms/list}">Room List</a>
-							</li>
-						</ul>
-						<form class="form-inline" role="search" action="#" th:action="@{/admin/rooms/search}"
-							method="get">
-							<input class="form-control mr-sm-2" type="text" placeholder="Search..."
-								th:value="${searchStr != null} ? ${searchStr} : ''" name="searchRoom" />
+		<nav class="navbar navbar-expand-md navbar-light bg-light">
+			<div class="container-fluid">
+				<img src="/image/logo.png" height="60px" style="vertical-align:middle;">
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+					aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarCollapse">
+					<ul class="navbar-nav me-auto mb-2 mb-md-0">
+						<li class="nav-item">
+							<a class="nav-link" th:href="@{/admin/index}">&nbsp;&nbsp;Home</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" th:href="@{/admin/rooms/create}">Create room</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" th:href="@{/admin/rooms/list}">Room List</a>
+						</li>
+					</ul>
+					<form class="form-inline" role="search" action="#" th:action="@{/admin/rooms/search}" method="get">
+						<input class="form-control mr-sm-2" type="text" placeholder="Search..."
+							th:value="${searchStr != null} ? ${searchStr} : ''" name="searchRoom" />
 
-							<select class="form-control mr-sm-2" name="facility">
-								<option class="dropdown-item" th:each="facility : ${checkBoxFacilities}"
-									th:value="${facility.name}" th:text="${facility.name}"></option>
-							</select>
-							<select class="form-control mr-sm-2" name="availability">
-								<option class="dropdown-item" value="0">Open</option>
-								<option class="dropdown-item" value="1">Full</option>
-							</select>
-							<button class="btn btn-primary" type="submit">Search</button>
-						</form>
-						<ul class="navbar-nav ml-auto">
-							<li class="nav-item">
-
-								<a class="btn btn-danger" th:href="@{/logout}">Logout</a>
-								<!--<a class="nav-link" th:href="@{/logout}">Logout</a>-->
-
-							</li>
-						</ul>
-					</div>
+						<select class="form-control mr-sm-2" name="facility">
+							<option class="dropdown-item" th:each="facility : ${checkBoxFacilities}"
+								th:value="${facility.name}" th:text="${facility.name}"></option>
+						</select>
+						<select class="form-control mr-sm-2" name="availability">
+							<option class="dropdown-item" value="0">Open</option>
+							<option class="dropdown-item" value="1">Full</option>
+						</select>
+						<button class="btn mybtn" type="submit">Search</button>
+					</form>
+					<ul class="navbar-nav ml-auto">
+						<li class="nav-item">
+							<a class="btn btnorange" th:href="@{/logout}">Logout</a>
+						</li>
+					</ul>
 				</div>
-			</nav>
-		</div>
+			</div>
+		</nav>
 	</div>
 </body>
 

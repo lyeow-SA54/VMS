@@ -13,16 +13,10 @@
 			<div class="col-3"></div>
 			<div class="col-6">
 				<form action="#" th:action="@{/admin/rooms/create}" th:object="${room}" method="post">
-					<h4>New Room Page</h4>
+					<h5>New Room Page</h5>
+					<input type="hidden" th:field="*{id}">
 					<table class="table table-borderless" align="center">
 						<tbody>
-							<tr>
-								<td>
-									<fieldset>
-										<input type="hidden" th:field="*{id}">
-									</fieldset>
-								</td>
-							</tr>
 							<tr>
 								<td><span th:text="#{fieldLabel.name}"></span></td>
 								<td>
@@ -81,7 +75,7 @@
 								</td>
 								<td colspan="2">
 									<fieldset>
-										<input type="submit" value="Create" class="btn btn-primary" />
+										<input type="submit" value="Create" class="btn btnblue" />
 									</fieldset>
 								</td>
 							</tr>
