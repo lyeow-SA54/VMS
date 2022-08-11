@@ -120,8 +120,7 @@ public class Android_StudentController {
 			@RequestBody List<Map<String, Object>> rawPayload) {
 //		String token = (String) payload.get("token");
 //		System.out.println(token);
-		if (token != null) {
-			JWTGenerator.verifyJWT(token);
+		if (JWTGenerator.verifyJWT(token)) {
 			System.out.println();
 			Map<String, Object> payload = rawPayload.get(0);
 			Student s = ss.findStudentById(Integer.parseInt((String) payload.get("studentId")));
