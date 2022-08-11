@@ -14,8 +14,8 @@ import iss.team5.vms.helper.ReportStatus;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
+import iss.team5.vms.generators.IdGenerator;
 import iss.team5.vms.helper.Category;
-import iss.team5.vms.helper.IdGenerator;
 import iss.team5.vms.helper.StudentStatus;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,7 +28,7 @@ import lombok.NoArgsConstructor;
 public class Report {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "report_id_gen")
-	@GenericGenerator(name = "report_id_gen", strategy = "iss.team5.vms.helper.ReportIdGenerator")
+	@GenericGenerator(name = "report_id_gen", strategy = "iss.team5.vms.generators.ReportIdGenerator")
 	private String id;
 	@NotNull
 	private String details;

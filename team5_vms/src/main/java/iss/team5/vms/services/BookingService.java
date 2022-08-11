@@ -10,34 +10,36 @@ public interface BookingService {
 	
 	boolean tableExist();
 	
-	List<Booking> findAllBookings();
+	boolean checkBookingByDateTimeRoom(Booking booking, Room room);
+	
+	boolean predictHogging(String imgPath);
 	
 	Booking findBookingById(String id);
 
 	Booking createBooking(Booking booking);
+			
+	Booking findStudentCurrentBooking(Student student);
+	
+	Booking findLastBooking(Booking booking);
+	
+	List<Booking> findAllBookings();
 
 	List<Booking> findBookingsByRoom(Room room);	
 	
 	List<Booking> findBookingsByStudent(Student student);
 	
-	void addStudent(Booking booking, Student student);
-	
-	void addRoom(Booking booking, Room room);
-	
-	String checkIn(Student student, Booking booking);
+	List<Booking> checkBookingInProgress(List<Booking> bookings);
 	
 	List<Booking> checkBookingAvailable(Booking booking, List<Room> rooms);
-
-	boolean checkBookingByDateTimeRoom(Booking booking, Room room);
+	
+	String checkIn(Student student, Booking booking);
 
 	void cancelCourseById(String id);
 
 	void scheduleWaitingList(Booking booking, Room room);
-
-	List<Booking> checkBookingInProgress(List<Booking> bookings);
-
-	Booking findStudentCurrentBooking(Student student);
 	
-	Booking findLastBooking(Booking booking);
+	void addStudent(Booking booking, Student student);
+	
+	void addRoom(Booking booking, Room room);
 
 }

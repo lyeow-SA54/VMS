@@ -1,4 +1,4 @@
-package iss.team5.vms.helper;
+package iss.team5.vms.generators;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 import java.security.Key;
@@ -38,15 +38,22 @@ public class JWTGenerator {
 	}
 	
 	//Sample method to validate and read the JWT
-	public static void verifyJWT(String jwt) {
+	public static boolean verifyJWT(String jwt) {
 	 
 	    //This line will throw an exception if it is not a signed JWS (as expected)
-	    Claims claims = Jwts.parser()         
+	    try {
+		Claims claims = Jwts.parser()         
 	       .setSigningKey(DatatypeConverter.parseBase64Binary("asldf81721lk2h1o291AUjUUn"))
 	       .parseClaimsJws(jwt).getBody();
 	    System.out.println("ID: " + claims.getId());
 	    System.out.println("Subject: " + claims.getSubject());
 	    System.out.println("Issuer: " + claims.getIssuer());
 	    System.out.println("Expiration: " + claims.getExpiration());
+	    return true;
+	    }
+	    catch (Exception e)
+	    {
+	    return false;
+	    }
 	}
 }

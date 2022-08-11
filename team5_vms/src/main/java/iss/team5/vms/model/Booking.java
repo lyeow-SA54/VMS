@@ -16,8 +16,8 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import iss.team5.vms.generators.IdGenerator;
 import iss.team5.vms.helper.BookingStatus;
-import iss.team5.vms.helper.IdGenerator;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -27,7 +27,7 @@ import lombok.NoArgsConstructor;
 public class Booking {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "booking_id_gen")
-	@GenericGenerator(name = "booking_id_gen", strategy = "iss.team5.vms.helper.BookingIdGenerator")
+	@GenericGenerator(name = "booking_id_gen", strategy = "iss.team5.vms.generators.BookingIdGenerator")
 	private String id;
 //	@OnDelete(action = OnDeleteAction.CASCADE)
 	@OneToOne

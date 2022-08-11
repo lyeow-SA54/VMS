@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import iss.team5.vms.helper.JWTGenerator;
+import iss.team5.vms.generators.JWTGenerator;
 import iss.team5.vms.model.Facility;
 import iss.team5.vms.model.Room;
 import iss.team5.vms.model.User;

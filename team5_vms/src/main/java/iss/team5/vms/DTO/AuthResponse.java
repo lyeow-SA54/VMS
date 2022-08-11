@@ -1,4 +1,4 @@
-package iss.team5.vms.helper;
+package iss.team5.vms.DTO;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

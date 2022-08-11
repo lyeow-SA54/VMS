@@ -21,10 +21,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import iss.team5.vms.helper.Account;
+import iss.team5.vms.DTO.Account;
+import iss.team5.vms.generators.JWTGenerator;
 import iss.team5.vms.helper.BookingStatus;
 import iss.team5.vms.helper.Category;
-import iss.team5.vms.helper.JWTGenerator;
 import iss.team5.vms.helper.ReportStatus;
 import iss.team5.vms.model.Booking;
 import iss.team5.vms.model.Report;
@@ -41,7 +41,7 @@ import iss.team5.vms.services.UserService;
 
 @RestController
 @RequestMapping(path = "api/student", produces = "application/json")
-public class RestStudentController {
+public class Android_StudentController {
 
 	@Autowired
 	BookingService bs;
@@ -66,17 +66,19 @@ public class RestStudentController {
 
 	@PostMapping(value = "/login")
 	public Map<String, Object> loginAndroid(@RequestBody Account account) {
-		try {
 			User user = accAuthService.authenticateAccount(account);
+			Map<String, Object> mapResponse = new HashMap<String, Object>();
+			if(user!=null) {
 			String id = String.valueOf(user.getId());
 			String accessToken = JWTGenerator.generateJWT(id, "jwtauthenticator", account.getUsername(), 604800000);
-			JWTGenerator.verifyJWT(accessToken);
-			Map<String, Object> mapResponse = new HashMap<String, Object>();
-			mapResponse.put(id.toString(), accessToken);
+//			JWTGenerator.verifyJWT(accessToken);
+			Student s = ss.findStudentByUser(user);
+			mapResponse.put("studentId", s.getId());
+			mapResponse.put("response", accessToken);
 			return mapResponse;
-		}
-		catch(Exception e) {
-			return null;
+			}
+			mapResponse.put("response", "Invalid login");
+			return mapResponse;
 		}
 
 //		Map<String, Object> response = new HashMap<String, Object>();
@@ -99,19 +101,19 @@ public class RestStudentController {
 //			System.out.println(map.get(s));
 //			return response;
 //		}
-	}
+//	}
 
-	@PostMapping(value = "/logout/{token}")
-	public Map<String, Object> loginAndroid(@PathVariable String token) {
-		Map<String, Object> response = new HashMap<String, Object>();
-		Map<Student, String> map = accAuthService.getMap();
-		Student s = map.entrySet().stream().filter(m -> m.getValue().equals(token)).map(Map.Entry::getKey).findFirst()
-				.get();
-		map.remove(s);
-		System.out.println(s);
-		response.put("response", HttpStatus.CONTINUE);
-		return response;
-	}
+//	@PostMapping(value = "/logout/{token}")
+//	public Map<String, Object> loginAndroid(@PathVariable String token) {
+//		Map<String, Object> response = new HashMap<String, Object>();
+//		Map<Student, String> map = accAuthService.getMap();
+//		Student s = map.entrySet().stream().filter(m -> m.getValue().equals(token)).map(Map.Entry::getKey).findFirst()
+//				.get();
+//		map.remove(s);
+//		System.out.println(s);
+//		response.put("response", HttpStatus.CONTINUE);
+//		return response;
+//	}
 
 	@PostMapping("/booking/history/{token}")
 	public List<Booking> bookingHistoryAndroid(@PathVariable String token,

@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import iss.team5.vms.helper.HashStringGenerator;
+import iss.team5.vms.generators.HashStringGenerator;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

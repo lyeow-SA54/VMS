@@ -18,7 +18,8 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.springframework.format.annotation.DateTimeFormat;
-import iss.team5.vms.helper.IdGenerator;
+
+import iss.team5.vms.generators.IdGenerator;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -29,7 +30,7 @@ public class Room {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "custom_id_gen")
 	  @GenericGenerator(
-	      name = "custom_id_gen",      strategy = "iss.team5.vms.helper.IdGenerator", 
+	      name = "custom_id_gen",      strategy = "iss.team5.vms.generators.IdGenerator", 
 	      parameters = {
 	          @Parameter(name = IdGenerator.INCREMENT_PARAM, value = "1"),
 	          @Parameter(name = IdGenerator.VALUE_PREFIX_PARAMETER, value = "RM"),

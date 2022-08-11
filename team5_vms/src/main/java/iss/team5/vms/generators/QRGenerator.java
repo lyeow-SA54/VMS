@@ -1,4 +1,4 @@
-package iss.team5.vms.helper;
+package iss.team5.vms.generators;
 
 import java.awt.image.BufferedImage;
 

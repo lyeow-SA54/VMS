@@ -13,11 +13,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import iss.team5.vms.generators.QRGenerator;
+
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 import java.awt.image.BufferedImage;
-
-import iss.team5.vms.helper.QRGenerator;
 
 @RestController
 @RequestMapping("/barcodes")

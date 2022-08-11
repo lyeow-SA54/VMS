@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import iss.team5.vms.helper.Account;
+import iss.team5.vms.DTO.Account;
 import iss.team5.vms.model.User;
 import iss.team5.vms.services.AccountAuthenticateService;
 import iss.team5.vms.services.UserSessionService;
 
 @Controller
-public class AuthController {
+public class LoginController {
 	@Autowired
 	private AccountAuthenticateService accAuthService;
 	@Autowired

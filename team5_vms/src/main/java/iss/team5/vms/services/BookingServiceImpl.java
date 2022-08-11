@@ -12,7 +12,9 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
+import iss.team5.vms.DTO.ResponsePojo;
 import iss.team5.vms.helper.BookingStatus;
 import iss.team5.vms.model.Booking;
 import iss.team5.vms.model.Room;
@@ -193,5 +195,20 @@ public class BookingServiceImpl implements BookingService {
 			}
 		}
 		return booking;
+	}
+	
+	@Override
+	public boolean predictHogging(String imgPath)
+	{
+		String uri = "http://127.0.0.1:5000/predict?filename="+imgPath+".png";
+		RestTemplate restTemplate = new RestTemplate();
+		ResponsePojo response = restTemplate.getForObject(uri, ResponsePojo.class);
+		String result = response.getResponse();
+		System.out.println(result);
+		if (result.equals("TRUE"))
+		{
+			return true;
+		}
+		return false;
 	}
 }

@@ -1,4 +1,4 @@
-package iss.team5.vms.helper;
+package iss.team5.vms.generators;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
