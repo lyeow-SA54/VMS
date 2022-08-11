@@ -6,6 +6,8 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.security.core.Authentication;
 //import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,12 +16,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
 import iss.team5.vms.helper.BookingStatus;
+import iss.team5.vms.helper.ResponsePojo;
 import iss.team5.vms.model.Booking;
 import iss.team5.vms.model.Facility;
-import iss.team5.vms.model.Report;
 import iss.team5.vms.model.Room;
 import iss.team5.vms.model.Student;
 import iss.team5.vms.model.User;
@@ -52,6 +55,9 @@ public class BookingController {
 	
 	@Autowired
 	StudentRepo srepo;
+	
+	@Autowired
+	HttpSession session;
 	
 	@Autowired
 	private UserSessionService userSessionService;
@@ -97,7 +103,7 @@ public class BookingController {
 	
 
 	@RequestMapping("/checkin/{bookingId}")
-	public ModelAndView bookingCheckin(@PathVariable("bookingId") String bookingId) {
+	public ModelAndView bookingCheckin(@PathVariable("bookingId") String bookingId, HttpSession session) {
 		User user = userSessionService.findUserBySession();
 		if(!user.getRole().equals("STUDENT")) {
 			ModelAndView mav = new ModelAndView("unauthorized-admin");
@@ -169,9 +175,8 @@ public class BookingController {
 //		}
 //		
 //		Student student = findStu.get(0);
-		Student student = ss.findStudentById(3);
+		Student student = (Student) session.getAttribute("student");
 		Room room = rs.findRoomById(roomString);
-
 
 		booking.setStudent(student);
 		booking.setRoom(room);
@@ -225,16 +230,16 @@ public class BookingController {
 //	}
 	
 	@RequestMapping("/booking/history")
-	public ModelAndView bookingHistory(Student student) {
+	public ModelAndView bookingHistory() {
 		User user = userSessionService.findUserBySession();
 		if(!user.getRole().equals("STUDENT")) {
 			ModelAndView mav = new ModelAndView("unauthorized-admin");
 			return mav;
 		}
-//		String username = SecurityContextHolder.getContext().getAuthentication().getName();
-//		Student s1 = ss.findStudentByUser(us.findUserByUsername(username));
-		Student s1 = ss.findStudentById(3);
-		List<Booking> bookings = bs.findBookingsByStudent(s1);
+
+		Student student = (Student) session.getAttribute("student");
+
+		List<Booking> bookings = bs.findBookingsByStudent(student);
 		List<Booking> bookings2 = bs.checkBookingInProgress(bookings);
 		ModelAndView mav = new ModelAndView("student-bookings-list");
 		mav.addObject("bookings",bookings2);
@@ -242,6 +247,14 @@ public class BookingController {
 		LocalTime timenow = LocalTime.now();
 		mav.addObject("datenow", datenow);
 		mav.addObject("timenow", timenow);
+		
+		final String uri = "http://127.0.0.1:5000/predict?filename=be9349ed8f284a32ab286514be55d896.png";
+
+		RestTemplate restTemplate = new RestTemplate();
+		ResponsePojo response = restTemplate.getForObject(uri, ResponsePojo.class);
+		String result = response.getResponse();
+		System.out.println(result);
+		   
 		return mav;
 	}
 	

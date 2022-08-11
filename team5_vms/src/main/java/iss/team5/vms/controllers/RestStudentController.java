@@ -71,14 +71,14 @@ public class RestStudentController {
 		Map<Student, String> map = accAuthService.getMap();
 		User user = accAuthService.authenticateAccount(account);
 		if (user == null) {
-			System.out.println("invalid login");
+//			System.out.println("invalid login");
 			response.put("response", "Invalid login");
 			return response;
 		} else {
 			Student s = ss.findStudentByUser(user);
 			String token = accAuthService.generateNewToken();
-			if (map.containsKey(ss.findStudentByUser(user))) {
-				map.replace(ss.findStudentByUser(user), token);
+			if (map.containsKey(s)) {
+				map.replace(s, token);
 			} else {
 				map.put(s, token);
 			}
@@ -162,7 +162,7 @@ public class RestStudentController {
 		}
 
 		// add path to report
-		Student student = ss.findStudentById((int) (payload.get("id")));
+		Student student = ss.findStudentById(Integer.parseInt((String) payload.get("studentId")));
 		Booking booking = bs.findStudentCurrentBooking(student);
 		Booking lastBooking = bs.findLastBooking(booking);
 
@@ -183,7 +183,7 @@ public class RestStudentController {
 	public List<HttpStatus> newBookingAndroid(@RequestBody List<Map<String, Object>> rawPayload) {
 		Map<String, Object> payload = rawPayload.get(0);
 
-		Student student = ss.findStudentById(3);
+		Student student = ss.findStudentById(Integer.parseInt((String) payload.get("studentId")));
 		Room room = rms.findRoomById((String) payload.get("roomId"));
 
 		LocalDate date = LocalDate.parse((String) payload.get("date"), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
