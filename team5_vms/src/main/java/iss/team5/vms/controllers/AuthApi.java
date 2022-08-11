@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import iss.team5.vms.helper.Account;
 import iss.team5.vms.helper.AuthResponse;
-import iss.team5.vms.helper.GenerateJWT;
+import iss.team5.vms.helper.JWTGenerator;
 import iss.team5.vms.model.User;
 import iss.team5.vms.services.AccountAuthenticateService;
 
@@ -24,7 +24,7 @@ public class AuthApi {
 		try {
 			User user = accAuthService.authenticateAccount(account);
 			String id = String.valueOf(user.getId());
-			String accessToken = GenerateJWT.generateJWT(id, "jwtauthenticator", account.getUsername(), 86400000);
+			String accessToken = JWTGenerator.generateJWT(id, "jwtauthenticator", account.getUsername(), 86400000);
 			AuthResponse response = new AuthResponse(user.getUsername(), accessToken);
 //			GenerateJWT.verifyJWT(accessToken);
 			return ResponseEntity.ok().body(response);
