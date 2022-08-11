@@ -8,6 +8,10 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpSession;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.security.core.Authentication;
 //import org.springframework.security.core.context.SecurityContextHolder;
@@ -63,7 +67,7 @@ public class BookingController {
 	private UserSessionService userSessionService;
 	
 	@RequestMapping("/home")
-	public ModelAndView studentHome() {
+	public ModelAndView studentHome(HttpServletRequest request) {
 		User user = userSessionService.findUserBySession();
 		if(!user.getRole().equals("STUDENT")) {
 			ModelAndView mav = new ModelAndView("unauthorized-admin");
@@ -77,9 +81,10 @@ public class BookingController {
 		
 		//String username = SecurityContextHolder.getContext().getAuthentication().getName();
 		//Student s1 = ss.findStudentByUser(us.findUserByUsername(username));
-		Student s1 = ss.findStudentById(3);
-	
-		List<Booking> sBooking = bs.findBookingsByStudent(s1); 
+		
+		HttpSession session = request.getSession();
+		Student student = (Student)session.getAttribute("student");	
+		List<Booking> sBooking = bs.findBookingsByStudent(student); 
 		
 		List<Booking> findTodayBooking=sBooking.stream()
 		.filter(b-> b.getDate()==LocalDate.now() && b.getStatus().toString().equalsIgnoreCase("SUCCESSFUL") )
@@ -103,7 +108,7 @@ public class BookingController {
 	
 
 	@RequestMapping("/checkin/{bookingId}")
-	public ModelAndView bookingCheckin(@PathVariable("bookingId") String bookingId, HttpSession session) {
+	public ModelAndView bookingCheckin(@PathVariable("bookingId") String bookingId, HttpServletRequest request) {
 		User user = userSessionService.findUserBySession();
 		if(!user.getRole().equals("STUDENT")) {
 			ModelAndView mav = new ModelAndView("unauthorized-admin");
@@ -115,7 +120,8 @@ public class BookingController {
 		//String username = SecurityContextHolder.getContext().getAuthentication().getName();
 		//Student student = ss.findStudentByUser(us.findUserByUsername(username));
 		//Student student = ss.findStudentById("S00001");
-		Student student = ss.findStudentById(3);
+		HttpSession session = request.getSession();
+		Student student = (Student)session.getAttribute("student");	
 		// pending proper url to be forwarded to on check-in completion
 		ModelAndView mav = new ModelAndView("student-bookings-list");
 		Booking booking = bs.findBookingById(bookingId);
@@ -162,7 +168,7 @@ public class BookingController {
 	}
 	
 	@RequestMapping(value = "/booking/save", method = RequestMethod.POST)
-	public String bookingNew(Booking booking, @RequestParam("roomid") String roomString) {
+	public String bookingNew(Booking booking, @RequestParam("roomid") String roomString, HttpServletRequest request) {
 		
 //		Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
 //		List <Student> sList = ss.findAllStudents(); 

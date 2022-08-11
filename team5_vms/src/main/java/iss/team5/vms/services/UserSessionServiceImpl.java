@@ -13,6 +13,9 @@ public class UserSessionServiceImpl implements UserSessionService {
 	@Autowired
 	HttpSession session;
 	
+	@Autowired
+	StudentService ss;
+	
 	private final String sessionIdentity = "loginUser";
 
 	@Override
@@ -30,6 +33,7 @@ public class UserSessionServiceImpl implements UserSessionService {
 	@Override
 	public void setUserSession(User user) {
 		session.setAttribute(sessionIdentity, user);
+		session.setAttribute("student", ss.findStudentById(user.getId()));
 	}
 
 	@Override

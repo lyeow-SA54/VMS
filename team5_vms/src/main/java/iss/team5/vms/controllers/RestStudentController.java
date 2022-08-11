@@ -88,12 +88,13 @@ public class RestStudentController {
 			return response;
 		}
 	}
-	
+
 	@PostMapping(value = "/logout/{token}")
 	public Map<String, Object> loginAndroid(@PathVariable String token) {
 		Map<String, Object> response = new HashMap<String, Object>();
 		Map<Student, String> map = accAuthService.getMap();
-		Student s = map.entrySet().stream().filter(m -> m.getValue().equals(token)).map(Map.Entry::getKey).findFirst().get();
+		Student s = map.entrySet().stream().filter(m -> m.getValue().equals(token)).map(Map.Entry::getKey).findFirst()
+				.get();
 		map.remove(s);
 		System.out.println(s);
 		response.put("response", HttpStatus.CONTINUE);
@@ -101,20 +102,21 @@ public class RestStudentController {
 	}
 
 	@PostMapping("/booking/history/{token}")
-	public List<Booking> bookingHistoryAndroid(@PathVariable String token, @RequestBody List<Map<String, Object>> rawPayload) {
-//		
+	public List<Booking> bookingHistoryAndroid(@PathVariable String token,
+			@RequestBody List<Map<String, Object>> rawPayload) {
 //		String token = (String) payload.get("token");
 //		System.out.println(token);
 		if (accAuthService.getMap().containsValue(token)) {
 			Map<String, Object> payload = rawPayload.get(0);
-		Student s = ss.findStudentById(Integer.parseInt((String) payload.get("studentId")));
-		System.out.println(payload.get("studentId"));
-		List<Booking> bookings = bs.findBookingsByStudent(s);
-		System.out.println("returning list");
-		return bs.checkBookingInProgress(bookings);
+			Student s = ss.findStudentById(Integer.parseInt((String) payload.get("studentId")));
+			System.out.println(payload.get("studentId"));
+			List<Booking> bookings = bs.findBookingsByStudent(s);
+			System.out.println("returning list");
+			return bs.checkBookingInProgress(bookings);
 		}
-		
-		else return null;
+
+		else
+			return null;
 	}
 
 	@PostMapping(value = "/booking/options")
