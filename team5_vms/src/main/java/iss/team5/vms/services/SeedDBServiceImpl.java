@@ -152,25 +152,24 @@ public class SeedDBServiceImpl implements SeedDBService {
 		rms.createRoom(r2);
 		rms.createRoom(r1);
 		
-//		bs.addStudent(b1, s1);
-//		bs.addStudent(b2, s1);	
-//		bs.addStudent(b3, s2);	
-//		bs.addStudent(b4, s2);	
-//		bs.addStudent(b5, s2);
-//		bs.addStudent(b6, s1);
-//
-//		rs.addBooking(rp1,b1);
-//		rs.addBooking(rp2,b2);
-//		rs.addBooking(rp3,b3);
-//		rs.addBooking(rp4,b4);
-//		rs.addBooking(rp5,b5);
-//		
-//		bs.addRoom(b1, r1);
-//		bs.addRoom(b2, r2);
-//		bs.addRoom(b3, r3);
-//		bs.addRoom(b4, r1);
-//		bs.addRoom(b5, r3);
-//		bs.addRoom(b6, r3);
+		bs.addStudent(b1, s1);
+		bs.addStudent(b2, s1);	
+		bs.addStudent(b3, s2);	
+		bs.addStudent(b4, s2);	
+		bs.addStudent(b5, s2);
+		bs.addStudent(b6, s1);
+
+		rs.addBooking(rp1,b1);
+		rs.addBooking(rp2,b2);
+		rs.addBooking(rp3,b3);
+		rs.addBooking(rp4,b4);
+		rs.addBooking(rp5,b5);
 		
+		bs.addRoom(b1, r1);
+		bs.addRoom(b2, r2);
+		bs.addRoom(b3, r3);
+		bs.addRoom(b4, r1);
+		bs.addRoom(b5, r3);
+		bs.addRoom(b6, r3);
 	}
 }
