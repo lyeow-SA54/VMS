@@ -20,7 +20,7 @@
 			background-color: #003062;
 			color: white;
 		}
-		.bnblue:hover {
+		.btnblue:hover {
 			background-color: white;
 			color: #003062;
 			border-color: #003062;
@@ -36,7 +36,7 @@
 	</nav>
 	<div class="container w-25 p-5">
 		<form role="form" th:action="@{/login/authenticate}" method="post" th:object=${account}>
-			<p th:if="${repeatlogin}">*Incorrect Username or password</p>
+			<p th:if="${repeatlogin}">*Incorrect Username or Password!</p>
 			<div class="form-outline mb-4">
 				<input type="text" th:field="*{username}" class="form-control" />
 				<label class="form-label" for="username">Username</label>
@@ -48,7 +48,7 @@
 			<input type="submit" class="btn btnblue" value="Login">
 		</form>
 	</div>
-	<footer class="text-center py-4" style="color:white; margin-top: 195px; background-color:#003062">
+	<footer class="text-center py-4" style="color:white; margin-top: 188px; background-color:#003062">
 		VMS Copyright &copy; 2022
 	</footer>
 </body>
