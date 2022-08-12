@@ -17,21 +17,32 @@
 		.container-fluid {
 			padding: 60px 50px;
 		}
-
 		.mylink a {
 			text-decoration: none;
-			color: gray;
+			color: white;
+			background-color: #003062;
+		}
+		.mylink a:hover {
+			color: #003062;
+			background-color: white;
+			border-color: #003062;
+		}
+		.btnorange {
+			background-color: #F27C36;
+			color: white;
 		}
 
-		.mylink a:hover {
-			color: black;
+		.btnorange:hover {
+			background-color: white;
+			color: #F27C36;
+			border-color: #F27C36;
 		}
 	</style>
 </head>
 
 <body>
 	<nav class="navbar navbar-expand-sm bg-light navbar-light">
-		<a class="navbar-brand" href="#">Team 5 VMS</a>
+		<img src="/image/logo.png" height="60px" style="vertical-align:middle;">
 		<nav class="my_menu navbar navbar-expand-sm navbar-light bg-light">
 			<div class="d-flex w-100">
 				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar9">
@@ -43,47 +54,43 @@
 			</div>
 		</nav>
 		<span class="navbar-nav ml-auto">
-			Welcome
+			Welcome&nbsp;&nbsp;&nbsp;&nbsp;
 		</span>
-		<a class="nav-link" style="color: gray;" th:href="@{/logout}">Logout</a>
+		<a class="btn btnorange" th:href="@{/logout}">Logout</a>
 	</nav>
-	<!-- Container (Services Section) -->
 	<div class="container-fluid text-center">
-		<!-- <h2>SERVICES</h2>
-			<h4>What we offer</h4> -->
-		<br>
 		<div class="row">
 			<div class="col-sm-4">
 			</div>
 			<div class="col-sm-4 mylink">
-				<a th:href="@{/admin/rooms/list}">
-					<i class='fas fa-book-reader' style='font-size:36px'></i>
-					<h4>ROOMS</h4>
+				<i class='fas fa-book-reader' style='font-size:36px; color:#003062'></i>
+				<h4>ROOMS</h4>
+				<a class="btn" th:href="@{/admin/rooms/list}">
+					Manage Rooms
 				</a>
-				<p>Manage Rooms</p>
 			</div>
 		</div>
 		<br><br>
 		<div class="row">
 			<div class="col-sm-6 mylink">
-				<a href="#" id="bookings">
-					<i class='fas fa-book' style='font-size:36px'></i>
-					<h4>BOOKINGS</h4>
+				<i class='fas fa-book' style='font-size:36px; color:#003062'></i>
+				<h4>BOOKINGS</h4>
+				<a class="btn" href="#" id="bookings">
+					Manage Bookings
 				</a>
-				<p>Manage Bookings</p>
 			</div>
 			<div class="col-sm-6 mylink">
-				<!--<a onclick="location.href='http://localhost:3000/admin/reports'">-->
-				<a href="#" id="reports">
-					<i class='fas fa-edit' style='font-size:36px'></i>
-					<h4>REPORTS</h4>
+				<i class='fas fa-edit' style='font-size:36px; color:#003062'></i>
+				<h4>REPORTS</h4>
+				<a class="btn" href="#" id="reports">
+					Manage Reports
 				</a>
-				<p>Manage Reports</p>
 			</div>
 		</div>
-		<footer class="text-center py-4 text-muted" style="margin-top: 100px;">
-			VMS Copyright &copy; 2022
-		</footer>
+	</div>
+	<footer class="text-center py-4" style="color:white; margin-top: 117px; background-color:#003062">
+		VMS Copyright &copy; 2022
+	</footer>
 </body>
 <script>
 	$("#bookings").on('click', function () {

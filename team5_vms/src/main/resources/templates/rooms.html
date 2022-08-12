@@ -12,7 +12,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-3" style="margin-top: 15px; margin-bottom: 15px;">
-					<h4>Room List</h4>
+					<h5>Room List</h5>
 				</div>
 			</div>
 			<div class="row" style="margin-top:100px;">
@@ -22,9 +22,9 @@
 			</div><br>
 			<div class="row">
 				<div class="col" style="text-align:center;">
-					<h4>There are no rooms yet.</h4>
+					<h5>No Rooms.</h5>
 					<h5 style="text-decoration: underline;">
-						<a th:href="@{/admin/rooms/create}">Add New Room</a>
+						<a th:href="@{/admin/rooms/create}"class="btn btnblue">Add New Room</a>
 					</h5>
 				</div>
 			</div>
@@ -93,7 +93,9 @@
 			</div>
 		</div>
 	</div>
-	
+	<footer class="text-center py-4" style="color:white; margin-top: 180px; background-color:#003062">
+		VMS Copyright &copy; 2022
+	</footer>
 </body>
 
 </html>
