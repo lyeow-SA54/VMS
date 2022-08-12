@@ -183,7 +183,7 @@ public class Android_StudentController {
 			// add path to report
 			Student student = ss.findStudentById(Integer.parseInt((String) payload.get("studentId")));
 			Booking booking = bs.findStudentCurrentBooking(student);
-			Booking lastBooking = bs.findLastBooking(booking);
+			Booking lastBooking = bs.findBookingBefore(booking);
 
 			rs.createReport(new Report((String) payload.get("details"), name + imageType, lastBooking,
 					ReportStatus.PROCESSING, Category.valueOf((String) payload.get("category")), student));

@@ -335,7 +335,7 @@ public class StudentController {
         Student student = (Student)session.getAttribute("student");	
         Booking booking = bs.findStudentCurrentBooking(student);
 //        Booking booking = bs.findBookingById("B00011");
-        Booking lastBooking = bs.findLastBooking(booking);
+        Booking lastBooking = bs.findBookingBefore(booking);
 
 		rs.createReport(new Report(details, fileName, lastBooking,
 				ReportStatus.PROCESSING, Category.CLEANLINESS, student));

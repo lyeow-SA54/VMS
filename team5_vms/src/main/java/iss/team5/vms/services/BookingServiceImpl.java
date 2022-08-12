@@ -125,7 +125,20 @@ public class BookingServiceImpl implements BookingService {
 				bookings.add(new Booking(r.getRoomName(), booking.getDate(), booking.getTime(), duration, r));
 			}
 		}
+		
+		
 		return bookings;
+	}
+	
+	@Override public boolean checkBookingsOverlap (Booking newBooking, Booking existingBooking)
+	{
+		if (newBooking.getTime().isBefore(existingBooking.getTime().plusHours(existingBooking.getDuration()))
+				&& (newBooking.getTime().plusHours(newBooking.getDuration()).isAfter(existingBooking.getTime()))
+				&& (existingBooking.getStatus().equals(BookingStatus.SUCCESSFUL)||existingBooking.getStatus().equals(BookingStatus.WAITINGLIST)))
+		{
+			return false;
+		}
+		return true;
 	}
 
 	@Override
@@ -135,9 +148,7 @@ public class BookingServiceImpl implements BookingService {
 		// check whether each booking for the room overlaps with the requested booking
 		// time. if overlap return false
 		for (Booking b : bookings) {
-			if (booking.getTime().isBefore(b.getTime().plusHours(b.getDuration()))
-					&& (booking.getTime().plusHours(booking.getDuration()).isAfter(b.getTime()))
-					&& b.getStatus().equals(BookingStatus.SUCCESSFUL)) {
+			if (!checkBookingsOverlap(booking, b)) {
 				return false;
 			}
 		}
@@ -178,11 +189,10 @@ public class BookingServiceImpl implements BookingService {
 		List<Booking> bookings = br.findAllBookingByStudent(student);
 		bookings = checkBookingInProgress(bookings);
 		return bookings.stream().filter(b->b.isBookingInProgress()).findFirst().get();
-
 	}
 
 	@Override
-	public Booking findLastBooking(Booking booking) {
+	public Booking findBookingBefore(Booking booking) {
 		Room room = booking.getRoom();
 		String id = booking.getId();
 		LocalDate date = booking.getDate();

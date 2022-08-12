@@ -14,13 +14,15 @@ public interface BookingService {
 	
 	boolean predictHogging(String imgPath);
 	
+	boolean checkBookingsOverlap(Booking newBooking, Booking existingBooking);
+	
 	Booking findBookingById(String id);
 
 	Booking createBooking(Booking booking);
 			
 	Booking findStudentCurrentBooking(Student student);
 	
-	Booking findLastBooking(Booking booking);
+	Booking findBookingBefore(Booking booking);
 	
 	List<Booking> findAllBookings();
 
@@ -41,5 +43,7 @@ public interface BookingService {
 	void addStudent(Booking booking, Student student);
 	
 	void addRoom(Booking booking, Room room);
+
+
 
 }
