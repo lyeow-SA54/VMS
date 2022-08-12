@@ -210,7 +210,7 @@ public class BookingServiceImpl implements BookingService {
 	@Override
 	public boolean predictHogging(String imgPath)
 	{
-		String uri = "http://127.0.0.1:5000/predict?filename="+imgPath+".png";
+		String uri = "http://127.0.0.1:5000/hogpredict?filename="+imgPath;
 		RestTemplate restTemplate = new RestTemplate();
 		ResponsePojo response = restTemplate.getForObject(uri, ResponsePojo.class);
 		String result = response.getResponse();
@@ -221,4 +221,19 @@ public class BookingServiceImpl implements BookingService {
 		}
 		return false;
 	}
+	
+	@Override
+	public boolean predictPeak(int week, int volume)
+	{
+			String uri = "http://127.0.0.1:5000/peakpredict?week="+week+"&volume="+volume;
+			RestTemplate restTemplate = new RestTemplate();
+			ResponsePojo response = restTemplate.getForObject(uri, ResponsePojo.class);
+			String result = response.getResponse();
+			System.out.println(result);
+			if (result.equals("TRUE"))
+			{
+				return true;
+			}
+			return false;
+		}
 }
