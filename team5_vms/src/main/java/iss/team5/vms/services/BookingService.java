@@ -16,6 +16,8 @@ public interface BookingService {
 	
 	boolean checkBookingsOverlap(Booking newBooking, Booking existingBooking);
 	
+	boolean predictPeak(int week, int volume);
+	
 	Booking findBookingById(String id);
 
 	Booking createBooking(Booking booking);
@@ -43,7 +45,5 @@ public interface BookingService {
 	void addStudent(Booking booking, Student student);
 	
 	void addRoom(Booking booking, Room room);
-
-
 
 }
