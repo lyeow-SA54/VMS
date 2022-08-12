@@ -121,7 +121,7 @@ public class Android_StudentController {
 
 		if (JWTGenerator.verifyJWT(token)) {
 			Map<String, Object> payload = rawPayload.get(0);
-			Student s = ss.findStudentById(Integer.parseInt((String) payload.get("studentId")));
+			Student s = ss.findStudentById((String) payload.get("studentId"));
 			System.out.println(payload.get("studentId"));
 			List<Booking> bookings = bs.findBookingsByStudent(s);
 			System.out.println("returning list");
@@ -181,7 +181,7 @@ public class Android_StudentController {
 			}
 
 			// add path to report
-			Student student = ss.findStudentById(Integer.parseInt((String) payload.get("studentId")));
+			Student student = ss.findStudentById((String) payload.get("studentId"));
 			Booking booking = bs.findStudentCurrentBooking(student);
 			Booking lastBooking = bs.findBookingBefore(booking);
 
@@ -207,7 +207,7 @@ public class Android_StudentController {
 		if (JWTGenerator.verifyJWT(token)) {
 			Map<String, Object> payload = rawPayload.get(0);
 
-			Student student = ss.findStudentById(Integer.parseInt((String) payload.get("studentId")));
+			Student student = ss.findStudentById((String) payload.get("studentId"));
 			Room room = rms.findRoomById((String) payload.get("roomId"));
 
 			LocalDate date = LocalDate.parse((String) payload.get("date"), DateTimeFormatter.ofPattern("yyyy-MM-dd"));

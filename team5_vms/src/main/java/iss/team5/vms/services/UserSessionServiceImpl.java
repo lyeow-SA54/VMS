@@ -33,7 +33,7 @@ public class UserSessionServiceImpl implements UserSessionService {
 	@Override
 	public void setUserSession(User user) {
 		session.setAttribute(sessionIdentity, user);
-		session.setAttribute("student", ss.findStudentById(user.getId()));
+		session.setAttribute("student", ss.findStudentById(String.valueOf(user.getId())));
 	}
 
 	@Override

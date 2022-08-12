@@ -50,6 +50,15 @@ public class SeedDBServiceImpl implements SeedDBService {
 
 	public void createInitialData() {
 		if(!ss.tableExist()){
+			User user = new User();
+			user.setEmail("admin@u.nus.edu");
+			user.setFirstName("admin");
+			user.setLastName("");
+			user.setRole("ADMIN");
+			user.setUsername("admin");
+			user.setPassword(HashStringGenerator.getHash("admin", "admin"));
+			us.createUser(user);
+			
 			ss.createStudent(new Student("Trevor", "Green", "email1@u.nus.edu", "user1"));
 			ss.createStudent(new Student("Tori", "Howe", "email2@u.nus.edu", "user2"));
 			ss.createStudent(new Student("Lula", "Thorpe", "email3@u.nus.edu", "user3"));
@@ -73,15 +82,6 @@ public class SeedDBServiceImpl implements SeedDBService {
 		rs.createReport(new Report("The tables and chairs are broken",Category.MISUSE, StudentStatus.NORMAL, ReportStatus.PROCESSING));
 		rs.createReport(new Report("IS THAT A COCKROACH?!",Category.CLEANLINESS, StudentStatus.NORMAL, ReportStatus.PROCESSING));
 		}
-			
-		User user = new User();
-		user.setEmail("admin@u.nus.edu");
-		user.setFirstName("admin");
-		user.setLastName("");
-		user.setRole("ADMIN");
-		user.setUsername("admin");
-		user.setPassword(HashStringGenerator.getHash("admin", "admin"));
-		us.createUser(user);
 	
 		if(!fs.tableExist()) {
 			Facility f1 = new Facility("Projector");
@@ -102,8 +102,8 @@ public class SeedDBServiceImpl implements SeedDBService {
 	}
 	
 	public void loadBookingData() {
-		Student s1 = ss.findStudentById(1);
-		Student s2 = ss.findStudentById(3);
+		Student s1 = ss.findStudentById("S1001");
+		Student s2 = ss.findStudentById("S1002");
 
 		Booking b1 = bs.findBookingById("B1001");
 		Booking b2 = bs.findBookingById("B1002");
