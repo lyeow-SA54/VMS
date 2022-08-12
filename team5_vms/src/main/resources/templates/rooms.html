@@ -66,12 +66,10 @@
 								<td th:text=${room.blockedStartTime}></td>
 								<td th:text=${room.blockDuration}></td>
 								<td><a href="" th:href="@{/admin/rooms/edit/}+${room.id}">Edit</a></td>
-								<!--<td th:if=${room.booking}>
-									<span>-</span>
-								</td>
-								<td th:unless=${room.booking}>
+								
+								<td>
 									<a href="" th:href="@{/admin/rooms/delete/}+${room.id}">Delete</a>
-								</td>-->
+								</td>
 							</tr>
 						</tbody>
 					</table>
