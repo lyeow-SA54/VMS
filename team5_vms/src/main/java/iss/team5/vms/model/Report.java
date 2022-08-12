@@ -71,11 +71,12 @@ public class Report {
 		this.booking=booking;
 		this.reportStatus=reportStatus;
 	}
-	public Report(String details, String imgPath, Booking booking, ReportStatus reportStatus, Category category) {
+	public Report(String details, String imgPath, Booking booking, ReportStatus reportStatus, Category category, Student student) {
 		this.details=details;
 		this.imgPath=imgPath;
 		this.booking=booking;
 		this.reportStatus=reportStatus;
 		this.category=category;
+		this.student=student;
 	}
 }

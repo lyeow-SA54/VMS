@@ -38,12 +38,12 @@
     <span th:text="${booking.time}"></span>
     </div>
     <div class="mx-auto text-center">
-    <span>Booking Status: </span>
-    <span th:text="${booking.status}"></span>
+    <span>Extension Request Outcome: </span>
+    <span th:text="${outcomeMsg}"></span>
     </div>
     <br />
     <div class="mx-auto text-center">
-    <a th:href="@{student/booking/cancel/{bookingId}(bookingId=${booking.id})}" class="btn btn-outline-danger">Cancel</a>
+    <a th:href="@{/student/booking/history}" class="btn btn-outline-danger">Back</a>
     </div>
   </div>
     </div></div>

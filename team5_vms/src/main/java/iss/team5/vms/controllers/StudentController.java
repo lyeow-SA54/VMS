@@ -290,10 +290,10 @@ public class StudentController {
 				booking.getTime().plusHours(booking.getDuration()), 
 				1, booking.getRoom());
 		if (!bs.checkBookingByDateTimeRoom(extendBooking,booking.getRoom())) {
-			outcomeMsg = "Booking extension request denied";
+			outcomeMsg = "DENIED";
 		}
 		else {
-			outcomeMsg = "Booking extension request approved";
+			outcomeMsg = "APPROVED";
 			booking.setDuration(booking.getDuration()+1);
 			bs.createBooking(booking);
 		}
@@ -338,7 +338,7 @@ public class StudentController {
         Booking lastBooking = bs.findLastBooking(booking);
 
 		rs.createReport(new Report(details, fileName, lastBooking,
-				ReportStatus.PROCESSING, Category.CLEANLINESS));
+				ReportStatus.PROCESSING, Category.CLEANLINESS, student));
         System.out.println("4 success");
         System.out.println(path);//real path in local
         /*ms.sendSimpleMail("e0838388@u.nus.edu","report test","new report generated!");*/

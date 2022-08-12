@@ -49,8 +49,6 @@ public class ReactAuthAPI {
 	@RequestMapping(path = "/react/auth", produces = "application/json")
 	public Map<String, Object> loginReact() {
 			User user = userSessionService.findUserBySession();
-//			User user = (User) session.getAttribute("loginUser");
-//			System.out.println(user);
 			Map<String, Object> response = new HashMap<String, Object>();
 			if(user!= null && user.getRole().equals("ADMIN")) {
 				String id = String.valueOf(user.getId());

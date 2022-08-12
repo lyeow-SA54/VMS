@@ -118,11 +118,7 @@ public class Android_StudentController {
 	@PostMapping("/booking/history/{token}")
 	public List<Booking> bookingHistoryAndroid(@PathVariable String token,
 			@RequestBody List<Map<String, Object>> rawPayload) {
-//		String token = (String) payload.get("token");
-//		System.out.println(token);
-		if (token != null) {
-			JWTGenerator.verifyJWT(token);
-			System.out.println();
+		if (JWTGenerator.verifyJWT(token)) {
 			Map<String, Object> payload = rawPayload.get(0);
 			Student s = ss.findStudentById(Integer.parseInt((String) payload.get("studentId")));
 			System.out.println(payload.get("studentId"));
@@ -133,8 +129,10 @@ public class Android_StudentController {
 			return null;
 	}
 
-	@PostMapping(value = "/booking/options")
-	public List<Booking> bookingOptionsAndroid(@RequestBody List<Map<String, Object>> rawPayload) {
+	@PostMapping(value = "/booking/options/{token}")
+	public List<Booking> bookingOptionsAndroid(@PathVariable String token, @RequestBody List<Map<String, Object>> rawPayload) {
+		
+		if (JWTGenerator.verifyJWT(token)) {
 		Map<String, Object> payload = rawPayload.get(0);
 
 		LocalDate date = LocalDate.parse((String) payload.get("date"), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
@@ -153,12 +151,14 @@ public class Android_StudentController {
 //		System.out.println(payload.get("time"));
 //		System.out.println(payload.get("capacity"));
 
-		return bookings;
+		return bookings;}
+		else return null;
 	}
 
-	@PostMapping(value = "/report/save")
-	public String newReportAndroid(@RequestBody List<Map<String, Object>> rawPayload) {
+	@PostMapping(value = "/report/save/{token}")
+	public String newReportAndroid(@PathVariable String token, @RequestBody List<Map<String, Object>> rawPayload) {
 
+		if (JWTGenerator.verifyJWT(token)) {
 		Map<String, Object> payload = rawPayload.get(0);
 
 		String encodedString = (String) payload.get("image");
@@ -183,7 +183,7 @@ public class Android_StudentController {
 		Booking lastBooking = bs.findLastBooking(booking);
 
 		rs.createReport(new Report((String) payload.get("details"), name + imageType, lastBooking,
-				ReportStatus.PROCESSING, Category.valueOf((String) payload.get("category"))));
+				ReportStatus.PROCESSING, Category.valueOf((String) payload.get("category")), student));
 //		System.out.println("4 success");
 		// test for getting real path for app
 		System.out.println(filePath + name + imageType);// real path in local
@@ -192,11 +192,14 @@ public class Android_StudentController {
 		 * );
 		 */
 //		System.out.println("report success");
-		return "report-success";
+		return "report-success";}
+		else return null;
 	}
 
-	@PostMapping(value = "/booking/save")
-	public List<HttpStatus> newBookingAndroid(@RequestBody List<Map<String, Object>> rawPayload) {
+	@PostMapping(value = "/booking/save/{token}")
+	public List<HttpStatus> newBookingAndroid(@PathVariable String token, @RequestBody List<Map<String, Object>> rawPayload) {
+		
+		if (JWTGenerator.verifyJWT(token)) {
 		Map<String, Object> payload = rawPayload.get(0);
 
 		Student student = ss.findStudentById(Integer.parseInt((String) payload.get("studentId")));
@@ -229,6 +232,8 @@ public class Android_StudentController {
 			}
 		}
 		return response;
+		}
+		else return null;
 	}
 
 }
