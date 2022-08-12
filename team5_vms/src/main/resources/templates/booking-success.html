@@ -38,8 +38,11 @@
     <span th:text="${booking.time}"></span>
     </div>
     <div class="mx-auto text-center">
+    <span>Booking Status: </span>
+    <span th:text="${booking.status}"></span></div>
+    <div class="mx-auto text-center" th:if="${outcomeMsg}!= null">
     <span>Extension Request Outcome: </span>
-    <span th:text="${outcomeMsg}"></span>
+	<span th:text="${outcomeMsg}"></span></span>
     </div>
     <br />
     <div class="mx-auto text-center">

@@ -118,14 +118,9 @@ public class Android_StudentController {
 	@PostMapping("/booking/history/{token}")
 	public List<Booking> bookingHistoryAndroid(@PathVariable String token,
 			@RequestBody List<Map<String, Object>> rawPayload) {
-<<<<<<< HEAD
-		if (JWTGenerator.verifyJWT(token)) {
-=======
 //		String token = (String) payload.get("token");
 //		System.out.println(token);
 		if (JWTGenerator.verifyJWT(token)) {
-			System.out.println();
->>>>>>> branch 'master' of https://github.com/lyeow-SA54/VMS
 			Map<String, Object> payload = rawPayload.get(0);
 			Student s = ss.findStudentById(Integer.parseInt((String) payload.get("studentId")));
 			System.out.println(payload.get("studentId"));
