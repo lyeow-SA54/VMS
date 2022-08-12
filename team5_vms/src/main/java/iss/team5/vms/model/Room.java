@@ -1,6 +1,7 @@
 package iss.team5.vms.model;
 
 import java.time.LocalTime;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,14 +14,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToOne;
-import javax.validation.constraints.NotNull;
-
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
 import org.springframework.format.annotation.DateTimeFormat;
-
-import iss.team5.vms.generators.IdGenerator;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -29,13 +24,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Room {
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "custom_id_gen")
-	  @GenericGenerator(
-	      name = "custom_id_gen",      strategy = "iss.team5.vms.generators.IdGenerator", 
-	      parameters = {
-	          @Parameter(name = IdGenerator.INCREMENT_PARAM, value = "1"),
-	          @Parameter(name = IdGenerator.VALUE_PREFIX_PARAMETER, value = "RM"),
-	          @Parameter(name = IdGenerator.NUMBER_FORMAT_PARAMETER, value = "%05d") })
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "room_id_gen")
+	@GenericGenerator(name = "room_id_gen", strategy = "iss.team5.vms.generators.RoomIdGenerator")
 	private String id;
 	private boolean availability;
 	

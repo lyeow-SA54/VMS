@@ -1,6 +1,7 @@
 package iss.team5.vms.model;
 
 import javax.persistence.Column;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -30,8 +31,8 @@ public class User {
 	private String email;
 	@NotNull(message = "Username is mandatory")
 	private String username;
-	@NotNull(message = "Password is mandatory")
-	@Column(columnDefinition="BINARY(32) NOT NULL")
+//	@NotNull(message = "Password is mandatory")
+//	@Column(columnDefinition="BINARY(32) NOT NULL")
 	@JsonIgnore
 	private byte[] password;
 

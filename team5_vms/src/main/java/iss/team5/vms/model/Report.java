@@ -1,6 +1,7 @@
 package iss.team5.vms.model;
 
 import javax.persistence.Column;
+
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -12,9 +13,6 @@ import javax.validation.constraints.NotNull;
 
 import iss.team5.vms.helper.ReportStatus;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
-
-import iss.team5.vms.generators.IdGenerator;
 import iss.team5.vms.helper.Category;
 import iss.team5.vms.helper.StudentStatus;
 import lombok.Data;

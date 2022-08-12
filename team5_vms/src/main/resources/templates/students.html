@@ -8,11 +8,11 @@
 
 <body>
 	<div th:replace="fragments/general.html :: menu-admin-room"></div>
-	<div th:if="${#lists.isEmpty(rooms)}">
+	<div th:if="${#lists.isEmpty(students)}">
 		<div class="container">
 			<div class="row">
 				<div class="col-3" style="margin-top: 15px; margin-bottom: 15px;">
-					<h5>Room List</h5>
+					<h5>Student List</h5>
 				</div>
 			</div>
 			<div class="row" style="margin-top:100px;">
@@ -22,20 +22,20 @@
 			</div><br>
 			<div class="row">
 				<div class="col" style="text-align:center;">
-					<h5>No Rooms.</h5>
+					<h5>No Students.</h5>
 					<h5 style="text-decoration: underline;">
-						<a th:href="@{/admin/rooms/create}" class="btn btnblue">Add New Room</a>
+						<a th:href="@{/admin/students/create}" class="btn btnblue">Add New Student</a>
 					</h5>
 				</div>
 			</div>
 		</div>
 	</div>
 
-	<div th:if="${not #lists.isEmpty(rooms)}">
+	<div th:if="${not #lists.isEmpty(students)}">
 		<div class="container">
 			<div class="row">
 				<div class="col-3" style="margin-top: 15px; margin-bottom: 15px;">
-					<h4>Room List</h4>
+					<h4>Student List</h4>
 				</div>
 			</div>
 			<div class="row">
@@ -43,32 +43,26 @@
 					<table class="table table-striped" align="center">
 						<thead>
 							<tr class="listHeading">
-								<th>Name</th>
-								<th>Facilities</th>
-								<th>Capacity</th>
-								<th>Availability</th>
-								<th>Start Time</th>
-								<th>Duration</th>
-								<th>Edit</th>
-								<th>Delete</th>
+								<th>First Name</th>
+								<th>Last Name</th>
+								<th>Username</th>
+								<th>Email</th>
+								<th>Score</th>
+								<!--<th>Edit</th>
+								<th>Delete</th>-->
 							</tr>
 						</thead>
 						<tbody>
-							<tr th:each="room:${rooms}">
-								<td th:text=${room.roomName}></td>
+							<tr th:each="student:${students}">
+								<td th:text=${student.user.firstName}></td>
+								<td th:text=${student.user.lastName}></td>
+								<td th:text=${student.user.username}></td>
+								<td th:text=${student.user.email}></td>
+								<td th:text=${student.score}></td>
+								<!--<td><a href="" th:href="@{/admin/students/edit/}+${student.id}">Edit</a></td>
 								<td>
-									<ul th:each="fac:${room.facilities}">
-										<li th:text="${fac.name}"></li>
-									</ul>
-								</td>
-								<td th:text=${room.capacity}></td>
-								<td th:text="${room.availability} ? 'OPEN' : 'FULL'"></td>
-								<td th:text=${room.blockedStartTime}></td>
-								<td th:text=${room.blockDuration}></td>
-								<td><a href="" th:href="@{/admin/rooms/edit/}+${room.id}">Edit</a></td>
-								<td>
-									<a href="" th:href="@{/admin/rooms/delete/}+${room.id}">Delete</a>
-								</td>
+									<a href="" th:href="@{/admin/students/delete/}+${student.id}">Delete</a>
+								</td>-->
 							</tr>
 						</tbody>
 					</table>

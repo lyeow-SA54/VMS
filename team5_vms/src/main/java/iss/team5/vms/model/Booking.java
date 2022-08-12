@@ -1,6 +1,7 @@
 package iss.team5.vms.model;
 
 import java.time.LocalDate;
+
 import java.time.LocalTime;
 
 import javax.persistence.Entity;
@@ -13,10 +14,7 @@ import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
 import org.springframework.format.annotation.DateTimeFormat;
-
-import iss.team5.vms.generators.IdGenerator;
 import iss.team5.vms.helper.BookingStatus;
 import lombok.Data;
 import lombok.NoArgsConstructor;

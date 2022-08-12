@@ -58,10 +58,10 @@ public class SeedDBServiceImpl implements SeedDBService {
 		}
 
 		if(!bs.tableExist()) {
-		bs.createBooking(new Booking("B1", dateTimeInput.dateInput("08/01/2022"), LocalTime.now().minusHours(1), 1, BookingStatus.SUCCESSFUL));
-		bs.createBooking(new Booking("B2", dateTimeInput.dateInput("08/02/2022"), LocalTime.now(), 2, BookingStatus.CANCELLED));
-		bs.createBooking(new Booking("B3", dateTimeInput.dateInput("08/03/2022"), LocalTime.now(), 3, BookingStatus.REJECTED));
-		bs.createBooking(new Booking("B4", dateTimeInput.dateInput("08/04/2022"), LocalTime.now(), 1, BookingStatus.WAITINGLIST));
+		bs.createBooking(new Booking("B1", dateTimeInput.dateInput("08/12/2022"), LocalTime.now().minusHours(1), 1, BookingStatus.SUCCESSFUL));
+		bs.createBooking(new Booking("B2", dateTimeInput.dateInput("08/13/2022"), LocalTime.now(), 2, BookingStatus.CANCELLED));
+		bs.createBooking(new Booking("B3", dateTimeInput.dateInput("08/14/2022"), LocalTime.now(), 3, BookingStatus.REJECTED));
+		bs.createBooking(new Booking("B4", dateTimeInput.dateInput("08/15/2022"), LocalTime.now(), 1, BookingStatus.WAITINGLIST));
 		bs.createBooking(new Booking("B5", LocalDate.now(), LocalTime.now().minusHours(5), 2, BookingStatus.SUCCESSFUL));
 		bs.createBooking(new Booking("B6", LocalDate.now(), LocalTime.now(), 2, BookingStatus.SUCCESSFUL));
 		}
@@ -74,8 +74,6 @@ public class SeedDBServiceImpl implements SeedDBService {
 		rs.createReport(new Report("IS THAT A COCKROACH?!",Category.CLEANLINESS, StudentStatus.NORMAL, ReportStatus.PROCESSING));
 		}
 			
-		
-//		if(!us.tableExist()) {
 		User user = new User();
 		user.setEmail("admin@u.nus.edu");
 		user.setFirstName("admin");
@@ -84,9 +82,7 @@ public class SeedDBServiceImpl implements SeedDBService {
 		user.setUsername("admin");
 		user.setPassword(HashStringGenerator.getHash("admin", "admin"));
 		us.createUser(user);
-//		}
 	
-		
 		if(!fs.tableExist()) {
 			Facility f1 = new Facility("Projector");
 			fs.createFacility(f1);
@@ -123,9 +119,9 @@ public class SeedDBServiceImpl implements SeedDBService {
 		Report rp5 = rs.findReportById("RE1005");
 
 		
-		Room r1 = rms.findRoomById("RM00001");
-		Room r2 = rms.findRoomById("RM00002");
-		Room r3 = rms.findRoomById("RM00003");
+		Room r1 = rms.findRoomById("RM1001");
+		Room r2 = rms.findRoomById("RM1002");
+		Room r3 = rms.findRoomById("RM1003");
 		
 		List<Facility> projecter = fs.findFacilityByName("Projector");
 		List<Facility> wb = fs.findFacilityByName("White Board");

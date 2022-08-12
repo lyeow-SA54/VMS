@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <!--<head th:replace="fragments/general.html :: headerfiles"/>-->
-<head th:replace="fragments/general.html :: headerfiles"/>
+
+<head th:replace="fragments/general.html :: headerfiles" />
 
 <body>
 	<div th:replace="fragments/general.html :: menu-student"></div>
@@ -9,7 +10,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-3" style="margin-top: 15px; margin-bottom: 15px;">
-					<h4>Room List</h4>
+					<h5>Room List</h5>
 				</div>
 
 			</div>
@@ -20,16 +21,16 @@
 			</div><br>
 			<div class="row">
 				<div class="col" style="text-align:center;">
-					<h4>There are no rooms available.</h4>
+					<h5>There are no rooms available.</h5>
 					<h5 style="text-decoration: underline;">
-						<a th:href="@{/student/booking/options}" class="btn btn-primary">New Booking</a>
+						<a th:href="@{/student/booking/options}" class="btn btnblue">New Booking</a>
 					</h5>
 				</div>
 			</div>
 		</div>
 	</div>
 
-<div th:if="${outcomeMsg!=null}"><span th:text = "${outcomeMsg}"></span></div>
+	<div th:if="${outcomeMsg!=null}"><span th:text="${outcomeMsg}"></span></div>
 
 	<table>
 		<tr>
@@ -45,25 +46,22 @@
 			<td th:text=${booking.duration}></td>
 			<td th:text=${booking.id}></td>
 			<td>
-			<form action="#" th:action="@{/student/booking/save}" method="post">
-			<input type="hidden" name="roomid" th:value="${booking.room.id}"  />
-			<input type="hidden" th:value="${booking.room.roomName}" th:field="${booking.room.roomName}" />
-			<input type="hidden" th:value="${booking.date}" th:field="${booking.date}" />
-			<input type="hidden" th:value="${booking.time}" th:field="${booking.time}" />
-			<input type="hidden" th:value="${booking.duration}" th:field="${booking.duration}" />
-			<input type="submit" value="Select Booking" class="btn btn-primary" />
-			</form>
+				<form action="#" th:action="@{/student/booking/save}" method="post">
+					<input type="hidden" name="roomid" th:value="${booking.room.id}" />
+					<input type="hidden" th:value="${booking.room.roomName}" th:field="${booking.room.roomName}" />
+					<input type="hidden" th:value="${booking.date}" th:field="${booking.date}" />
+					<input type="hidden" th:value="${booking.time}" th:field="${booking.time}" />
+					<input type="hidden" th:value="${booking.duration}" th:field="${booking.duration}" />
+					<input type="submit" value="Select Booking" class="btn btn-primary" />
+				</form>
 			</td>
 		</tr>
 	</table>
-
-				<p>
-					
-					
-				</p>
-
-	<br />
-	<!--<div th:replace="fragments/general.html :: footer"></div>-->
+	<footer class="page-footer">
+		<div class="footer-copyright text-center py-3" style="color:white; background-color: #003062">
+			VMS Copyright &copy; 2022
+		</div>
+	</footer>
 </body>
 
 </html>

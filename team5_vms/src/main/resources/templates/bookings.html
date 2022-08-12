@@ -1,27 +1,41 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<!--<head th:replace="fragments/general.html :: headerfiles"/>-->
+
+<head>
+	<style>
+		html {
+			position: relative;
+			min-height: 100%;
+		}
+
+		body {
+			margin-bottom: 100px;
+		}
+
+		footer {
+			position: absolute;
+			bottom: 0;
+			width: 100%;
+			height: 56px;
+		}
+	</style>
+</head>
 
 <body>
-	<!--<header th:insert="fragments/general.html :: header"> </header>
-	<div th:replace="fragments/general.html :: menu"></div>-->
 
 	<h2 th:if="${not #lists.isEmpty(facilities)}">Booking List</h2>
 	<label for="Room">Room:</label>
-		<select th:field="*{room}">
-			<option th:each="room : ${rooms}" th:value="${room}"
-				th:text="#{${'seedstarter.type.' + room}}"></option>
-		</select>
-		<label for="Date">Date:</label>
-		<select th:field="*{date}">
-			<option th:each="date : ${dates}" th:value="${date}"
-				th:text="#{${'seedstarter.type.' + date}}"></option>
-		</select>
-		<label for="Status">Status:</label>
-		<select th:field="*{stat}">
-			<option th:each="stat : ${status}" th:value="${stat}"
-				th:text="#{${'seedstarter.type.' + stat}}"></option>
-		</select>
+	<select th:field="*{room}">
+		<option th:each="room : ${rooms}" th:value="${room}" th:text="#{${'seedstarter.type.' + room}}"></option>
+	</select>
+	<label for="Date">Date:</label>
+	<select th:field="*{date}">
+		<option th:each="date : ${dates}" th:value="${date}" th:text="#{${'seedstarter.type.' + date}}"></option>
+	</select>
+	<label for="Status">Status:</label>
+	<select th:field="*{stat}">
+		<option th:each="stat : ${status}" th:value="${stat}" th:text="#{${'seedstarter.type.' + stat}}"></option>
+	</select>
 	<table>
 		<tr>
 			<th>Room Name</th>
@@ -34,8 +48,11 @@
 			<td th:text=${booking.status}></td>
 		</tr>
 	</table>
-	<br />
-	<!--<div th:replace="fragments/general.html :: footer"></div>-->
+	<footer class="page-footer">
+		<div class="footer-copyright text-center py-3" style="color:white; background-color: #003062">
+			VMS Copyright &copy; 2022
+		</div>
+	</footer>
 </body>
 
 </html>

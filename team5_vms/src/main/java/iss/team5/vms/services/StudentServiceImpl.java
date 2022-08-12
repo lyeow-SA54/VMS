@@ -2,12 +2,12 @@ package iss.team5.vms.services;
 
 import java.util.ArrayList;
 
-import java.util.List;
-
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
+
+import iss.team5.vms.generators.HashStringGenerator;
 import iss.team5.vms.model.Student;
 import iss.team5.vms.model.User;
 import iss.team5.vms.repositories.StudentRepo;
@@ -42,6 +42,9 @@ public class StudentServiceImpl implements StudentService{
 	@Transactional
 	public Student createStudent(Student student) {
 		User user = student.getUser();
+		user.setRole("STUDENT");
+		user.setPassword(HashStringGenerator.getHash(student.getUser().getUsername(), "password"));
+		student.setUser(user);
 		return srepo.saveAndFlush(student);
 	}
 	
