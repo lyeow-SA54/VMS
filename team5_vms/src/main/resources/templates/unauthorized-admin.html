@@ -1,28 +1,83 @@
 <!DOCTYPE html>
-
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
+	<meta charset="ISO-8859-1">
+	<title>Team 5 VMS</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+	<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
 
-    <meta charset="ISO-8859-1">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
-    <title>VMS</title>
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+		integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
 
-    <link rel="stylesheet" th:href="@{/css/simple.css}" />
+	<style type="text/css">
+		div {
+			text-align: center;
+			padding: 100px;
+		}
+		p {
+			color: red;
+		}
 
-    <style>
-            div{text-align: center; padding: 100px;}
-            p{color:red;}
-    </style>
+		.btnblue {
+			text-decoration: none;
+			color: white;
+			background-color: #003062;
+		}
+
+		.btnblue:hover {
+			color: #003062;
+			background-color: white;
+			border-color: #003062;
+		}
+		.container-fluid {
+			padding: 60px 50px;
+		}
+		.btnorange {
+			background-color: #F27C36;
+			color: white;
+		}
+
+		.btnorange:hover {
+			background-color: white;
+			color: #F27C36;
+			border-color: #F27C36;
+		}
+	</style>
 
 </head>
 
 <body>
-	<div>
-		<h1>You don't have access to this page</h1>
-		<a th:href="@{/admin/index}">Home</a>
+	<nav class="navbar navbar-expand-sm bg-light navbar-light">
+		<img src="/image/logo.png" height="60px" style="vertical-align:middle;">
+		<nav class="my_menu navbar navbar-expand-sm navbar-light bg-light">
+			<div class="d-flex w-100">
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar9">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+			</div>
+			<div class="d-flex w-100">
+				&nbsp;
+			</div>
+		</nav>
+		<span class="navbar-nav ml-auto">
+			Welcome&nbsp;&nbsp;&nbsp;&nbsp;
+		</span>
+		<a class="btn btnorange" th:href="@{/logout}">Logout</a>
+	</nav>
+	<div class="container-fluid text-center">
+		<h5>401 - Unauthorized: Access is denied.</h5>
+		<h5>You don't have permission to view this directory or page using the credentials that you supplied.
+		</h5>
+		<a th:href="@{/admin/index}" class="btn btnblue">Home</a>
 	</div>
-
+	<footer class="text-center py-4" style="color:white; margin-top: 287px; background-color:#003062">
+		VMS Copyright &copy; 2022
+	</footer>
 </body>
 
 </html>

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/general.html :: headerfiles"/>
+
+<head th:replace="fragments/general.html :: headerfiles" />
 
 <body>
 	<div th:replace="fragments/general.html :: menu-student"></div>
@@ -20,84 +21,40 @@
 			</div><br>
 			<div class="row">
 				<div class="col" style="text-align:center;">
-					<h4>There are no new booking.</h4>
+					<h5>There are no new bookings.</h5>
 				</div>
 			</div>
 		</div>
 	</div>
-	
+
 	<div th:if="${not #strings.isEmpty(booking)}">
-<div class="card bg-light mb-3 mx-auto" style="max-width: 30rem;">
-  <div class="card-header text-center">Booking Summary</div>
-  <div class="card-body">
-    <h5 class="card-title" th:text="${booking.room.roomName}">
-	</h5>
-    <div class="mx-auto text-center">
-    <span>Booking Date and Time: </span>
-    <span th:text="${booking.date}" /></span>
-    <span th:text="${booking.time}"></span>
-    </div>
-    <div class="mx-auto text-center">
+		<div class="card bg-light mt-5 mx-auto" style="max-width: 30rem;">
+			<div class="card-header text-center">Booking Summary</div>
+			<div class="card-body">
+				<h5 class="card-title" th:text="${booking.room.roomName}">
+				</h5>
+				<div class="mx-auto text-center">
+					<span>Booking Date and Time: </span>
+					<span th:text="${booking.date}" /></span>
+					<span th:text="${booking.time}"></span>
+				</div>
+				<div class="mx-auto text-center">
     <span>Booking Status: </span>
     <span th:text="${booking.status}"></span></div>
     <div class="mx-auto text-center" th:if="${outcomeMsg}!= null">
     <span>Extension Request Outcome: </span>
 	<span th:text="${outcomeMsg}"></span></span>
     </div>
-    <br />
-    <div class="mx-auto text-center">
-    <a th:href="@{/student/booking/history}" class="btn btn-outline-danger">Back</a>
-    </div>
-  </div>
-    </div></div>
-	
-	<!--<div th:if="${not #strings.isEmpty(booking)}">
-	<div class="container">
-			<div class="row">
-				<div class="col-3" style="margin-top: 15px; margin-bottom: 15px;">
-					<h4>Booking Summary</h4>
-				</div>
-				<div class="row">
-				<div class="col">
-					<table class="table table-striped" align="center">
-						<thead>
-							<tr class="listHeading">
-								<th>Room Name</th>
-								<th>Booking Date</th>
-								<th>Booking Status</th>
-								<th>Facilities</th>
-								<th>Capacity</th>								
-								<th>Start Time</th>
-								<th>Duration</th>
-								<th></th>
-								<th></th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr th:object="${booking}">
-								<td th:text="${booking.room.roomName}"></td>
-								<td th:text="${booking.date}"></td>
-								<td th:text="${booking.status}"></td>
-								<td>
-									<ul th:each="fac:${booking.room.facilities}">
-										<li th:text="${fac.name}"></li>
-									</ul>
-								</td>
-								<td th:text=${booking.room.capacity}></td>
-								<td th:text=${booking.time}></td>
-								<td th:text=${booking.duration}></td>
-								<td><a th:href="@{/student/booking/cancel/}+${booking.id}" class="btn btn-outline-danger">Cancel</a></td>
-							</tr>
-						</tbody>
-					</table>
+				<br />
+				<div class="mx-auto text-center">
+					<a th:href="@{/student/booking/history}" class="btn btnblue">Back</a>
 				</div>
 			</div>
 		</div>
-	</div>-->
-	<!--<a href="" th:href="@{/admin/rooms/edit/}">View Pending Booking</a>
-	<a href="" th:href="@{/admin/rooms/edit/}">Update</a>-->
-	<br />
-	<!--<div th:replace="fragments/general.html :: footer"></div>-->
+	</div>
+	<footer class="text-center py-4" style="color:white; margin-top: 222px; background-color:#003062">
+		VMS Copyright &copy; 2022
+	</footer>
 </body>
 
 </html>

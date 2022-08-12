@@ -34,14 +34,14 @@ public class RoomController {
 
 	@Autowired
 	private FacilityService fService;
-	
+
 	@Autowired
 	private UserSessionService userSessionService;
 
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	public ModelAndView newRoom() {
 		User user = userSessionService.findUserBySession();
-		if(!user.getRole().equals("ADMIN")) {
+		if (!user.getRole().equals("ADMIN")) {
 			ModelAndView mav = new ModelAndView("unauthorized-student");
 			return mav;
 		}
@@ -55,7 +55,7 @@ public class RoomController {
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
 	public ModelAndView createRoom(@ModelAttribute @Valid Room room, BindingResult result) {
 		User user = userSessionService.findUserBySession();
-		if(!user.getRole().equals("ADMIN")) {
+		if (!user.getRole().equals("ADMIN")) {
 			ModelAndView mav = new ModelAndView("unauthorized-student");
 			return mav;
 		}
@@ -70,7 +70,7 @@ public class RoomController {
 	public ModelAndView searchRoom(@RequestParam("searchRoom") String roomName, @RequestParam("facility") String facStr,
 			@RequestParam("availability") String ava, Model model) {
 		User user = userSessionService.findUserBySession();
-		if(!user.getRole().equals("ADMIN")) {
+		if (!user.getRole().equals("ADMIN")) {
 			ModelAndView mav = new ModelAndView("unauthorized-student");
 			return mav;
 		}
@@ -80,9 +80,9 @@ public class RoomController {
 		mav.addObject("searchStr", roomName);
 		System.out.println("Facilities" + facStr);
 		if (roomName != "") {
-			mav.addObject("rooms", rService.searchRoomByNameFacilityAvailability(roomName, facStr, Boolean.parseBoolean(ava)));
-		}
-		else {
+			mav.addObject("rooms",
+					rService.searchRoomByNameFacilityAvailability(roomName, facStr, Boolean.parseBoolean(ava)));
+		} else {
 			mav.addObject("rooms", rService.searchRoomByFacilityAvailability(facStr, Boolean.parseBoolean(ava)));
 		}
 		return mav;
@@ -92,12 +92,12 @@ public class RoomController {
 	@ResponseBody
 	public ModelAndView roomList() {
 		User user = userSessionService.findUserBySession();
-		if(user != null) {
-			if(!user.getRole().equals("ADMIN")) {
+		if (user != null) {
+			if (!user.getRole().equals("ADMIN")) {
 				ModelAndView mav = new ModelAndView("unauthorized-student");
 				return mav;
 			}
-		}		
+		}
 		ModelAndView mav = new ModelAndView("rooms");
 		List<Room> rooms = rService.findAllRooms();
 		mav.addObject("rooms", rooms);
@@ -109,7 +109,7 @@ public class RoomController {
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
 	public ModelAndView editRoom(@PathVariable String id) {
 		User user = userSessionService.findUserBySession();
-		if(!user.getRole().equals("ADMIN")) {
+		if (!user.getRole().equals("ADMIN")) {
 			ModelAndView mav = new ModelAndView("unauthorized-student");
 			return mav;
 		}
@@ -128,7 +128,7 @@ public class RoomController {
 	@RequestMapping(value = "/edit", method = RequestMethod.POST)
 	public ModelAndView editRoom(@ModelAttribute @Valid Room room, BindingResult result) {
 		User user = userSessionService.findUserBySession();
-		if(!user.getRole().equals("ADMIN")) {
+		if (!user.getRole().equals("ADMIN")) {
 			ModelAndView mav = new ModelAndView("unauthorized-student");
 			return mav;
 		}
@@ -146,7 +146,7 @@ public class RoomController {
 	@RequestMapping(value = "/delete/{id}")
 	public ModelAndView deleteRoom(@PathVariable("id") String id) {
 		User user = userSessionService.findUserBySession();
-		if(!user.getRole().equals("ADMIN")) {
+		if (!user.getRole().equals("ADMIN")) {
 			ModelAndView mav = new ModelAndView("unauthorized-student");
 			return mav;
 		}

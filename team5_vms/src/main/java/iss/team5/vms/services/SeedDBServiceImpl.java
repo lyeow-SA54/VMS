@@ -171,6 +171,5 @@ public class SeedDBServiceImpl implements SeedDBService {
 		bs.addRoom(b4, r1);
 		bs.addRoom(b5, r3);
 		bs.addRoom(b6, r3);
-		
 	}
 }
