@@ -65,9 +65,12 @@
 								<td th:text="${room.availability} ? 'OPEN' : 'FULL'"></td>
 								<td th:text=${room.blockedStartTime}></td>
 								<td th:text=${room.blockDuration}></td>
-								<td><a href="" th:href="@{/admin/rooms/edit/}+${room.id}">Edit</a></td>
-								<td>
+								<td><a href="" th:href="@{/admin/rooms/edit/}+${room.id}">Edit</a></td>								
+								<td th:if="${not roomids.contains(room.id)}">
 									<a href="" th:href="@{/admin/rooms/delete/}+${room.id}">Delete</a>
+								</td>
+								<td th:unless="${not roomids.contains(room.id)}">
+									<span>-</span>
 								</td>
 							</tr>
 						</tbody>

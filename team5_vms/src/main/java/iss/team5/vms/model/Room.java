@@ -1,8 +1,6 @@
 package iss.team5.vms.model;
 
 import java.time.LocalTime;
-
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,8 +13,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
+
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.format.annotation.DateTimeFormat;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

@@ -1,6 +1,7 @@
 package iss.team5.vms.controllers;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -17,10 +18,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import iss.team5.vms.model.Booking;
 import iss.team5.vms.model.Facility;
 import iss.team5.vms.model.Room;
 import iss.team5.vms.model.Student;
 import iss.team5.vms.model.User;
+import iss.team5.vms.services.BookingService;
 import iss.team5.vms.services.FacilityService;
 import iss.team5.vms.services.RoomService;
 import iss.team5.vms.services.StudentService;
@@ -38,6 +41,9 @@ public class AdminController {
 	
 	@Autowired
 	private StudentService sService;
+	
+	@Autowired
+	private BookingService bService;
 
 	@Autowired
 	private UserSessionService userSessionService;
@@ -96,6 +102,11 @@ public class AdminController {
 	@ResponseBody
 	public ModelAndView roomList() {
 		User user = userSessionService.findUserBySession();
+		List<Booking> bookings = bService.findAllBookings();
+        HashSet<String> roomIds = new HashSet<>();
+        for(Booking b : bookings) {
+            roomIds.add(b.getRoom().getId());
+        }
 		if (user != null) {
 			if (!user.getRole().equals("ADMIN")) {
 				ModelAndView mav = new ModelAndView("unauthorized-student");
@@ -107,6 +118,7 @@ public class AdminController {
 		mav.addObject("rooms", rooms);
 		List<Facility> facilities = (List<Facility>) fService.findAllFacilities();
 		mav.addObject("checkBoxFacilities", facilities);
+		mav.addObject("roomids", roomIds);
 		return mav;
 	}
 
