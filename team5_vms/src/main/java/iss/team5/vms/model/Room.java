@@ -52,8 +52,6 @@ public class Room {
 	@DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
 	private LocalTime blockedStartTime;
 	private int blockDuration;
-	@OneToOne(mappedBy="room")
-	private Booking booking;
 	
 	public Room(String id)
 	{
