@@ -12,7 +12,7 @@
 	<<div class="container">
 		<div class="row">
 			<div class="col-3 mb-3">
-				<h5>Booking</h5>
+				<h5>Available Rooms</h5>
 			</div>
 		</div>
 		<div class="card-deck mb-3 text-center">
@@ -40,7 +40,8 @@
 
 
 		<div class="container">
-			<div class="card-deck mb-3 text-center">
+			<div class="col-3 text-center">
+				<!--<div class="card-deck mb-3 text-center">
 				<div class="card mb-4 box-shadow">
 					<div class="card-header">
 						<h5>New Booking</h5>
@@ -73,7 +74,7 @@
 						<a class="btn btn-block btnblue" style="margin-top:70px;" th:href="@{/report/save}">Create
 							Report</a>
 					</div>
-				</div>
+				</div>-->
 				<div class="card mb-4 box-shadow">
 					<div class="card-header">
 						<h5>Room Check-In</h5>
@@ -89,7 +90,7 @@
 							th:href="@{/barcodes/{bookingId}(bookingId=${bookingOfTheDay.id})}">Check-In</a>
 					</div>
 				</div>
-				<div class="card mb-4 box-shadow">
+				<!--<div class="card mb-4 box-shadow">
 					<div class="card-header">
 						<h5>Booking History</h5>
 					</div>
@@ -101,7 +102,7 @@
 						<a class="btn btn-block btnblue" style="margin-top:120px;"
 							th:href="@{/student/booking/history}">History Details</a>
 					</div>
-				</div>
+				</div>-->
 			</div>
 		</div>
 
