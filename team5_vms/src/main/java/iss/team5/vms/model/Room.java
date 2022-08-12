@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -51,6 +52,8 @@ public class Room {
 	@DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
 	private LocalTime blockedStartTime;
 	private int blockDuration;
+	@OneToOne(mappedBy="room")
+	private Booking booking;
 	
 	public Room(String id)
 	{
