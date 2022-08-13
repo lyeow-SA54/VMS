@@ -2,39 +2,58 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="fragments/general.html :: headerfiles" />
+<title>VMS</title>
+<link rel="stylesheet" th:href="@{/css/simple.css}" />
+<style>
+	.card:hover {
+		transform: scale(1.1);
+	}
+
+	.card {
+		transition: transform .5s;
+	}
+</style>
+</head>
 
 <body>
 	<div th:replace="fragments/general.html :: menu-student"></div>
 
-	<div class="container">
+	<div class="container" th:if="${#lists.isEmpty(bookings)}">
 		<div class="row">
 			<div class="col-3 mb-3">
 				<h5>Available Rooms</h5>
 			</div>
 		</div>
-		<div class="card-deck mb-3 text-center">
-			<div class="card mb-4 box-shadow" th:each="booking:${bookings}">
-				<div class="card-header">
-					<h5 th:text="${booking.room.roomName}"></h5>
-				</div>
-				<div class="card-body">
-					<p class="card-text text-center" th:if="${booking.room.facilities == null}">
-						<span>NA</span>
-					</p>
-					<span "card-text text-center" th:if="${booking.room.facilities != null}">
-						<span class="card-text text-center">Facilities:
-							<ul class="list-unstyled mt-3 mb-4" th:each="fac:${booking.room.facilities}">
-								<li th:text="${fac.name}"></li>
-							</ul>
+		<div class="row">
+			<div class="col-3 text-center" th:each="booking:${bookings}">
+				<div class="card mb-4 shadow">
+					<div class="card-header">
+						<h5 th:text="${booking.room.roomName}"></h5>
+					</div>
+					<div class="card-body">
+						<span "card-text text-center" th:if="${#lists.isEmpty(booking.room.facilities)}">
+							<span class="card-text text-center font-weight-bold">Facilities :
+							</span>
+							<span class="card-text text-center">&nbsp;NA
+							</span><br>
 						</span>
-					</span>
-					<span class="card-text text-center" th:text="#{fieldLabel.rmcapacity} + ${booking.room.capacity}">
-					</span>
+						<span "card-text text-center" th:if="${not #lists.isEmpty(booking.room.facilities)}">
+							<span class="card-text text-center font-weight-bold">Facilities : </span>
+							<span class="card-text text-center">
+								<ul class="list-unstyled mt-3 mb-4" th:each="fac:${booking.room.facilities}">
+									<li th:text="${fac.name}"></li>
+								</ul>
+							</span>
+						</span>
+						<span class="card-text text-center font-weight-bold" th:text="#{fieldLabel.rmcapacity}">
+						</span>
+						<span class="card-text text-center" th:text="${booking.room.capacity}">
+						</span>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-
 
 	<div class="container">
 		<div class="row">
@@ -78,7 +97,8 @@
 						<h5>Room Check-In</h5>
 					</div>
 					<div class="card-body">
-						<h5 class="card-title">Register Upon Arrival</h5>
+						<!--<h5 class="card-title">Register Upon Arrival</h5>-->
+						<span class="card-text text-center font-weight-bold">Register Upon Arrival</span>
 						<ul class="list-unstyled mt-3 mb-4">
 							<li>Be puntucal</li>
 							<li>Keep the room clean</li>
