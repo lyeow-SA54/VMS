@@ -97,7 +97,7 @@ public class BookingServiceImpl implements BookingService {
 	}
 
 	@Override
-	public List<Booking> checkBookingAvailable(Booking booking, List<Room> rooms) {
+	public List<Booking> checkBookingAvailable(Booking booking, List<Room> rooms, Student student) {
 		LocalTime bstart = booking.getTime();
 		int duration = booking.getDuration();
 		if (duration > 2)
@@ -125,20 +125,28 @@ public class BookingServiceImpl implements BookingService {
 				bookings.add(new Booking(r.getRoomName(), booking.getDate(), booking.getTime(), duration, r));
 			}
 		}
-		
-		
+
+		// filtering bookings to be offered against student's existing bookings so there are no overlaps 
+		List<Booking> sbookings = findStudentBookingsForDate(student, booking.getDate());
+		for (Booking sbooking : sbookings) {
+//			System.out.println(sbooking.getTime());
+//			System.out.println(booking.getTime());
+		bookings = bookings.stream().filter(b -> !checkBookingsOverlap(b, sbooking)).collect(Collectors.toList());
+		}
+
 		return bookings;
+
 	}
-	
-	@Override public boolean checkBookingsOverlap (Booking newBooking, Booking existingBooking)
-	{
+
+	@Override
+	public boolean checkBookingsOverlap(Booking newBooking, Booking existingBooking) {
 		if (newBooking.getTime().isBefore(existingBooking.getTime().plusHours(existingBooking.getDuration()))
 				&& (newBooking.getTime().plusHours(newBooking.getDuration()).isAfter(existingBooking.getTime()))
-				&& (existingBooking.getStatus().equals(BookingStatus.SUCCESSFUL)||existingBooking.getStatus().equals(BookingStatus.WAITINGLIST)))
-		{
-			return false;
+				&& (existingBooking.getStatus().equals(BookingStatus.SUCCESSFUL)
+						|| existingBooking.getStatus().equals(BookingStatus.WAITINGLIST))) {
+			return true;
 		}
-		return true;
+		return false;
 	}
 
 	@Override
@@ -148,11 +156,11 @@ public class BookingServiceImpl implements BookingService {
 		// check whether each booking for the room overlaps with the requested booking
 		// time. if overlap return false
 		for (Booking b : bookings) {
-			if (!checkBookingsOverlap(booking, b)) {
-				return false;
+			if (checkBookingsOverlap(booking, b)) {
+				return true;
 			}
 		}
-		return true;
+		return false;
 	}
 
 	@Override
@@ -183,12 +191,18 @@ public class BookingServiceImpl implements BookingService {
 
 		return bookings;
 	}
-	
+
 	@Override
 	public Booking findStudentCurrentBooking(Student student) {
 		List<Booking> bookings = br.findAllBookingByStudent(student);
 		bookings = checkBookingInProgress(bookings);
-		return bookings.stream().filter(b->b.isBookingInProgress()).findFirst().get();
+		return bookings.stream().filter(b -> b.isBookingInProgress()).findFirst().get();
+	}
+
+	@Override
+	public List<Booking> findStudentBookingsForDate(Student student, LocalDate date) {
+		List<Booking> bookings = br.findByDateAndStudent(date, student);
+		return bookings;
 	}
 
 	@Override
@@ -206,34 +220,30 @@ public class BookingServiceImpl implements BookingService {
 		}
 		return booking;
 	}
-	
+
 	@Override
-	public boolean predictHogging(String imgPath)
-	{
-		String uri = "http://127.0.0.1:5000/hogpredict?filename="+imgPath;
+	public boolean predictHogging(String imgPath) {
+		String uri = "http://127.0.0.1:5000/hogpredict?filename=" + imgPath;
 		RestTemplate restTemplate = new RestTemplate();
 		ResponsePojo response = restTemplate.getForObject(uri, ResponsePojo.class);
 		String result = response.getResponse();
 		System.out.println(result);
-		if (result.equals("TRUE"))
-		{
+		if (result.equals("TRUE")) {
 			return true;
 		}
 		return false;
 	}
-	
+
 	@Override
-	public boolean predictPeak(int week, int volume)
-	{
-			String uri = "http://127.0.0.1:5000/peakpredict?week="+week+"&volume="+volume;
-			RestTemplate restTemplate = new RestTemplate();
-			ResponsePojo response = restTemplate.getForObject(uri, ResponsePojo.class);
-			String result = response.getResponse();
-			System.out.println(result);
-			if (result.equals("TRUE"))
-			{
-				return true;
-			}
-			return false;
+	public boolean predictPeak(int week, int volume) {
+		String uri = "http://127.0.0.1:5000/peakpredict?week=" + week + "&volume=" + volume;
+		RestTemplate restTemplate = new RestTemplate();
+		ResponsePojo response = restTemplate.getForObject(uri, ResponsePojo.class);
+		String result = response.getResponse();
+		System.out.println(result);
+		if (result.equals("TRUE")) {
+			return true;
 		}
+		return false;
+	}
 }

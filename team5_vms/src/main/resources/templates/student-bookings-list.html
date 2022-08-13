@@ -47,7 +47,6 @@
 								<th>Status</th>
 								<th>Report</th>
 								<th>Cancel</th>
-								<th>Extension</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -62,7 +61,6 @@
 									</a>
 								</td>
 								<td th:unless="${booking.bookingInProgress}">
-								<td>
 									<span>-</span>
 								</td>
 								<td
@@ -73,13 +71,6 @@
 								</td>
 								<td
 									th:unless="${booking.status != T(iss.team5.vms.helper.BookingStatus).REJECTED and booking.status != T(iss.team5.vms.helper.BookingStatus).CANCELLED}">
-									<span>-</span>
-								</td>
-								<td th:if="${booking.bookingInProgress}">
-									<a th:href="@{/student/booking/extend/}+${booking.id}">
-										<span th:text="EXTEND">
-								</td>
-								<td th:unless="${booking.bookingInProgress}">
 									<span>-</span>
 								</td>
 							</tr>

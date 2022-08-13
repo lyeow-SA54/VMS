@@ -85,21 +85,22 @@ public class StudentController {
 		Booking bookingForTheDay = new Booking();
 		bookingForTheDay.setDate(LocalDate.now());
 		bookingForTheDay.setTime(LocalTime.now());
-		List<Booking> availableBookings = bs.checkBookingAvailable(bookingForTheDay, rooms);
+		
 		
 		//String username = SecurityContextHolder.getContext().getAuthentication().getName();
 		//Student s1 = ss.findStudentByUser(us.findUserByUsername(username));
 		
 		HttpSession session = request.getSession();
 		Student student = (Student)session.getAttribute("student");	
-		List<Booking> sBooking = bs.findBookingsByStudent(student); 
+		List<Booking> availableBookings = bs.checkBookingAvailable(bookingForTheDay, rooms, student);
+		List<Booking> studentBookingToday = bs.findStudentBookingsForDate(student, LocalDate.now()); 
 		
-		List<Booking> findTodayBooking=sBooking.stream()
-		.filter(b-> b.getDate()==LocalDate.now() && b.getStatus().toString().equalsIgnoreCase("SUCCESSFUL") )
-		.collect(Collectors.toList());
+//		List<Booking> findTodayBooking=sBooking.stream()
+//		.filter(b-> b.getDate()==LocalDate.now() && b.getStatus().toString().equalsIgnoreCase("SUCCESSFUL") )
+//		.collect(Collectors.toList());
 		
-		if (findTodayBooking.size() == 1) { 
-			Booking bookingOfTheDay = findTodayBooking.get(0);
+		if (studentBookingToday.size() == 1) { 
+			Booking bookingOfTheDay = studentBookingToday.get(0);
 			ModelAndView mav = new ModelAndView("student-home-page");
 			mav.addObject("bookingOfTheDay",bookingOfTheDay);
 			mav.addObject("bookings",availableBookings);
@@ -115,8 +116,8 @@ public class StudentController {
 	}
 	
 
-	@RequestMapping("/checkin/{bookingId}")
-	public ModelAndView bookingCheckin(@PathVariable("bookingId") String bookingId, HttpServletRequest request) {
+	@RequestMapping("/checkin/{bookingId}/{studentId}")
+	public ModelAndView bookingCheckin(@PathVariable("bookingId") String bookingId, @PathVariable("studentId") String studentId) {
 		User user = userSessionService.findUserBySession();
 		if(!user.getRole().equals("STUDENT")) {
 			ModelAndView mav = new ModelAndView("unauthorized-admin");
@@ -128,8 +129,7 @@ public class StudentController {
 		//String username = SecurityContextHolder.getContext().getAuthentication().getName();
 		//Student student = ss.findStudentByUser(us.findUserByUsername(username));
 		//Student student = ss.findStudentById("S00001");
-		HttpSession session = request.getSession();
-		Student student = (Student)session.getAttribute("student");	
+		Student student = ss.findStudentById(studentId);	
 		// pending proper url to be forwarded to on check-in completion
 		ModelAndView mav = new ModelAndView("student-bookings-list");
 		Booking booking = bs.findBookingById(bookingId);
@@ -167,8 +167,9 @@ public class StudentController {
 			ModelAndView mav = new ModelAndView("unauthorized-admin");
 			return mav;
 		}
+		Student student = ss.findStudentByUser(user);
 		List<Room> rooms = rms.findRoomsByAttributes(room);
-		List<Booking> bookings = bs.checkBookingAvailable(booking, rooms);
+		List<Booking> bookings = bs.checkBookingAvailable(booking, rooms, student);
 		ModelAndView mav = new ModelAndView("student-bookings-slot_selection");
 		mav.addObject("bookings", bookings);
 		mav.addObject("room", room);
@@ -275,29 +276,39 @@ public class StudentController {
 		return "forward:/student/booking/history";
 	}
 	
-	@RequestMapping(value = "/booking/extend/{bookingId}", method = RequestMethod.GET)
-	public ModelAndView extendBooking(@PathVariable String bookingId) {
+	@RequestMapping(value = "/booking/extend", method = RequestMethod.GET)
+	public ModelAndView extendBooking() {
 		User user = userSessionService.findUserBySession();
 		if(!user.getRole().equals("STUDENT")) {
 			ModelAndView mav = new ModelAndView("unauthorized-admin");
 			return mav;
 		}
 		ModelAndView mav = new ModelAndView("booking-success");
-		Booking booking = bs.findBookingById(bookingId);
+		Student student = ss.findStudentByUser(user);
+		Booking currentBooking = bs.findStudentCurrentBooking(student);
 		String outcomeMsg = "";
 		Booking extendBooking = new Booking("placeholder", 
-				booking.getDate(), 
-				booking.getTime().plusHours(booking.getDuration()), 
-				1, booking.getRoom());
-		if (!bs.checkBookingByDateTimeRoom(extendBooking,booking.getRoom())) {
-			outcomeMsg = "DENIED";
+				currentBooking.getDate(), 
+				currentBooking.getTime().plusHours(currentBooking.getDuration()), 
+				1, currentBooking.getRoom());
+		//check if current booking is less than 1 hour before end
+		if (LocalTime.now().isAfter(currentBooking.getTime().plusHours(currentBooking.getDuration()).minusHours(1)))
+		{
+			//check if extension request clashes with next booking
+			if (!bs.checkBookingByDateTimeRoom(extendBooking,currentBooking.getRoom())) {
+				outcomeMsg = "APPROVED";
+				currentBooking.setDuration(currentBooking.getDuration()+1);
+				bs.createBooking(currentBooking);
+			}
+			else
+			{
+				outcomeMsg = "DENIED - OVERLAP WITH NEXT BOOKING";
+			}
 		}
 		else {
-			outcomeMsg = "APPROVED";
-			booking.setDuration(booking.getDuration()+1);
-			bs.createBooking(booking);
+			outcomeMsg = "DENIED - EXTENSION REQUEST TO BE MADE <1 HOUR BEFORE END OF CURRENT BOOKING";
 		}
-		mav.addObject("booking", booking);
+		mav.addObject("booking", currentBooking);
 		mav.addObject("outcomeMsg", outcomeMsg);
 		return mav;
 	}

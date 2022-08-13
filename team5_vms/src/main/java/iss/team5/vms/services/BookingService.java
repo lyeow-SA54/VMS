@@ -1,5 +1,6 @@
 package iss.team5.vms.services;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import iss.team5.vms.model.Booking;
@@ -32,9 +33,11 @@ public interface BookingService {
 	
 	List<Booking> findBookingsByStudent(Student student);
 	
+	List<Booking> findStudentBookingsForDate(Student student, LocalDate date);
+	
 	List<Booking> checkBookingInProgress(List<Booking> bookings);
 	
-	List<Booking> checkBookingAvailable(Booking booking, List<Room> rooms);
+	List<Booking> checkBookingAvailable(Booking booking, List<Room> rooms, Student student);
 	
 	String checkIn(Student student, Booking booking);
 
@@ -45,5 +48,6 @@ public interface BookingService {
 	void addStudent(Booking booking, Student student);
 	
 	void addRoom(Booking booking, Room room);
+
 
 }

@@ -139,6 +139,7 @@ public class Android_StudentController {
 
 			LocalDate date = LocalDate.parse((String) payload.get("date"), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 			LocalTime time = LocalTime.parse((String) payload.get("time"));
+			Student student = ss.findStudentById((String) payload.get("studentId"));
 
 			Booking booking = new Booking("1", date, time, Integer.parseInt((String) payload.get("duration")),
 					BookingStatus.WAITINGLIST);
@@ -146,7 +147,7 @@ public class Android_StudentController {
 					fs.jsonToFacilityList((String) payload.get("facilities")));
 
 			List<Room> rooms = rms.findRoomsByAttributes(room);
-			List<Booking> bookings = bs.checkBookingAvailable(booking, rooms);
+			List<Booking> bookings = bs.checkBookingAvailable(booking, rooms, student);
 
 //		System.out.println(payload.get("facilities"));
 //		System.out.println(payload.get("date"));
