@@ -91,5 +91,6 @@ public class React_AdminController {
 		}
 		ModelAndView mav = new ModelAndView("admin-index");
 		return mav;
+
 	}
 }
