@@ -2,6 +2,7 @@ package iss.team5.vms.services;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -26,6 +27,9 @@ public class BookingServiceImpl implements BookingService {
 
 	@Autowired
 	BookingRepo br;
+
+	@Autowired
+	RoomService rms;
 
 	@Override
 	public List<Booking> findAllBookings() {
@@ -97,51 +101,100 @@ public class BookingServiceImpl implements BookingService {
 	}
 
 	@Override
-	public List<Booking> checkBookingAvailable(Booking booking, List<Room> rooms, Student student) {
-		LocalTime bstart = booking.getTime();
+	public List<Booking> findBookingsAvailableExact(Booking booking, List<Room> rooms, Student student) {
 		int duration = booking.getDuration();
-		if (duration > 2)
-			duration = 2;
-		LocalTime bend = bstart.plusHours(duration);
+		if (duration > 120)
+			duration = 120;
 
-		// rooms with no blocked timings
-		List<Room> nullBlockTimeRooms = rooms.stream().filter(room -> room.getBlockedStartTime() == null)
-				.collect(Collectors.toList());
-
-		// check against room blocked timings if there are
-		List<Room> frooms = rooms.stream().filter(room -> room.getBlockedStartTime() != null)
-				.filter(room -> (room.getBlockedStartTime().isAfter(bend))
-						&& (room.getBlockedStartTime().plusHours(room.getBlockDuration()).isBefore(bstart)))
-				.collect(Collectors.toList());
-
-		// all rooms that are available in requested timing
-		frooms.addAll(nullBlockTimeRooms);
+		List<Room> frooms = rms.findAllRoomsOpenForBooking(booking, rooms);
 
 		List<Booking> bookings = new ArrayList<Booking>();
-		// checking if there are existing bookings overlapping with requested time slot
-		// for each room for that day
+		// if existing bookings for a room for the same day as requested booking does
+		// not overlap, add booking for room as an option
 		for (Room r : frooms) {
-			if (checkBookingByDateTimeRoom(booking, r)) {
+			if (!checkBookingByDateTimeRoom(booking, r)) {
 				bookings.add(new Booking(r.getRoomName(), booking.getDate(), booking.getTime(), duration, r));
 			}
 		}
 
-		// filtering bookings to be offered against student's existing bookings so there are no overlaps 
+//		for (Booking b : bookings) {
+//			System.out.println(b.getDate() + "/" + b.getTime()+"/"+b.getRoom().getRoomName());
+//		}
+		// filtering bookings to be offered against student's existing bookings so there
+		// are no overlaps
 		List<Booking> sbookings = findStudentBookingsForDate(student, booking.getDate());
 		for (Booking sbooking : sbookings) {
-//			System.out.println(sbooking.getTime());
-//			System.out.println(booking.getTime());
-		bookings = bookings.stream().filter(b -> !checkBookingsOverlap(b, sbooking)).collect(Collectors.toList());
+			bookings = bookings.stream().filter(b -> !checkBookingsOverlap(b, sbooking)).collect(Collectors.toList());
 		}
-
 		return bookings;
 
 	}
 
 	@Override
+	public List<Booking> findBookingsAvailableAlternative(Booking booking, List<Room> rooms, Student student) {
+		List<Booking> bookings = new ArrayList<Booking>();
+		int duration = booking.getDuration();
+		if (duration > 120)
+			duration = 120;
+
+		List<Room> frooms = rms.findAllRoomsOpenForBooking(booking, rooms);
+		Booking bookingBefore1 = new Booking("placeholder", booking.getDate(), booking.getTime(), booking.getDuration());
+		Booking bookingBefore2 = new Booking("placeholder", booking.getDate(), booking.getTime(), booking.getDuration());
+		Booking bookingAfter1 = new Booking("placeholder", booking.getDate(), booking.getTime(), booking.getDuration());
+		Booking bookingAfter2 = new Booking("placeholder", booking.getDate(), booking.getTime(), booking.getDuration());
+
+		for (Room r : frooms) {
+			Booking overlapBooking = findOverlapBookingByDateTimeRoom(booking, r);
+
+			// same start time, reduced duration
+			bookingBefore1.setDuration(
+					Math.toIntExact(booking.getTime().until(overlapBooking.getTime(), ChronoUnit.MINUTES)));
+			if (bookingBefore1.getDuration() >= 30 && !checkBookingByDateTimeRoom(bookingBefore1, r)) {
+				bookings.add(new Booking(r.getRoomName(), bookingBefore1.getDate(), bookingBefore1.getTime(),
+						bookingBefore1.getDuration(), r));
+			}
+
+			// earlier start time, same duration
+			bookingBefore2.setTime(overlapBooking.getTime().minusMinutes(booking.getDuration() + 5));
+			if (!checkBookingByDateTimeRoom(bookingBefore2, r)) {
+				bookings.add(new Booking(r.getRoomName(), bookingBefore2.getDate(), bookingBefore2.getTime(),
+						bookingBefore2.getDuration(), r));
+			}
+
+			// later start time, same duration
+			bookingAfter1.setTime(overlapBooking.getTime().plusMinutes(overlapBooking.getDuration() + 5));
+
+			if (bookingAfter1.getDuration() >= 30 && !checkBookingByDateTimeRoom(bookingAfter1, r)) {
+				bookings.add(new Booking(r.getRoomName(), bookingAfter1.getDate(), bookingAfter1.getTime(),
+						bookingAfter1.getDuration(), r));
+			}
+
+			// later start time, reduced duration
+			bookingAfter2.setTime(overlapBooking.getTime().plusMinutes(overlapBooking.getDuration() + 5));
+			bookingAfter2.setDuration(Math.toIntExact(booking.getDuration() - booking.getTime()
+					.until(overlapBooking.getTime().plusMinutes(overlapBooking.getDuration()), ChronoUnit.MINUTES)));
+
+			if (bookingAfter2.getDuration() >= 30 && !checkBookingByDateTimeRoom(bookingAfter2, r)) {
+				bookings.add(new Booking(r.getRoomName(), bookingAfter2.getDate(), bookingAfter2.getTime(),
+						bookingAfter2.getDuration(), r));
+			}
+		}
+
+		List<Booking> sbookings = findStudentBookingsForDate(student, booking.getDate());
+		// filtering bookings to be offered against student's existing bookings so there
+		// are no overlaps or start time before now
+		for (Booking sbooking : sbookings) {
+			bookings = bookings.stream().filter(b -> !checkBookingsOverlap(b, sbooking))
+					.filter(b -> !b.getTime().isBefore(LocalTime.now())).collect(Collectors.toList());
+		}
+
+		return bookings;
+	}
+
+	@Override
 	public boolean checkBookingsOverlap(Booking newBooking, Booking existingBooking) {
-		if (newBooking.getTime().isBefore(existingBooking.getTime().plusHours(existingBooking.getDuration()))
-				&& (newBooking.getTime().plusHours(newBooking.getDuration()).isAfter(existingBooking.getTime()))
+		if (newBooking.getTime().isBefore(existingBooking.getTime().plusMinutes(existingBooking.getDuration()))
+				&& (newBooking.getTime().plusMinutes(newBooking.getDuration()).isAfter(existingBooking.getTime()))
 				&& (existingBooking.getStatus().equals(BookingStatus.SUCCESSFUL)
 						|| existingBooking.getStatus().equals(BookingStatus.WAITINGLIST))) {
 			return true;
@@ -164,6 +217,20 @@ public class BookingServiceImpl implements BookingService {
 	}
 
 	@Override
+	public Booking findOverlapBookingByDateTimeRoom(Booking booking, Room room) {
+		// all the bookings for the day for the specific room
+		List<Booking> bookings = br.findByDateAndRoom(booking.getDate(), room);
+		// check whether each booking for the room overlaps with the requested booking
+		// time. if overlap return false
+		for (Booking b : bookings) {
+			if (checkBookingsOverlap(booking, b)) {
+				return b;
+			}
+		}
+		return null;
+	}
+
+	@Override
 	public void scheduleWaitingList(Booking booking, Room room) {
 		ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 		Runnable setStatus = () -> {
@@ -181,12 +248,12 @@ public class BookingServiceImpl implements BookingService {
 	public List<Booking> checkBookingInProgress(List<Booking> bookings) {
 		bookings.stream().filter(b -> b.getDate().equals(LocalDate.now()))
 				.filter(b -> b.getTime().isBefore(LocalTime.now())
-						&& b.getTime().plusHours(b.getDuration()).isAfter(LocalTime.now()))
+						&& b.getTime().plusMinutes(b.getDuration()).isAfter(LocalTime.now()))
 				.filter(b -> b.getStatus().equals(BookingStatus.SUCCESSFUL)).forEach(b -> b.setBookingInProgress(true));
 
 		bookings.stream()
 				.filter(b -> !b.getDate().equals(LocalDate.now()) || b.getTime().isAfter(LocalTime.now())
-						|| b.getTime().plusHours(b.getDuration()).isBefore(LocalTime.now()))
+						|| b.getTime().plusMinutes(b.getDuration()).isBefore(LocalTime.now()))
 				.forEach(b -> b.setBookingInProgress(false));
 
 		return bookings;

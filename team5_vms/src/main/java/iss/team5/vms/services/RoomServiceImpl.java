@@ -1,5 +1,6 @@
 package iss.team5.vms.services;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -9,6 +10,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
+import iss.team5.vms.model.Booking;
 import iss.team5.vms.model.Facility;
 import iss.team5.vms.model.Room;
 import iss.team5.vms.repositories.RoomRepo;
@@ -61,17 +63,60 @@ public class RoomServiceImpl implements RoomService {
 	}
 
 	@Override
-	public List<Room> findRoomsByAttributes(Room room) {
+	public List<Room> findRoomsByExactAttributes(Room room) {
+
+		List<Room> rooms = rrepo.findAll().stream().filter(froom -> (froom.getCapacity() >= room.getCapacity())
+				&& (compareFacilityListsExact(froom.getFacilities(),room.getFacilities()))).collect(Collectors.toList());
+		
+		return rooms;
+	}
+	
+	@Override
+	public List<Room> findRoomsByContainingAttributes(Room room) {
 		return rrepo.findAll().stream().filter(froom -> (froom.getCapacity() >= room.getCapacity())
-				&& (compareFacilityLists(froom.getFacilities(),room.getFacilities()))).collect(Collectors.toList());
+				&& (compareFacilityListsContains(froom.getFacilities(),room.getFacilities()))).collect(Collectors.toList());
+	}
+	
+	
+	@Override
+	public List<Room> findAllRoomsOpenForBooking(Booking booking, List<Room> rooms)
+	{
+		LocalTime bstart = booking.getTime();
+		int duration = booking.getDuration();
+		if (duration > 2)
+			duration = 2;
+		LocalTime bend = bstart.plusMinutes(duration);
+		// rooms with no blocked timings
+				List<Room> nullBlockTimeRooms = rooms.stream().filter(room -> room.getBlockedStartTime() == null)
+						.collect(Collectors.toList());
+
+				// check booking against room blocked timings if there are
+				List<Room> frooms = rooms.stream().filter(room -> room.getBlockedStartTime() != null)
+						.filter(room -> (room.getBlockedStartTime().isAfter(bend))
+								&& (room.getBlockedStartTime().plusHours(room.getBlockDuration()).isBefore(bstart)))
+						.collect(Collectors.toList());
+
+				// all rooms that are open in requested timing
+				frooms.addAll(nullBlockTimeRooms);
+				
+				return frooms;
 	}
 
 	@Override
-	public boolean compareFacilityLists(List<Facility> facilities1, List<Facility> facilities2) {
-		if (facilities1.size() == facilities2.size()) {		
-			return facilities1.stream().allMatch(f -> facilities2.contains(f));
+	public boolean compareFacilityListsExact(List<Facility> existingRooms, List<Facility> roomToCheck) {
+		if (existingRooms.size() == roomToCheck.size()) {		
+			return existingRooms.stream().allMatch(f -> roomToCheck.contains(f));
 		}
 		return false;
+	}
+	
+	@Override
+	public boolean compareFacilityListsContains(List<Facility> existingRooms, List<Facility> roomToCheck) {
+			if (roomToCheck.stream().allMatch(f -> existingRooms.contains(f)))
+			{
+				return true;
+			}
+			return false;
 	}
 
 	@Override

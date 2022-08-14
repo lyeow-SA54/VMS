@@ -5,9 +5,9 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -20,11 +20,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import iss.team5.vms.DTO.ResponsePojo;
 import iss.team5.vms.helper.BookingStatus;
 import iss.team5.vms.helper.Category;
 import iss.team5.vms.helper.ReportStatus;
@@ -92,7 +90,7 @@ public class StudentController {
 		
 		HttpSession session = request.getSession();
 		Student student = (Student)session.getAttribute("student");	
-		List<Booking> availableBookings = bs.checkBookingAvailable(bookingForTheDay, rooms, student);
+		List<Booking> availableBookings = bs.findBookingsAvailableExact(bookingForTheDay, rooms, student);
 		List<Booking> studentBookingToday = bs.findStudentBookingsForDate(student, LocalDate.now()); 
 		
 //		List<Booking> findTodayBooking=sBooking.stream()
@@ -168,8 +166,19 @@ public class StudentController {
 			return mav;
 		}
 		Student student = ss.findStudentByUser(user);
-		List<Room> rooms = rms.findRoomsByAttributes(room);
-		List<Booking> bookings = bs.checkBookingAvailable(booking, rooms, student);
+		List<Room> roomsExact = rms.findRoomsByExactAttributes(room);
+		List<Booking> bookings = new ArrayList<Booking>();
+		bookings = bs.findBookingsAvailableExact(booking, roomsExact, student);
+		if (bookings.size()==0)
+		{
+			System.out.println("Alternative list");
+			List<Room> roomsContaining = rms.findRoomsByContainingAttributes(room);
+			bookings.addAll(bs.findBookingsAvailableAlternative(booking, roomsExact, student));
+			bookings.addAll(bs.findBookingsAvailableExact(booking, roomsContaining, student));
+
+
+		}
+
 		ModelAndView mav = new ModelAndView("student-bookings-slot_selection");
 		mav.addObject("bookings", bookings);
 		mav.addObject("room", room);
@@ -289,10 +298,10 @@ public class StudentController {
 		String outcomeMsg = "";
 		Booking extendBooking = new Booking("placeholder", 
 				currentBooking.getDate(), 
-				currentBooking.getTime().plusHours(currentBooking.getDuration()), 
+				currentBooking.getTime().plusMinutes(currentBooking.getDuration()), 
 				1, currentBooking.getRoom());
 		//check if current booking is less than 1 hour before end
-		if (LocalTime.now().isAfter(currentBooking.getTime().plusHours(currentBooking.getDuration()).minusHours(1)))
+		if (LocalTime.now().isAfter(currentBooking.getTime().plusMinutes(currentBooking.getDuration()).minusMinutes(60)))
 		{
 			//check if extension request clashes with next booking
 			if (!bs.checkBookingByDateTimeRoom(extendBooking,currentBooking.getRoom())) {

@@ -146,8 +146,8 @@ public class Android_StudentController {
 			Room room = new Room("1", Integer.parseInt((String) payload.get("capacity")),
 					fs.jsonToFacilityList((String) payload.get("facilities")));
 
-			List<Room> rooms = rms.findRoomsByAttributes(room);
-			List<Booking> bookings = bs.checkBookingAvailable(booking, rooms, student);
+			List<Room> rooms = rms.findRoomsByExactAttributes(room);
+			List<Booking> bookings = bs.findBookingsAvailableExact(booking, rooms, student);
 
 //		System.out.println(payload.get("facilities"));
 //		System.out.println(payload.get("date"));

@@ -46,24 +46,16 @@ public class Booking {
 	private boolean checkedIn;
 	private boolean bookingInProgress;
 	
-	public Booking (String id, LocalDate date, LocalTime time, int duration, BookingStatus status)
+	public Booking (String id, LocalDate date, LocalTime time, int duration, BookingStatus status, Student student)
 	{
 		this.id = id;
 		this.date = date;
 		this.time = time;
 		this.duration = duration;
 		this.status= status;
+		this.student = student;
 	}
 	
-	public Booking (String id, LocalDate date, LocalTime time, int duration, Room room)
-	{
-		this.id=id;
-		this.date = date;
-		this.time = time;
-		this.duration = duration;
-		this.room = room;
-	}
-
 	public Booking (String id, LocalDate date, LocalTime time, int duration, Room room, Student student)
 	{
 		this.id=id;
@@ -74,13 +66,32 @@ public class Booking {
 		this.student = student;
 	}
 	
-	public Booking (String id, LocalDate date, LocalTime time, int duration, BookingStatus status, Student student)
+	public Booking (String id, LocalDate date, LocalTime time, int duration, BookingStatus status)
 	{
 		this.id = id;
 		this.date = date;
 		this.time = time;
 		this.duration = duration;
 		this.status= status;
-		this.student = student;
 	}
+
+	
+	public Booking (String id, LocalDate date, LocalTime time, int duration, Room room)
+	{
+		this.id=id;
+		this.date = date;
+		this.time = time;
+		this.duration = duration;
+		this.room = room;
+	}
+
+	public Booking (String id, LocalDate date, LocalTime time, int duration)
+	{
+		this.id = id;
+		this.date = date;
+		this.time = time;
+		this.duration = duration;
+	}
+	
+
 }

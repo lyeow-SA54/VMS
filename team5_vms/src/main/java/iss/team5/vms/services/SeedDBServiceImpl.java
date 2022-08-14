@@ -67,12 +67,12 @@ public class SeedDBServiceImpl implements SeedDBService {
 		}
 
 		if(!bs.tableExist()) {
-		bs.createBooking(new Booking("B1", dateTimeInput.dateInput("08/12/2022"), LocalTime.now().minusHours(1), 1, BookingStatus.SUCCESSFUL));
-		bs.createBooking(new Booking("B2", dateTimeInput.dateInput("08/13/2022"), LocalTime.now(), 2, BookingStatus.CANCELLED));
-		bs.createBooking(new Booking("B3", dateTimeInput.dateInput("08/14/2022"), LocalTime.now(), 3, BookingStatus.REJECTED));
-		bs.createBooking(new Booking("B4", dateTimeInput.dateInput("08/15/2022"), LocalTime.now(), 1, BookingStatus.WAITINGLIST));
-		bs.createBooking(new Booking("B5", LocalDate.now(), LocalTime.now().minusHours(5), 2, BookingStatus.SUCCESSFUL));
-		bs.createBooking(new Booking("B6", LocalDate.now(), LocalTime.now(), 2, BookingStatus.SUCCESSFUL));
+		bs.createBooking(new Booking("B1", dateTimeInput.dateInput("08/12/2022"), LocalTime.now().minusMinutes(60), 60, BookingStatus.SUCCESSFUL));
+		bs.createBooking(new Booking("B2", dateTimeInput.dateInput("08/13/2022"), LocalTime.now(), 60, BookingStatus.CANCELLED));
+		bs.createBooking(new Booking("B3", dateTimeInput.dateInput("08/14/2022"), LocalTime.now(), 60, BookingStatus.REJECTED));
+		bs.createBooking(new Booking("B4", dateTimeInput.dateInput("08/15/2022"), LocalTime.now(), 60, BookingStatus.WAITINGLIST));
+		bs.createBooking(new Booking("B5", LocalDate.now(), LocalTime.now().minusMinutes(300), 60, BookingStatus.SUCCESSFUL));
+		bs.createBooking(new Booking("B6", LocalDate.now(), LocalTime.now().minusMinutes(35), 120, BookingStatus.SUCCESSFUL));
 		}
 		
 		if(!rs.tableExist()) {

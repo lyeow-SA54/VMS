@@ -27,6 +27,8 @@ public interface BookingService {
 	
 	Booking findBookingBefore(Booking booking);
 	
+	Booking findOverlapBookingByDateTimeRoom(Booking booking, Room room);
+	
 	List<Booking> findAllBookings();
 
 	List<Booking> findBookingsByRoom(Room room);	
@@ -37,8 +39,10 @@ public interface BookingService {
 	
 	List<Booking> checkBookingInProgress(List<Booking> bookings);
 	
-	List<Booking> checkBookingAvailable(Booking booking, List<Room> rooms, Student student);
+	List<Booking> findBookingsAvailableExact(Booking booking, List<Room> rooms, Student student);
 	
+	List<Booking> findBookingsAvailableAlternative(Booking booking, List<Room> rooms, Student student);
+
 	String checkIn(Student student, Booking booking);
 
 	void cancelCourseById(String id);
@@ -48,6 +52,8 @@ public interface BookingService {
 	void addStudent(Booking booking, Student student);
 	
 	void addRoom(Booking booking, Room room);
+
+
 
 
 }
