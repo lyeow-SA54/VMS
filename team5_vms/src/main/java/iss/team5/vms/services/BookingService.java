@@ -15,13 +15,13 @@ public interface BookingService {
 	
 	boolean predictHogging(String imgPath);
 	
-	boolean checkBookingsOverlap(Booking newBooking, Booking existingBooking);
-	
 	boolean predictPeak(int week, int volume);
 	
-	Booking findBookingById(String id);
+	boolean checkBookingsOverlap(Booking newBooking, Booking existingBooking);
 
 	Booking createBooking(Booking booking);
+	
+	Booking findBookingById(String id);
 			
 	Booking findStudentCurrentBooking(Student student);
 	
@@ -37,11 +37,11 @@ public interface BookingService {
 	
 	List<Booking> findStudentBookingsForDate(Student student, LocalDate date);
 	
-	List<Booking> checkBookingInProgress(List<Booking> bookings);
-	
 	List<Booking> findBookingsAvailableExact(Booking booking, List<Room> rooms, Student student);
 	
 	List<Booking> findBookingsAvailableAlternative(Booking booking, List<Room> rooms, Student student);
+	
+	List<Booking> updateBookingInProgress(List<Booking> bookings);
 
 	String checkIn(Student student, Booking booking);
 

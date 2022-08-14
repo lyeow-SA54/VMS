@@ -245,7 +245,7 @@ public class BookingServiceImpl implements BookingService {
 	}
 
 	@Override
-	public List<Booking> checkBookingInProgress(List<Booking> bookings) {
+	public List<Booking> updateBookingInProgress(List<Booking> bookings) {
 		bookings.stream().filter(b -> b.getDate().equals(LocalDate.now()))
 				.filter(b -> b.getTime().isBefore(LocalTime.now())
 						&& b.getTime().plusMinutes(b.getDuration()).isAfter(LocalTime.now()))
@@ -262,7 +262,7 @@ public class BookingServiceImpl implements BookingService {
 	@Override
 	public Booking findStudentCurrentBooking(Student student) {
 		List<Booking> bookings = br.findAllBookingByStudent(student);
-		bookings = checkBookingInProgress(bookings);
+		bookings = updateBookingInProgress(bookings);
 		return bookings.stream().filter(b -> b.isBookingInProgress()).findFirst().get();
 	}
 

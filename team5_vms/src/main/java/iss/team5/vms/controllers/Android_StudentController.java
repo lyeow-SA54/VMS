@@ -125,7 +125,7 @@ public class Android_StudentController {
 			System.out.println(payload.get("studentId"));
 			List<Booking> bookings = bs.findBookingsByStudent(s);
 			System.out.println("returning list");
-			return bs.checkBookingInProgress(bookings);
+			return bs.updateBookingInProgress(bookings);
 		} else
 			return null;
 	}

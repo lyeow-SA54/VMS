@@ -84,7 +84,6 @@ public class StudentController {
 		bookingForTheDay.setDate(LocalDate.now());
 		bookingForTheDay.setTime(LocalTime.now());
 		
-		
 		//String username = SecurityContextHolder.getContext().getAuthentication().getName();
 		//Student s1 = ss.findStudentByUser(us.findUserByUsername(username));
 		
@@ -250,7 +249,7 @@ public class StudentController {
 		Student student = (Student) session.getAttribute("student");
 
 		List<Booking> bookings = bs.findBookingsByStudent(student);
-		List<Booking> bookings2 = bs.checkBookingInProgress(bookings);
+		List<Booking> bookings2 = bs.updateBookingInProgress(bookings);
 		ModelAndView mav = new ModelAndView("student-bookings-list");
 		mav.addObject("bookings",bookings2);
 		LocalDate datenow = LocalDate.now();
