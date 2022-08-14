@@ -31,7 +31,7 @@
 								<td>
 									<fieldset>
 										<input type="checkbox" name="facilities" th:each="facility : ${fList}"
-											th:text="${facility.name}" th:value="${facility.id}"
+											th:text="${facility.name} + #{fieldLabel.space}" th:value="${facility.id}"
 											th:field="*{facilities}" />
 									</fieldset>
 								</td>
