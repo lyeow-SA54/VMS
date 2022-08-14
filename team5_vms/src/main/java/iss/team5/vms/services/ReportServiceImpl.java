@@ -1,46 +1,65 @@
 package iss.team5.vms.services;
 
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
-import javax.annotation.Resource;
 import javax.transaction.Transactional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import iss.team5.vms.helper.BookingStatus;
+import iss.team5.vms.helper.ReportCategory;
 import iss.team5.vms.model.Booking;
 import iss.team5.vms.model.Report;
 import iss.team5.vms.model.Student;
+import iss.team5.vms.repositories.BookingRepo;
 import iss.team5.vms.repositories.ReportRepo;
 
 @Service
-public class ReportServiceImpl implements ReportService{
-	
-	@Resource
-	private ReportRepo rprepo;
-	
+public class ReportServiceImpl implements ReportService {
+
+	@Autowired
+	ReportRepo rprepo;
+
+	@Autowired
+	BookingRepo brepo;
+
+	@Autowired
+	StudentService ss;
+
+	@Autowired
+	MailService ms;
+
 	public boolean tableExist() {
 		return rprepo.existsBy();
 	}
-	
+
 	@Override
 	@Transactional
-	public List<Report> findAllReports(){
+	public List<Report> findAllReports() {
 		List<Report> r = rprepo.findAll();
 		return r;
 	}
-	
-	@Transactional 
+
+	@Transactional
 	public Report findReportById(String id) {
 		return rprepo.findById(id).orElse(null);
 	}
-	
+
 	@Override
 	@Transactional
 	public Report createReport(Report report) {
 		return rprepo.saveAndFlush(report);
 	}
-	
+
 	@Override
 	@Transactional
 	public Report changeReport(Report report) {
@@ -53,19 +72,17 @@ public class ReportServiceImpl implements ReportService{
 //		r.setImg(report.getImg());
 		return rprepo.saveAndFlush(r);
 	}
-	
+
 	@Override
 	@Transactional
 	public void removeReport(Report report) {
 		rprepo.delete(report);
 		rprepo.flush();
 	}
-	
+
 	@Override
-	@Transactional
-	public ArrayList<Report> findAllReportByStudent(Student student){
-		ArrayList<Report> r = (ArrayList<Report>)rprepo.findAllReportByStudent(student);
-		return r;
+	public ArrayList<Report> findAllReportByStudent(Student student) {
+		return rprepo.findAllReportByStudent(student);
 	}
 
 	@Override
@@ -75,27 +92,49 @@ public class ReportServiceImpl implements ReportService{
 		rprepo.saveAndFlush(report);
 	}
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	@Override
+	public void dailyBookingCheckinScoring() {
+		// scheduled to run at 11pm daily
+		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime nextRun = now.withHour(23).withMinute(0).withSecond(0);
+		if (now.compareTo(nextRun) > 0)
+			nextRun = nextRun.plusDays(1);
 
-	
-	
-   
-    
-    
-    
-    
-	
-	
-	
-	
-	
+		Duration duration = Duration.between(now, nextRun);
+		long initialDelay = duration.getSeconds();
+
+		ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
+		// pulls list of bookings for the day with status = successful and checkedin =
+		// false and adds 2 to score of student in booking
+		Runnable scoreBookingCheckin = () -> {
+			List<Booking> bookings = brepo.findAllByDate(LocalDate.now());
+			List<Student> students = bookings.stream().filter(b -> b.getStatus().equals(BookingStatus.SUCCESSFUL))
+					.filter(b -> !b.isCheckedIn()).map(Booking::getStudent).collect(Collectors.toList());
+			students.stream().forEach(s -> s.setScore(s.getScore() + 2));
+			students.stream().forEach(s -> ss.changeStudent(s));
+		};
+
+		scheduler.scheduleAtFixedRate(scoreBookingCheckin, initialDelay, TimeUnit.DAYS.toSeconds(1), TimeUnit.SECONDS);
+	}
+
+	@Override
+	public void approveReportScoring(Report report) {
+
+		Student student = report.getStudent();
+		int score = student.getScore();
+		if (report.getCategory().equals(ReportCategory.VANDALISE)) {
+			score += 2;
+		} else {
+			score += 1;
+		}
+		student.setScore(score);
+		ss.changeStudent(student);
+		ms.sendSimpleMail(student.getUser().getEmail(),
+				"REPORT AGAINST YOUR BOOKING ON:" + report.getBooking().getDate() + "FOR: "
+						+ report.getBooking().getRoom().getRoomName() + "WAS APPROVED",
+				"Your current score is now: " + student.getScore()
+						+ ". Please note your future booking application requests will be a lower priority once above 3.");
+	}
 
 }

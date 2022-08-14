@@ -2,8 +2,13 @@ package iss.team5.vms.services;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.WeekFields;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -103,9 +108,10 @@ public class BookingServiceImpl implements BookingService {
 	@Override
 	public List<Booking> findBookingsAvailableExact(Booking booking, List<Room> rooms, Student student) {
 		int duration = booking.getDuration();
-		if (duration > 120)
-			duration = 120;
-
+//		if (duration>60 && predictPeak(booking))
+//		{
+//			duration=60;
+//		}
 		List<Room> frooms = rms.findAllRoomsOpenForBooking(booking, rooms);
 
 		List<Booking> bookings = new ArrayList<Booking>();
@@ -133,50 +139,55 @@ public class BookingServiceImpl implements BookingService {
 	@Override
 	public List<Booking> findBookingsAvailableAlternative(Booking booking, List<Room> rooms, Student student) {
 		List<Booking> bookings = new ArrayList<Booking>();
-		int duration = booking.getDuration();
-		if (duration > 120)
-			duration = 120;
+//		int duration = booking.getDuration();
+//		if (duration>60 && predictPeak(booking))
+//		{
+//			duration=60;
+//		}
 
 		List<Room> frooms = rms.findAllRoomsOpenForBooking(booking, rooms);
-		Booking bookingBefore1 = new Booking("placeholder", booking.getDate(), booking.getTime(), booking.getDuration());
-		Booking bookingBefore2 = new Booking("placeholder", booking.getDate(), booking.getTime(), booking.getDuration());
+		Booking bookingBefore1 = new Booking("placeholder", booking.getDate(), booking.getTime(),
+				booking.getDuration());
+		Booking bookingBefore2 = new Booking("placeholder", booking.getDate(), booking.getTime(),
+				booking.getDuration());
 		Booking bookingAfter1 = new Booking("placeholder", booking.getDate(), booking.getTime(), booking.getDuration());
 		Booking bookingAfter2 = new Booking("placeholder", booking.getDate(), booking.getTime(), booking.getDuration());
 
 		for (Room r : frooms) {
 			Booking overlapBooking = findOverlapBookingByDateTimeRoom(booking, r);
+			if (overlapBooking != null) {
+				// same start time, reduced duration
+				bookingBefore1.setDuration(
+						Math.toIntExact(booking.getTime().until(overlapBooking.getTime(), ChronoUnit.MINUTES)));
+				if (bookingBefore1.getDuration() >= 30 && !checkBookingByDateTimeRoom(bookingBefore1, r)) {
+					bookings.add(new Booking(r.getRoomName(), bookingBefore1.getDate(), bookingBefore1.getTime(),
+							bookingBefore1.getDuration(), r));
+				}
 
-			// same start time, reduced duration
-			bookingBefore1.setDuration(
-					Math.toIntExact(booking.getTime().until(overlapBooking.getTime(), ChronoUnit.MINUTES)));
-			if (bookingBefore1.getDuration() >= 30 && !checkBookingByDateTimeRoom(bookingBefore1, r)) {
-				bookings.add(new Booking(r.getRoomName(), bookingBefore1.getDate(), bookingBefore1.getTime(),
-						bookingBefore1.getDuration(), r));
-			}
+				// earlier start time, same duration
+				bookingBefore2.setTime(overlapBooking.getTime().minusMinutes(booking.getDuration() + 5));
+				if (!checkBookingByDateTimeRoom(bookingBefore2, r)) {
+					bookings.add(new Booking(r.getRoomName(), bookingBefore2.getDate(), bookingBefore2.getTime(),
+							bookingBefore2.getDuration(), r));
+				}
 
-			// earlier start time, same duration
-			bookingBefore2.setTime(overlapBooking.getTime().minusMinutes(booking.getDuration() + 5));
-			if (!checkBookingByDateTimeRoom(bookingBefore2, r)) {
-				bookings.add(new Booking(r.getRoomName(), bookingBefore2.getDate(), bookingBefore2.getTime(),
-						bookingBefore2.getDuration(), r));
-			}
+				// later start time, same duration
+				bookingAfter1.setTime(overlapBooking.getTime().plusMinutes(overlapBooking.getDuration() + 5));
 
-			// later start time, same duration
-			bookingAfter1.setTime(overlapBooking.getTime().plusMinutes(overlapBooking.getDuration() + 5));
+				if (bookingAfter1.getDuration() >= 30 && !checkBookingByDateTimeRoom(bookingAfter1, r)) {
+					bookings.add(new Booking(r.getRoomName(), bookingAfter1.getDate(), bookingAfter1.getTime(),
+							bookingAfter1.getDuration(), r));
+				}
 
-			if (bookingAfter1.getDuration() >= 30 && !checkBookingByDateTimeRoom(bookingAfter1, r)) {
-				bookings.add(new Booking(r.getRoomName(), bookingAfter1.getDate(), bookingAfter1.getTime(),
-						bookingAfter1.getDuration(), r));
-			}
+				// later start time, reduced duration
+				bookingAfter2.setTime(overlapBooking.getTime().plusMinutes(overlapBooking.getDuration() + 5));
+				bookingAfter2.setDuration(Math.toIntExact(booking.getDuration() - booking.getTime().until(
+						overlapBooking.getTime().plusMinutes(overlapBooking.getDuration()), ChronoUnit.MINUTES)));
 
-			// later start time, reduced duration
-			bookingAfter2.setTime(overlapBooking.getTime().plusMinutes(overlapBooking.getDuration() + 5));
-			bookingAfter2.setDuration(Math.toIntExact(booking.getDuration() - booking.getTime()
-					.until(overlapBooking.getTime().plusMinutes(overlapBooking.getDuration()), ChronoUnit.MINUTES)));
-
-			if (bookingAfter2.getDuration() >= 30 && !checkBookingByDateTimeRoom(bookingAfter2, r)) {
-				bookings.add(new Booking(r.getRoomName(), bookingAfter2.getDate(), bookingAfter2.getTime(),
-						bookingAfter2.getDuration(), r));
+				if (bookingAfter2.getDuration() >= 30 && !checkBookingByDateTimeRoom(bookingAfter2, r)) {
+					bookings.add(new Booking(r.getRoomName(), bookingAfter2.getDate(), bookingAfter2.getTime(),
+							bookingAfter2.getDuration(), r));
+				}
 			}
 		}
 
@@ -302,7 +313,31 @@ public class BookingServiceImpl implements BookingService {
 	}
 
 	@Override
-	public boolean predictPeak(int week, int volume) {
+	public boolean predictPeak(Booking booking) {
+//		Booking bookingTest = findBookingById("B1006");
+		
+		LocalDate date = booking.getDate();
+		int week  = date.get(WeekFields.ISO.weekOfWeekBasedYear());
+		int year = date.getYear();
+//		
+//		System.out.println(week + ", "+ year);
+		
+		Calendar calendar = Calendar.getInstance();
+		calendar.clear();
+		calendar.set(Calendar.WEEK_OF_YEAR, week);
+		calendar.set(Calendar.YEAR, year);
+		
+		LocalDate firstDayOfWeek = LocalDate.ofInstant(calendar.getTime().toInstant(), ZoneOffset.ofHours(8)).plusDays(8);
+//		System.out.println(firstDayOfWeek);
+		calendar.add(Calendar.DAY_OF_MONTH, 6);
+		LocalDate lastDayOfWeek = LocalDate.ofInstant(calendar.getTime().toInstant(), ZoneOffset.ofHours(8)).plusDays(8);
+//		System.out.println(lastDayOfWeek);
+		
+		List<Booking> bookings = br.findByDateBetween(firstDayOfWeek, lastDayOfWeek);
+		
+		long volume = bookings.stream().count();
+//		System.out.println(volume);
+		
 		String uri = "http://127.0.0.1:5000/peakpredict?week=" + week + "&volume=" + volume;
 		RestTemplate restTemplate = new RestTemplate();
 		ResponsePojo response = restTemplate.getForObject(uri, ResponsePojo.class);

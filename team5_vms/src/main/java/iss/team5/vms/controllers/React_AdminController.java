@@ -76,6 +76,7 @@ public class React_AdminController {
 			Report report = rs.findReportById(reportId);
 			report.setReportStatus(ReportStatus.APPROVED);
 			rs.createReport(report);
+			rs.approveReportScoring(report);
 			return ResponseEntity.ok().build();
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().body("Report couldn't be updated");

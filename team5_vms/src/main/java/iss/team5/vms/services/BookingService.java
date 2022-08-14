@@ -14,8 +14,8 @@ public interface BookingService {
 	boolean checkBookingByDateTimeRoom(Booking booking, Room room);
 	
 	boolean predictHogging(String imgPath);
-	
-	boolean predictPeak(int week, int volume);
+
+	boolean predictPeak(Booking booking);
 	
 	boolean checkBookingsOverlap(Booking newBooking, Booking existingBooking);
 

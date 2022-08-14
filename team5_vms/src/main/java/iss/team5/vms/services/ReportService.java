@@ -23,6 +23,12 @@ public interface ReportService {
 
 	void removeReport(Report report);
 	
+	void dailyBookingCheckinScoring();
+	
+	void approveReportScoring(Report report);
+	
 	ArrayList<Report> findAllReportByStudent(Student student);
+
+
     
 }

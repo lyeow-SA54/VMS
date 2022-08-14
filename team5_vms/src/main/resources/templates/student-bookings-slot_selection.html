@@ -24,9 +24,9 @@
 			</div><br>
 			<div class="row">
 				<div class="col" style="text-align:center;">
-					<h5>No Rooms available according to your Preferences!.</h5>
+					<h5>No slots available</h5>
 					<h5 style="text-decoration: underline;">
-						<a th:href="@{/student/booking/options}" class="btn btnblue">Choose other Preferences</a>
+						<a th:href="@{/student/booking/options}" class="btn btnblue">Re-select filter options</a>
 					</h5>
 				</div>
 			</div>
@@ -38,7 +38,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col" style="margin-top: 15px; margin-bottom: 15px;">
-					<h5>Available rooms according to your Preferences!</h5>
+					<h5>Available rooms according to your preferences!</h5>
 					<h5>Please select the room to book.</h5>
 				</div>
 			</div>
@@ -95,7 +95,7 @@
 								<span class="card-text text-center font-weight-bold"
 									th:text="#{fieldLabel.blockDuration}">
 								</span><br>
-								<span class="card-text text-center" th:text="${booking.duration} + #{fieldLable.hr}">
+								<span class="card-text text-center" th:text="${booking.duration} + #{fieldLable.min}">
 								</span><br>
 								<form action="#" th:action="@{/student/booking/save}" method="post">
 									<input type="hidden" name="roomid" th:value="${booking.room.id}" />

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Button, ButtonGroup, Container } from 'reactstrap';
+import "../App.css";
 import { Link } from 'react-router-dom';
 
 
@@ -13,7 +14,9 @@ class Report extends Component {
             // roomNameFilter: '',
             // studentFilter: '',
             dateFilter: '',
-            isLoaded: false
+            isLoaded: false,
+            isOpen: false,
+            imageOpen: ''
         };
 
         this.onChange = {
@@ -30,35 +33,44 @@ class Report extends Component {
     }
 
     async updateReport(id, status) {
-        if (status==="APPROVE")
-        {
-            if(window.confirm("Please confirm approval."))
-            {await fetch(`/admin/reports/approval/${id}`, {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then(
-                window.location.reload(false)
-            )};
+        if (status === "APPROVE") {
+            if (window.confirm("Please confirm approval.")) {
+                await fetch(`/admin/reports/approval/${id}`, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(
+                        window.location.reload(false)
+                    )
+            };
         }
-        else
-        {
-            if(window.confirm("Please confirm rejection."))
-            {await fetch(`/admin/reports/reject/${id}`, {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then(
-                window.location.reload(false)
-            )};
+        else {
+            if (window.confirm("Please confirm rejection.")) {
+                await fetch(`/admin/reports/reject/${id}`, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(
+                        window.location.reload(false)
+                    )
+            };
         }
     };
+
+
+    
+    handleShowDialog = value => {
+        this.setState({ isOpen: !this.state.isOpen });
+        this.setState({ imageOpen: value})
+        console.log(this.state.imageOpen)
+        console.log("clicked");
+      };
 
 
     handleChange(name, event) {
@@ -74,17 +86,34 @@ class Report extends Component {
 
         // const ReportListProcessed = reports.forEach(x => x.imgPath = "/img/"+x.imgPath);
         const ReportList = reports
-        .filter(report =>
-            // (
-            //     report.student.user.firstName.toLowerCase().includes(this.state.studentFilter)
-            //     || report.student.user.lastName.toLowerCase().includes(this.state.studentFilter)
-            // )
-           report.booking.date.includes(this.state.dateFilter))
+            .filter(report =>
+                // (
+                //     report.student.user.firstName.toLowerCase().includes(this.state.studentFilter)
+                //     || report.student.user.lastName.toLowerCase().includes(this.state.studentFilter)
+                // )
+                report.booking.date.includes(this.state.dateFilter))
             .map(searchedReports => {
                 return (
                     <tr>
                         <td>{searchedReports.id}</td>
-                        <td> <img src ={searchedReports.imgPath}></img></td>
+                        <td> <img className="preview"
+                            src={searchedReports.imgPath}
+                            onClick={() => this.handleShowDialog(searchedReports.imgPath)}
+                        />
+                            {this.state.isOpen && (
+                                <dialog
+                                    className="dialog"
+                                    style={{ position: "absolute" }}
+                                    open
+                                    onClick={() => this.handleShowDialog(searchedReports.imgPath)}
+                                >
+                                    <img
+                                        className="dialogImage"
+                                        src={this.state.imageOpen}
+                                        onClick={() => this.handleShowDialog(searchedReports.imgPath)}
+                                    />
+                                </dialog>
+                            )}</td>
                         <td>{searchedReports.details}</td>
                         <td>{searchedReports.booking.date} / {searchedReports.booking.time}</td>
                         <td>{searchedReports.booking.duration} hour</td>
@@ -92,8 +121,8 @@ class Report extends Component {
                         {/* <td>{searchedReports.room.roomName}</td> */}
                         <td>
                             <ButtonGroup>
-                                <Button size="sm" color='primary' onClick={() => this.updateReport(searchedReports.id, "APPROVE")} style={ { display: (searchedReports.reportStatus==="PROCESSING")||(searchedReports.reportStatus==="REJECTED") ? 'block' : 'none' } }>Approve<span className="fa fa-thumbs-up"></span></Button>
-                                <Button size="sm" color='danger' onClick={() => this.updateReport(searchedReports.id, "REJECT")} style={ { display: (searchedReports.reportStatus==="PROCESSING")||(searchedReports.reportStatus==="APPROVED") ? 'block' : 'none' } }>Reject<span className="fa fa-times"></span></Button>
+                                <Button size="sm" color='primary' onClick={() => this.updateReport(searchedReports.id, "APPROVE")} style={{ display: (searchedReports.reportStatus === "PROCESSING") || (searchedReports.reportStatus === "REJECTED") ? 'block' : 'none' }}>Approve<span className="fa fa-thumbs-up"></span></Button>
+                                <Button size="sm" color='danger' onClick={() => this.updateReport(searchedReports.id, "REJECT")} style={{ display: (searchedReports.reportStatus === "PROCESSING") || (searchedReports.reportStatus === "APPROVED") ? 'block' : 'none' }}>Reject<span className="fa fa-times"></span></Button>
                             </ButtonGroup></td>
                     </tr>
                 );

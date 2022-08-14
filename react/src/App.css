@@ -1,6 +1,31 @@
+.preview {
+max-width: 150px;
+}
+
+.dialogImage {
+  max-width: 75vw;
+  }
+
 .App {
+  font-family: sans-serif;
   text-align: center;
 }
+
+.dialog {
+  box-shadow: 0 8px 6px -6px black;
+  position: static;
+  left: 20%;
+  top: 10%;
+  max-width: 75vw;
+}
+
+.image {
+  width: 300px;
+}
+/* 
+.App {
+  text-align: center;
+} */
 
 .App-logo {
   height: 40vmin;

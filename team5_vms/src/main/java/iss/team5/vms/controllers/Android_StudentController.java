@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import iss.team5.vms.DTO.Account;
 import iss.team5.vms.generators.JWTGenerator;
 import iss.team5.vms.helper.BookingStatus;
-import iss.team5.vms.helper.Category;
+import iss.team5.vms.helper.ReportCategory;
 import iss.team5.vms.helper.ReportStatus;
 import iss.team5.vms.model.Booking;
 import iss.team5.vms.model.Report;
@@ -187,7 +187,7 @@ public class Android_StudentController {
 			Booking lastBooking = bs.findBookingBefore(booking);
 
 			rs.createReport(new Report((String) payload.get("details"), name + imageType, lastBooking,
-					ReportStatus.PROCESSING, Category.valueOf((String) payload.get("category")), student));
+					ReportStatus.PROCESSING, ReportCategory.valueOf((String) payload.get("category")), student));
 //		System.out.println("4 success");
 			// test for getting real path for app
 			System.out.println(filePath + name + imageType);// real path in local

@@ -16,12 +16,16 @@ public interface BookingRepo extends JpaRepository<Booking,String>{
 	List<Booking> findAllBookingsByRoom(Room room);
 	
 	List<Booking> findAllBookingByStudent(Student student);
+	
+	List<Booking> findAllByDate(LocalDate date);
 
 	List<Booking> findAllByRoom(Room room);
 	
 	List<Booking> findByDateAndRoom(LocalDate date, Room room);
 	
 	List<Booking> findByDateAndStudent(LocalDate date, Student student);
+	
+	List<Booking> findByDateBetween(LocalDate start, LocalDate end);
 	
 	//Student class doesn't have Booking attribute, use BookingRepo to do this instead
 //	Student findStudentByBooking(Booking booking);

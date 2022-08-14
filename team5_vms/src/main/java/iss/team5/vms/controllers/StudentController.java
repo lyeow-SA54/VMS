@@ -24,7 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import iss.team5.vms.helper.BookingStatus;
-import iss.team5.vms.helper.Category;
+import iss.team5.vms.helper.ReportCategory;
 import iss.team5.vms.helper.ReportStatus;
 import iss.team5.vms.model.Booking;
 import iss.team5.vms.model.Facility;
@@ -325,41 +325,37 @@ public class StudentController {
     private String uploadReport(@RequestParam(value="file",required=false) MultipartFile file,
                                 @RequestParam(value = "details",required=true) String details,
                                 HttpServletRequest request) throws IOException {
-        System.out.println("1 success");
         String path = "";
         String fileName = "";
         if (!file.isEmpty()) {
             String name = UUID.randomUUID().toString().replaceAll("-", "");
             String imageType=file.getContentType();
-            System.out.println(imageType);
             String suffix=imageType.substring(imageType.indexOf("/")+1);
-            /*String pathRoot = request.getSession().getServletContext().getRealPath("");*/
             File file1 = new File("");
             String filePath = file1.getCanonicalPath();//get app real path in local
             fileName = name+"."+suffix;
-            /*path = filePath.replaceAll("\\\\","/")+ "/src/main/"+fileName;*/
             File file2 = new File("C:/VMS/img");
             if(!file2.exists()){
                 file2.mkdirs();
             }
             path = "C:/VMS/img/"+fileName;
-            System.out.println("2 success");
             file.transferTo(new File(path));
-            System.out.println("3 success");
         }
 
         //add path to report
         //method to extract student from logged in session
-//        Student student = ss.findStudentById(1);
         Student student = (Student)session.getAttribute("student");	
         Booking booking = bs.findStudentCurrentBooking(student);
-//        Booking booking = bs.findBookingById("B00011");
         Booking lastBooking = bs.findBookingBefore(booking);
-
-		rs.createReport(new Report(details, fileName, lastBooking,
-				ReportStatus.PROCESSING, Category.CLEANLINESS, student));
-        System.out.println("4 success");
-        System.out.println(path);//real path in local
+		Report report = rs.createReport(new Report(details, fileName, lastBooking,
+				ReportStatus.PROCESSING, ReportCategory.CLEANLINESS, student));
+		if (report.getCategory().equals(ReportCategory.HOGGING))
+		{
+			if(bs.predictHogging(path))
+			{
+				rs.approveReportScoring(report);
+			}
+		}
         /*ms.sendSimpleMail("e0838388@u.nus.edu","report test","new report generated!");*/
         return "report-success";
 

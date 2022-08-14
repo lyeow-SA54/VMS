@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 
 import iss.team5.vms.helper.ReportStatus;
 import org.hibernate.annotations.GenericGenerator;
-import iss.team5.vms.helper.Category;
+import iss.team5.vms.helper.ReportCategory;
 import iss.team5.vms.helper.StudentStatus;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -37,17 +37,15 @@ public class Report {
 	private Booking booking;
 	@Column(name = "category", columnDefinition = "ENUM('CLEANLINESS','VANDALISE','HOGGING','MISUSE')")
 	@Enumerated(EnumType.STRING)
-	private Category category;
+	private ReportCategory category;
 	@Column(name = "Student_status", columnDefinition = "ENUM('PROBATION','NORMAL')")
 	@Enumerated(EnumType.STRING)
 	private StudentStatus status;
 	@Column(name = "Report_status", columnDefinition = "ENUM('PROCESSING','REJECTED','APPROVED')")
 	@Enumerated(EnumType.STRING)
 	private ReportStatus reportStatus;
-//	@OneToOne
-//	private Image img;
 	
-	public Report(String details, Category category, StudentStatus status, ReportStatus reportStatus) {
+	public Report(String details, ReportCategory category, StudentStatus status, ReportStatus reportStatus) {
 		this.details=details;
 		this.category=category;
 		this.status=status;
@@ -69,7 +67,7 @@ public class Report {
 		this.booking=booking;
 		this.reportStatus=reportStatus;
 	}
-	public Report(String details, String imgPath, Booking booking, ReportStatus reportStatus, Category category, Student student) {
+	public Report(String details, String imgPath, Booking booking, ReportStatus reportStatus, ReportCategory category, Student student) {
 		this.details=details;
 		this.imgPath=imgPath;
 		this.booking=booking;
