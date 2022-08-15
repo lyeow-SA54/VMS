@@ -5,10 +5,12 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
@@ -19,7 +21,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import iss.team5.vms.DTO.Account;
 import iss.team5.vms.generators.JWTGenerator;
@@ -81,40 +85,6 @@ public class Android_StudentController {
 		return mapResponse;
 	}
 
-//		Map<String, Object> response = new HashMap<String, Object>();
-//		Map<Student, String> map = accAuthService.getMap();
-//		User user = accAuthService.authenticateAccount(account);
-//		if (user == null) {
-//			System.out.println("invalid login");
-//			response.put("response", "Invalid login");
-//			return response;
-//		} else {
-//			Student s = ss.findStudentByUser(user);
-//			String token = accAuthService.generateNewToken();
-//			if (map.containsKey(ss.findStudentByUser(user))) {
-//				map.replace(ss.findStudentByUser(user), token);
-//			} else {
-//				map.put(s, token);
-//			}
-//			response.put("response", token);
-//			response.put("studentId", s.getId());
-//			System.out.println(map.get(s));
-//			return response;
-//		}
-//	}
-
-//	@PostMapping(value = "/logout/{token}")
-//	public Map<String, Object> loginAndroid(@PathVariable String token) {
-//		Map<String, Object> response = new HashMap<String, Object>();
-//		Map<Student, String> map = accAuthService.getMap();
-//		Student s = map.entrySet().stream().filter(m -> m.getValue().equals(token)).map(Map.Entry::getKey).findFirst()
-//				.get();
-//		map.remove(s);
-//		System.out.println(s);
-//		response.put("response", HttpStatus.CONTINUE);
-//		return response;
-//	}
-
 	@PostMapping("/booking/history/{token}")
 	public List<Booking> bookingHistoryAndroid(@PathVariable String token,
 			@RequestBody List<Map<String, Object>> rawPayload) {
@@ -126,6 +96,51 @@ public class Android_StudentController {
 			List<Booking> bookings = bs.findBookingsByStudent(s);
 			System.out.println("returning list");
 			return bs.updateBookingInProgress(bookings);
+		} else
+			return null;
+	}
+	
+	@PostMapping("/booking/nearest/{token}")
+	public Map<String, Object> bookingNearestAndroid(@PathVariable String token,
+			@RequestBody Map<String, Object> payload) {
+
+		if (JWTGenerator.verifyJWT(token)) {
+			Student student = ss.findStudentById((String) payload.get("studentId"));
+			try {
+			Booking booking = bs.findStudentCurrentBooking(student); 
+			Map<String, Object> mapResponse = new HashMap<String, Object>();
+			String response = "NULL";
+			if (booking!=null)
+			{
+					response = "FOUND";
+			}
+			else {
+				booking = bs.findStudentNextBooking(student);
+				if (booking!=null) {
+					response = "FOUND";
+				}
+			}
+			if (response == "FOUND")
+			{
+				mapResponse.put("roomName", booking.getRoom().getRoomName());
+				mapResponse.put("date", booking.getDate().toString());
+				mapResponse.put("time", booking.getTime().toString());
+				mapResponse.put("duration", booking.getDuration());
+				mapResponse.put("inprogress", booking.isBookingInProgress());
+				mapResponse.put("checkin", booking.isCheckedIn());
+			}
+			
+			mapResponse.put("response", response);
+			return mapResponse;
+			}
+			catch (Exception e)
+			{
+				Map<String, Object> mapResponse = new HashMap<String, Object>();
+				String response = "NULL";
+				mapResponse.put("response", response);
+				return mapResponse;
+			}
+			
 		} else
 			return null;
 	}
@@ -146,8 +161,16 @@ public class Android_StudentController {
 			Room room = new Room("1", Integer.parseInt((String) payload.get("capacity")),
 					fs.jsonToFacilityList((String) payload.get("facilities")));
 
-			List<Room> rooms = rms.findRoomsByExactAttributes(room);
-			List<Booking> bookings = bs.findBookingsAvailableExact(booking, rooms, student);
+			List<Room> roomsExact = rms.findRoomsByExactAttributes(room);
+			List<Booking> bookings = bs.findBookingsAvailableExact(booking, roomsExact, student);
+			if (bookings.size()==0)
+			{
+//				System.out.println("Alternative list");
+				List<Room> roomsContaining = rms.findRoomsByContainingAttributes(room);
+				bookings.addAll(bs.findBookingsAvailableAlternative(booking, roomsExact, student));
+				bookings.addAll(bs.findBookingsAvailableExact(booking, roomsContaining, student));
+
+			}
 
 //		System.out.println(payload.get("facilities"));
 //		System.out.println(payload.get("date"));
@@ -157,6 +180,53 @@ public class Android_StudentController {
 			return bookings;
 		} else
 			return null;
+	}
+	
+	@PostMapping(value = "/booking/extend/{token}")
+	public Map<String, Object> extendBookingAndroid(@PathVariable String token,
+			@RequestBody Map<String, Object> payload) {
+		if (JWTGenerator.verifyJWT(token)) {
+			
+		Student student = ss.findStudentById((String) payload.get("studentId"));
+		Booking currentBooking = bs.findStudentCurrentBooking(student);
+		String outcomeMsg = "";
+		Booking extendBooking = new Booking("placeholder", 
+				currentBooking.getDate(), 
+				currentBooking.getTime().plusMinutes(currentBooking.getDuration()), 
+				1, currentBooking.getRoom());
+		//check if current booking is less than 1 hour before end
+		if (LocalTime.now().isAfter(currentBooking.getTime().plusMinutes(currentBooking.getDuration()).minusMinutes(60)))
+		{
+			//check if extension request clashes with next booking
+			if (!bs.checkBookingByDateTimeRoom(extendBooking,currentBooking.getRoom())) {
+				outcomeMsg = "APPROVED";
+				currentBooking.setDuration(currentBooking.getDuration()+60);
+				bs.createBooking(currentBooking);
+			}
+			else
+			{
+				Booking overlapBooking = bs.findOverlapBookingByDateTimeRoom(extendBooking, currentBooking.getRoom());
+				int newDuration = Math.toIntExact(currentBooking.getTime().plusMinutes(currentBooking.getDuration()).until(overlapBooking.getTime(), ChronoUnit.MINUTES));
+				if (newDuration > 10)
+				{
+				outcomeMsg = "APPROVED - EXTENDED BY "+newDuration;
+				currentBooking.setDuration(currentBooking.getDuration()+newDuration);
+				bs.createBooking(currentBooking);
+				}
+				else
+				{
+				outcomeMsg = "DENIED - NEXT BOOKING < 10 MINUTES AFTER CURRENT";
+				}
+			}
+		}
+		else {
+			outcomeMsg = "DENIED - EXTENSION REQUEST TO BE MADE <1 HOUR BEFORE END OF CURRENT BOOKING";
+		}
+		Map<String, Object> mapResponse = new HashMap<String, Object>();
+		mapResponse.put("response", outcomeMsg);
+		return mapResponse;
+		}
+		else return null;
 	}
 
 	@PostMapping(value = "/report/save/{token}")

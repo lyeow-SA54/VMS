@@ -8,6 +8,8 @@ import java.time.temporal.ChronoUnit;
 import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -297,6 +299,26 @@ public class BookingServiceImpl implements BookingService {
 			}
 		}
 		return booking;
+	}
+	
+	@Override
+	public Booking findStudentNextBooking(Student student) {
+		List<Booking> bookingsAfter = br.findByDateAfter(LocalDate.now());
+		List<Booking> bookingsFromToday = findStudentBookingsForDate(student, LocalDate.now());
+		bookingsFromToday = bookingsFromToday.stream().filter(b -> b.getStatus().equals(BookingStatus.SUCCESSFUL)).filter(b->b.getTime().isAfter(LocalTime.now())).collect(Collectors.toList());
+		bookingsAfter = bookingsAfter.stream().filter(b->b.getStatus().equals(BookingStatus.SUCCESSFUL)).collect(Collectors.toList());
+		bookingsFromToday.addAll(bookingsAfter);
+		Collections.sort(bookingsFromToday, new Comparator<Booking>() {
+			  public int compare(Booking b1, Booking b2) {
+			      if (b1.getDate() == null || b2.getDate() == null)
+			        return 0;
+			      return b1.getDate().compareTo(b2.getDate());}});
+//		for(Booking b: bookingsFromToday)
+//		{
+//			System.out.println(b.getDate()+"/"+b.getTime());
+//		}
+//		System.out.println(bookingsFromToday.get(0).getDate()+"/"+bookingsFromToday.get(0).getTime());
+		return bookingsFromToday.get(0);
 	}
 
 	@Override

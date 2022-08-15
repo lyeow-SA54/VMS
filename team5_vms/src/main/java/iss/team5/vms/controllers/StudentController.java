@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -88,7 +89,7 @@ public class StudentController {
 		//Student s1 = ss.findStudentByUser(us.findUserByUsername(username));
 		
 		HttpSession session = request.getSession();
-		Student student = (Student)session.getAttribute("student");	
+		Student student = (Student)session.getAttribute("student");
 		List<Booking> availableBookings = bs.findBookingsAvailableExact(bookingForTheDay, rooms, student);
 		List<Booking> studentBookingToday = bs.findStudentBookingsForDate(student, LocalDate.now()); 
 		
@@ -105,10 +106,10 @@ public class StudentController {
 			return mav;
 		} else {
 		
-		
 		ModelAndView mav = new ModelAndView("student-home-page");
 		mav.addObject("bookings",availableBookings);
 		return mav;}	
+		
 		
 	}
 	
@@ -170,11 +171,10 @@ public class StudentController {
 		bookings = bs.findBookingsAvailableExact(booking, roomsExact, student);
 		if (bookings.size()==0)
 		{
-			System.out.println("Alternative list");
+//			System.out.println("Alternative list");
 			List<Room> roomsContaining = rms.findRoomsByContainingAttributes(room);
 			bookings.addAll(bs.findBookingsAvailableAlternative(booking, roomsExact, student));
 			bookings.addAll(bs.findBookingsAvailableExact(booking, roomsContaining, student));
-
 
 		}
 
@@ -306,12 +306,23 @@ public class StudentController {
 			//check if extension request clashes with next booking
 			if (!bs.checkBookingByDateTimeRoom(extendBooking,currentBooking.getRoom())) {
 				outcomeMsg = "APPROVED";
-				currentBooking.setDuration(currentBooking.getDuration()+1);
+				currentBooking.setDuration(currentBooking.getDuration()+60);
 				bs.createBooking(currentBooking);
 			}
 			else
 			{
-				outcomeMsg = "DENIED - OVERLAP WITH NEXT BOOKING";
+				Booking overlapBooking = bs.findOverlapBookingByDateTimeRoom(extendBooking, currentBooking.getRoom());
+				int newDuration = Math.toIntExact(currentBooking.getTime().plusMinutes(currentBooking.getDuration()).until(overlapBooking.getTime(), ChronoUnit.MINUTES));
+				if (newDuration > 10)
+				{
+				outcomeMsg = "APPROVED - EXTENDED BY "+newDuration;
+				currentBooking.setDuration(currentBooking.getDuration()+newDuration);
+				bs.createBooking(currentBooking);
+				}
+				else
+				{
+				outcomeMsg = "DENIED - NEXT BOOKING < 10 MINUTES AFTER CURRENT";
+				}
 			}
 		}
 		else {

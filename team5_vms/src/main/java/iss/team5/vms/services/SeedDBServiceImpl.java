@@ -71,7 +71,7 @@ public class SeedDBServiceImpl implements SeedDBService {
 		bs.createBooking(new Booking("B2", dateTimeInput.dateInput("08/13/2022"), LocalTime.now(), 60, BookingStatus.CANCELLED));
 		bs.createBooking(new Booking("B3", dateTimeInput.dateInput("08/14/2022"), LocalTime.now(), 60, BookingStatus.REJECTED));
 		bs.createBooking(new Booking("B4", dateTimeInput.dateInput("08/15/2022"), LocalTime.now(), 60, BookingStatus.WAITINGLIST));
-		bs.createBooking(new Booking("B5", LocalDate.now(), LocalTime.now().minusMinutes(300), 60, BookingStatus.SUCCESSFUL));
+		bs.createBooking(new Booking("B5", LocalDate.now().plusDays(1), LocalTime.now(), 60, BookingStatus.SUCCESSFUL));
 		bs.createBooking(new Booking("B6", LocalDate.now(), LocalTime.now().minusMinutes(35), 120, BookingStatus.SUCCESSFUL));
 		}
 		

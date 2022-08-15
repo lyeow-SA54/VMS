@@ -25,6 +25,8 @@ public interface BookingService {
 			
 	Booking findStudentCurrentBooking(Student student);
 	
+	Booking findStudentNextBooking(Student student);
+	
 	Booking findBookingBefore(Booking booking);
 	
 	Booking findOverlapBookingByDateTimeRoom(Booking booking, Room room);
