@@ -260,15 +260,16 @@ public class StudentController {
 		return mav;
 	}
 	
-	@RequestMapping(value = "/booking/report/{bookingId}", method = RequestMethod.GET)
-	public ModelAndView bookingReport(@PathVariable String bookingId) {
+	@RequestMapping(value = "/booking/report", method = RequestMethod.GET)
+	public ModelAndView bookingReport() {
 		User user = userSessionService.findUserBySession();
 		if(!user.getRole().equals("STUDENT")) {
 			ModelAndView mav = new ModelAndView("unauthorized-admin");
 			return mav;
 		}
+		Student student = ss.findStudentByUser(user);
+		Booking booking = bs.findStudentCurrentBooking(student);
 		ModelAndView mav = new ModelAndView("misuse-report-form");
-		Booking booking = bs.findBookingById(bookingId);
 		mav.addObject("booking", booking);
 		return mav;
 	}
