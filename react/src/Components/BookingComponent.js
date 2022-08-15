@@ -67,6 +67,7 @@ class Booking extends Component {
         && (
             booking.student.user.firstName.toLowerCase().includes(this.state.studentFilter.toLowerCase())
          || booking.student.user.lastName.toLowerCase().includes(this.state.studentFilter.toLowerCase())
+         || booking.student.id.includes(this.state.studentFilter.toLowerCase())
         )
         && booking.date.includes(this.state.dateFilter))
         .map(searchedBookings => {
@@ -77,7 +78,7 @@ class Booking extends Component {
                     <td>{searchedBookings.student.user.firstName} {searchedBookings.student.user.lastName} / {searchedBookings.student.id}</td>
                     <td>{searchedBookings.room.roomName}</td>
                     <td>{searchedBookings.date} / {searchedBookings.time}</td>
-                    <td>{searchedBookings.duration} hour</td>
+                    <td>{searchedBookings.duration} minutes</td>
                     <td>
                     <ButtonGroup>
                         <Button size="sm" color='danger' onClick={() => this.cancelBooking(searchedBookings.id, searchedBookings.status)} style={ { display: (searchedBookings.status!=="REJECTED")&&(searchedBookings.status!=="CANCELLED") ? 'block' : 'none' } }>Cancel Booking<span className="fa fa-times"></span></Button>

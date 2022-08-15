@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Button, ButtonGroup, Container } from 'reactstrap';
 import "../App.css";
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 
 
 
@@ -99,19 +99,19 @@ class Report extends Component {
                         <td> <img className="preview"
                             src={searchedReports.imgPath}
                             onClick={() => this.handleShowDialog(searchedReports.imgPath)}
-                        />
+                            alt="report_image"/>
                             {this.state.isOpen && (
                                 <dialog
                                     className="dialog"
                                     style={{ position: "absolute" }}
                                     open
                                     onClick={() => this.handleShowDialog(searchedReports.imgPath)}
-                                >
+                                    >
                                     <img
                                         className="dialogImage"
                                         src={this.state.imageOpen}
                                         onClick={() => this.handleShowDialog(searchedReports.imgPath)}
-                                    />
+                                        alt="report_image_open"/>
                                 </dialog>
                             )}</td>
                         <td>{searchedReports.details}</td>
