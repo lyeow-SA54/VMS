@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import iss.team5.vms.email.service.EmailService;
 import iss.team5.vms.model.Booking;
 import iss.team5.vms.model.Facility;
 import iss.team5.vms.model.Room;
@@ -47,6 +48,9 @@ public class AdminController {
 
 	@Autowired
 	private UserSessionService userSessionService;
+	
+	@Autowired
+	private EmailService eService;
 
 	@RequestMapping(value = "/rooms/create", method = RequestMethod.GET)
 	public ModelAndView newRoom() {
@@ -195,6 +199,13 @@ public class AdminController {
 			return new ModelAndView("student-form");
 		ModelAndView mav = new ModelAndView("forward:/admin/students/list");
 		sService.createStudent(student);
+		User stu = student.getUser();
+		try{
+			eService.sendMail(stu);
+			System.out.println("Success");
+		}catch(Exception e) {
+			System.out.println(e.getMessage());
+		}
 		return mav;
 	}
 	
