@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="utf-8">
+	<title>VMS</title>
+</head>
+
+<body>
+	<div class="container">
+		<div class="row" style="text-align: center;">
+			<table style="border:1px solid #003062; border-spacing:30px; border-radius:10px; border-style:dashed;">
+				<thead>
+					<tr>
+						<th>
+							<span style="font-style: italic; font-size:15px;">
+								Welcome <b th:text="${user.firstName} + ' ' + ${user.lastName} + '!'"></b>
+							</span>
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>
+							<span>
+								Your account has been successfully created.
+							</span>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<span>
+								Your username is '<b th:text="${user.username}"></b>' and password is '<b>password</b>'.
+							</span>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	</div>
+	</div>
+</body>
+
+</html>
