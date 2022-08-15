@@ -110,10 +110,12 @@ public class BookingServiceImpl implements BookingService {
 	@Override
 	public List<Booking> findBookingsAvailableExact(Booking booking, List<Room> rooms, Student student) {
 		int duration = booking.getDuration();
-//		if (duration>60 && predictPeak(booking))
-//		{
-//			duration=60;
-//		}
+		if (duration > 180) {
+			duration = 180;
+//			if (predictPeak(booking)) {
+//				duration = 60;
+//			}
+		}
 		List<Room> frooms = rms.findAllRoomsOpenForBooking(booking, rooms);
 
 		List<Booking> bookings = new ArrayList<Booking>();
@@ -141,19 +143,20 @@ public class BookingServiceImpl implements BookingService {
 	@Override
 	public List<Booking> findBookingsAvailableAlternative(Booking booking, List<Room> rooms, Student student) {
 		List<Booking> bookings = new ArrayList<Booking>();
-//		int duration = booking.getDuration();
-//		if (duration>60 && predictPeak(booking))
-//		{
-//			duration=60;
-//		}
-
+		int duration = booking.getDuration();
+		if (duration > 180) {
+			duration = 180;
+//			if (predictPeak(booking)) {
+//				duration = 60;
+//			}
+		}
 		List<Room> frooms = rms.findAllRoomsOpenForBooking(booking, rooms);
 		Booking bookingBefore1 = new Booking("placeholder", booking.getDate(), booking.getTime(),
-				booking.getDuration());
+				duration);
 		Booking bookingBefore2 = new Booking("placeholder", booking.getDate(), booking.getTime(),
-				booking.getDuration());
-		Booking bookingAfter1 = new Booking("placeholder", booking.getDate(), booking.getTime(), booking.getDuration());
-		Booking bookingAfter2 = new Booking("placeholder", booking.getDate(), booking.getTime(), booking.getDuration());
+				duration);
+		Booking bookingAfter1 = new Booking("placeholder", booking.getDate(), booking.getTime(), duration);
+		Booking bookingAfter2 = new Booking("placeholder", booking.getDate(), booking.getTime(), duration);
 
 		for (Room r : frooms) {
 			Booking overlapBooking = findOverlapBookingByDateTimeRoom(booking, r);
@@ -300,19 +303,23 @@ public class BookingServiceImpl implements BookingService {
 		}
 		return booking;
 	}
-	
+
 	@Override
 	public Booking findStudentNextBooking(Student student) {
 		List<Booking> bookingsAfter = br.findByDateAfter(LocalDate.now());
 		List<Booking> bookingsFromToday = findStudentBookingsForDate(student, LocalDate.now());
-		bookingsFromToday = bookingsFromToday.stream().filter(b -> b.getStatus().equals(BookingStatus.SUCCESSFUL)).filter(b->b.getTime().isAfter(LocalTime.now())).collect(Collectors.toList());
-		bookingsAfter = bookingsAfter.stream().filter(b->b.getStatus().equals(BookingStatus.SUCCESSFUL)).collect(Collectors.toList());
+		bookingsFromToday = bookingsFromToday.stream().filter(b -> b.getStatus().equals(BookingStatus.SUCCESSFUL))
+				.filter(b -> b.getTime().isAfter(LocalTime.now())).collect(Collectors.toList());
+		bookingsAfter = bookingsAfter.stream().filter(b -> b.getStatus().equals(BookingStatus.SUCCESSFUL))
+				.collect(Collectors.toList());
 		bookingsFromToday.addAll(bookingsAfter);
 		Collections.sort(bookingsFromToday, new Comparator<Booking>() {
-			  public int compare(Booking b1, Booking b2) {
-			      if (b1.getDate() == null || b2.getDate() == null)
-			        return 0;
-			      return b1.getDate().compareTo(b2.getDate());}});
+			public int compare(Booking b1, Booking b2) {
+				if (b1.getDate() == null || b2.getDate() == null)
+					return 0;
+				return b1.getDate().compareTo(b2.getDate());
+			}
+		});
 //		for(Booking b: bookingsFromToday)
 //		{
 //			System.out.println(b.getDate()+"/"+b.getTime());
@@ -337,29 +344,31 @@ public class BookingServiceImpl implements BookingService {
 	@Override
 	public boolean predictPeak(Booking booking) {
 //		Booking bookingTest = findBookingById("B1006");
-		
+
 		LocalDate date = booking.getDate();
-		int week  = date.get(WeekFields.ISO.weekOfWeekBasedYear());
+		int week = date.get(WeekFields.ISO.weekOfWeekBasedYear());
 		int year = date.getYear();
 //		
 //		System.out.println(week + ", "+ year);
-		
+
 		Calendar calendar = Calendar.getInstance();
 		calendar.clear();
 		calendar.set(Calendar.WEEK_OF_YEAR, week);
 		calendar.set(Calendar.YEAR, year);
-		
-		LocalDate firstDayOfWeek = LocalDate.ofInstant(calendar.getTime().toInstant(), ZoneOffset.ofHours(8)).plusDays(8);
+
+		LocalDate firstDayOfWeek = LocalDate.ofInstant(calendar.getTime().toInstant(), ZoneOffset.ofHours(8))
+				.plusDays(8);
 //		System.out.println(firstDayOfWeek);
 		calendar.add(Calendar.DAY_OF_MONTH, 6);
-		LocalDate lastDayOfWeek = LocalDate.ofInstant(calendar.getTime().toInstant(), ZoneOffset.ofHours(8)).plusDays(8);
+		LocalDate lastDayOfWeek = LocalDate.ofInstant(calendar.getTime().toInstant(), ZoneOffset.ofHours(8))
+				.plusDays(8);
 //		System.out.println(lastDayOfWeek);
-		
+
 		List<Booking> bookings = br.findByDateBetween(firstDayOfWeek, lastDayOfWeek);
-		
+
 		long volume = bookings.stream().count();
 //		System.out.println(volume);
-		
+
 		String uri = "http://127.0.0.1:5000/peakpredict?week=" + week + "&volume=" + volume;
 		RestTemplate restTemplate = new RestTemplate();
 		ResponsePojo response = restTemplate.getForObject(uri, ResponsePojo.class);

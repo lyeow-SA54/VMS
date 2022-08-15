@@ -4,23 +4,26 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import iss.team5.vms.helper.BookingStatus;
-import iss.team5.vms.helper.ReportStatus;
-import iss.team5.vms.model.Report;
-import iss.team5.vms.model.User;
-import iss.team5.vms.services.ReportService;
-import iss.team5.vms.services.UserSessionService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import iss.team5.vms.model.Booking;
-import iss.team5.vms.services.BookingService;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+
+import iss.team5.vms.helper.ReportStatus;
+import iss.team5.vms.model.Booking;
+import iss.team5.vms.model.Report;
+import iss.team5.vms.model.Student;
+import iss.team5.vms.model.User;
+import iss.team5.vms.services.BookingService;
+import iss.team5.vms.services.ReportService;
+import iss.team5.vms.services.StudentService;
+import iss.team5.vms.services.UserSessionService;
 
 @RestController
 @RequestMapping(path = "/admin", produces = "application/json")
@@ -32,12 +35,15 @@ public class React_AdminController {
 
 	@Autowired
 	ReportService rs;
+	
+	@Autowired
+	StudentService ss;
 
 	@Autowired
 	private UserSessionService userSessionService;
 
 	@GetMapping("/bookings")
-    public List<Booking> getBookings(HttpServletRequest request, HttpServletResponse response) throws Exception{
+    public List<Booking> getBookings() {
         return bs.findAllBookings();
 	}
 
@@ -46,6 +52,11 @@ public class React_AdminController {
 		List<Report> reports = rs.findAllReports();
 		reports.stream().forEach(r -> r.setImgPath("/img/" + r.getImgPath()));
 		return reports;
+	}
+	
+	@GetMapping("/students")
+	public List<Student> getStudents() {
+		return ss.findAllStudents();
 	}
 
 	@PostMapping(value = "/bookings/{id}")
