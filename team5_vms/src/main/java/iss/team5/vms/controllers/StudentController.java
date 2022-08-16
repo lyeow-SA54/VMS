@@ -156,7 +156,6 @@ public class StudentController {
 			ModelAndView mav = new ModelAndView("unauthorized-admin");
 			return mav;
 		}
-		System.out.println(user.getGroupSize()+"Persons");
 		Booking booking = new Booking();
 		Room room = new Room();
 		ModelAndView mav = new ModelAndView("student-bookings-filter_selection");
@@ -383,7 +382,6 @@ public class StudentController {
 
     }
 	
-	
 	@RequestMapping(value = "/profile", method = RequestMethod.GET)
 	public ModelAndView viewProfile() {
 		User user = userSessionService.findUserBySession();
@@ -454,7 +452,6 @@ public class StudentController {
 			mav.addObject("error", true);
 			return mav;
 		}
-		System.out.println(newPassword.equals(confirmPassword)+"CHECK");
 		if(!(newPassword.equals(confirmPassword))) {
 			ModelAndView mav = new ModelAndView("student-reset-password");
 			mav.addObject("notMatch", true);

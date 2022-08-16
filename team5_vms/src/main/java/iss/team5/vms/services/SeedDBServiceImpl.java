@@ -60,10 +60,10 @@ public class SeedDBServiceImpl implements SeedDBService {
 			us.createUser(user);
 			
 			ss.createStudent(new Student("Trevor", "Green", "email1@u.nus.edu", "user1", 5));
-			ss.createStudent(new Student("Tori", "Howe", "email2@u.nus.edu", "user2", 7));
-			ss.createStudent(new Student("Lula", "Thorpe", "email3@u.nus.edu", "user3", 8));
-			ss.createStudent(new Student("Manal", "White", "email4@u.nus.edu", "user4", 9));
-			ss.createStudent(new Student("Vanesa", "Reese", "email5@u.nus.edu", "user5", 10));
+			ss.createStudent(new Student("Tori", "Howe", "email2@u.nus.edu", "user2", 6));
+			ss.createStudent(new Student("Lula", "Thorpe", "email3@u.nus.edu", "user3", 7));
+			ss.createStudent(new Student("Manal", "White", "email4@u.nus.edu", "user4", 8));
+			ss.createStudent(new Student("Vanesa", "Reese", "email5@u.nus.edu", "user5", 9));
 		}
 
 		if(!bs.tableExist()) {
