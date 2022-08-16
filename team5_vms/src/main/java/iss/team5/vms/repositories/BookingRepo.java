@@ -27,7 +27,7 @@ public interface BookingRepo extends JpaRepository<Booking,String>{
 	
 	List<Booking> findByDateBetween(LocalDate start, LocalDate end);
 	
-	List<Booking> findByDateAfter(LocalDate date);
+	List<Booking> findByDateAfterAndStudent(LocalDate date, Student student);
 	
 	//Student class doesn't have Booking attribute, use BookingRepo to do this instead
 //	Student findStudentByBooking(Booking booking);

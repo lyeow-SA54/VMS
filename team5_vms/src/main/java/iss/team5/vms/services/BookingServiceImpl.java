@@ -306,7 +306,7 @@ public class BookingServiceImpl implements BookingService {
 
 	@Override
 	public Booking findStudentNextBooking(Student student) {
-		List<Booking> bookingsAfter = br.findByDateAfter(LocalDate.now());
+		List<Booking> bookingsAfter = br.findByDateAfterAndStudent(LocalDate.now(), student);
 		List<Booking> bookingsFromToday = findStudentBookingsForDate(student, LocalDate.now());
 		bookingsFromToday = bookingsFromToday.stream().filter(b -> b.getStatus().equals(BookingStatus.SUCCESSFUL))
 				.filter(b -> b.getTime().isAfter(LocalTime.now())).collect(Collectors.toList());

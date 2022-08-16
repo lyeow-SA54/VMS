@@ -101,15 +101,15 @@ public class Android_StudentController {
 			bookingForTheDay.setTime(LocalTime.now());
 			List<Room> availableRooms = new ArrayList<Room>();
 			Student student = ss.findStudentById((String) payload.get("studentId"));
-			System.out.println(token);
+//			System.out.println(token);
 			try {
 				List<Booking> availableBookings = bs.findBookingsAvailableExact(bookingForTheDay, rooms, student);
 				availableRooms = availableBookings.stream().map(Booking::getRoom).distinct()
 						.collect(Collectors.toList());
-				for (Room r: availableRooms)
-				{
-					System.out.println(r.getRoomName());
-				}
+//				for (Room r: availableRooms)
+//				{
+//					System.out.println(r.getRoomName());
+//				}
 				return availableRooms;
 			} catch (Exception e) {
 				return availableRooms;
@@ -140,6 +140,7 @@ public class Android_StudentController {
 
 		if (JWTGenerator.verifyJWT(token)) {
 			Student student = ss.findStudentById((String) payload.get("studentId"));
+			System.out.println(payload.get("studentId"));
 			try {
 				Booking booking = bs.findStudentCurrentBooking(student);
 				Map<String, Object> mapResponse = new HashMap<String, Object>();
@@ -151,6 +152,7 @@ public class Android_StudentController {
 				mapResponse.put("inprogress", booking.isBookingInProgress());
 				mapResponse.put("checkin", booking.isCheckedIn());
 				mapResponse.put("response", response);
+				System.out.println(booking.getDate());
 				return mapResponse;
 			} catch (Exception e) {
 				try {
