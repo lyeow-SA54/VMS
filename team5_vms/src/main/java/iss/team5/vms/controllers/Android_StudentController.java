@@ -307,7 +307,7 @@ public class Android_StudentController {
 //		booking.setRoom(rs.findRoomById(booking.getRoom().getId()));
 //		List<Room> rooms = rs.findRoomsByAttributes(room);
 //		List<Booking> bookings = bs.checkBookingAvailable(booking, rooms);
-			if (!bs.checkBookingByDateTimeRoom(booking, room)) {
+			if (bs.checkBookingByDateTimeRoom(booking, room)) {
 				booking.setStatus(BookingStatus.REJECTED);
 				response.add(HttpStatus.EXPECTATION_FAILED);
 			} else {
@@ -326,6 +326,29 @@ public class Android_StudentController {
 			return response;
 		} else
 			return null;
+	}
+	
+	@PostMapping(value="/checkin/{bookingId}/{token}")
+	public Map<String, Object> bookingCheckin(@PathVariable("bookingId") String bookingId, @PathVariable("token") String token, @RequestBody Map<String, Object> payload) {
+		
+		if (JWTGenerator.verifyJWT(token)) {
+			try {
+			Student student = ss.findStudentById((String) payload.get("studentId"));
+			Booking booking = bs.findBookingById(bookingId);
+			String outcomeMsg = "";
+			outcomeMsg = bs.checkIn(student, booking);
+			Map<String, Object> mapResponse = new HashMap<String, Object>();
+			mapResponse.put("response", outcomeMsg);
+			return mapResponse;
+			}
+			catch (Exception e)
+			{
+			Map<String, Object> mapResponse = new HashMap<String, Object>();
+			mapResponse.put("response", "BOOKING NOT FOUND");
+			return mapResponse;
+			}
+		}
+		else return null;
 	}
 
 }
