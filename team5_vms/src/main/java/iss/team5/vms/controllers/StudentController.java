@@ -8,6 +8,7 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -278,7 +279,15 @@ public class StudentController {
 			return mav;
 		}
 		Student student = ss.findStudentByUser(user);
-		Booking booking = bs.findStudentCurrentBooking(student);
+		Booking booking = new Booking();
+		try{
+			booking = bs.findStudentCurrentBooking(student);
+		}
+		catch (NoSuchElementException e){
+			ModelAndView mav = new ModelAndView("booking-not-inprogress");
+			return mav;
+		}
+
 		ModelAndView mav = new ModelAndView("misuse-report-form");
 		mav.addObject("booking", booking);
 		return mav;
@@ -302,9 +311,17 @@ public class StudentController {
 			ModelAndView mav = new ModelAndView("unauthorized-admin");
 			return mav;
 		}
+
 		ModelAndView mav = new ModelAndView("booking-success");
 		Student student = ss.findStudentByUser(user);
-		Booking currentBooking = bs.findStudentCurrentBooking(student);
+		Booking currentBooking = new Booking();
+		try{
+			currentBooking = bs.findStudentCurrentBooking(student);
+		}
+		catch (NoSuchElementException e){
+			mav = new ModelAndView("booking-not-inprogress");
+			return mav;
+		}
 		String outcomeMsg = "";
 		Booking extendBooking = new Booking("placeholder", 
 				currentBooking.getDate(), 
