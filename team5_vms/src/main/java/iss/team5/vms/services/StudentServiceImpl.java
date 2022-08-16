@@ -13,31 +13,31 @@ import iss.team5.vms.model.User;
 import iss.team5.vms.repositories.StudentRepo;
 import iss.team5.vms.repositories.UserRepo;
 
-@Service 
-public class StudentServiceImpl implements StudentService{
-	
+@Service
+public class StudentServiceImpl implements StudentService {
+
 	@Resource
 	private StudentRepo srepo;
-	
+
 	@Resource
 	private UserRepo urepo;
-	
+
 	public boolean tableExist() {
 		return srepo.existsBy();
 	}
-	
+
 	@Override
 	@Transactional
-	public ArrayList<Student> findAllStudents(){
-		ArrayList<Student> s = (ArrayList<Student>)srepo.findAll();
+	public ArrayList<Student> findAllStudents() {
+		ArrayList<Student> s = (ArrayList<Student>) srepo.findAll();
 		return s;
 	}
-	
+
 	@Override
 	public Student findStudentById(String Id) {
 		return srepo.findById(Id).orElse(null);
 	}
-	
+
 	@Override
 	@Transactional
 	public Student createStudent(Student student) {
@@ -47,7 +47,7 @@ public class StudentServiceImpl implements StudentService{
 		student.setUser(user);
 		return srepo.saveAndFlush(student);
 	}
-	
+
 	@Override
 	@Transactional
 	public Student changeStudent(Student student) {
@@ -56,7 +56,7 @@ public class StudentServiceImpl implements StudentService{
 		s.setUser(student.getUser());
 		return srepo.saveAndFlush(s);
 	}
-	
+
 	@Override
 	@Transactional
 	public Student updateStudent(Student student) {
@@ -65,14 +65,31 @@ public class StudentServiceImpl implements StudentService{
 		stu.getUser().setLastName(student.getUser().getLastName());
 		return srepo.saveAndFlush(stu);
 	}
-	
+
+	@Override
+	@Transactional
+	public Student editStudent(Student student) {
+		Student stu = srepo.getById(student.getId());
+		System.out.println(stu.getScore()+"Old Score");
+		System.out.println(student.getScore()+"New Score");
+		System.out.println(stu.getUser().getFirstName()+"Old First Name");
+		System.out.println(student.getUser().getFirstName()+"New First Name");
+		System.out.println(student.getUser().getLastName());
+		System.out.println(student.getUser().getGroupSize());
+		stu.setScore(student.getScore());
+		stu.getUser().setFirstName(student.getUser().getFirstName());
+		stu.getUser().setLastName(student.getUser().getLastName());
+		stu.getUser().setGroupSize(student.getUser().getGroupSize());
+		return srepo.saveAndFlush(stu);
+	}
+
 	@Override
 	@Transactional
 	public void removeStudent(Student student) {
 		srepo.delete(student);
 		srepo.flush();
 	}
-	
+
 	@Override
 	public Student findStudentByUser(User user) {
 		return srepo.findStudentByUser(user);
@@ -85,5 +102,4 @@ public class StudentServiceImpl implements StudentService{
 		srepo.saveAndFlush(stu);
 		return stu;
 	}
-		
 }

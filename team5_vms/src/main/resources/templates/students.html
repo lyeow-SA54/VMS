@@ -7,7 +7,7 @@
 </head>
 
 <body>
-	<div th:replace="fragments/general.html :: menu-admin-room"></div>
+	<div th:replace="fragments/general.html :: menu-admin"></div>
 	<div th:if="${#lists.isEmpty(students)}">
 		<div class="container">
 			<div class="row">
@@ -49,8 +49,8 @@
 								<th>Email</th>
 								<th>Group Size</th>
 								<th>Score</th>								
-								<!--<th>Edit</th>
-								<th>Delete</th>-->
+								<th>Edit</th>
+								<th>Delete</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -61,10 +61,13 @@
 								<td th:text=${student.user.email}></td>
 								<td th:text=${student.user.groupSize}></td>
 								<td th:text=${student.score}></td>
-								<!--<td><a href="" th:href="@{/admin/students/edit/}+${student.id}">Edit</a></td>
-								<td>
+								<td><a href="" th:href="@{/admin/students/edit/}+${student.id}">Edit</a></td>
+								<td th:if="${not studentids.contains(student.id)}">
 									<a href="" th:href="@{/admin/students/delete/}+${student.id}">Delete</a>
-								</td>-->
+								</td>
+								<td th:unless="${not studentids.contains(student.id)}">
+									<span>-</span>
+								</td>
 							</tr>
 						</tbody>
 					</table>

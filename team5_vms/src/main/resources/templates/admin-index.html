@@ -73,7 +73,7 @@
 			</div>
 		</nav>
 		<span class="navbar-nav ml-auto">
-			Welcome&nbsp;&nbsp;&nbsp;&nbsp;
+			Welcome,&nbsp;<em th:text="${session.loginUser.groupName} + #{fieldLabel.space}"></em>&nbsp;&nbsp;&nbsp;
 		</span>
 		<a class="btn btnorange" th:href="@{/logout}">Logout</a>
 	</nav>

@@ -4,11 +4,6 @@
 <head th:replace="fragments/general.html :: headerfiles" />
 <title>VMS</title>
 <link rel="stylesheet" th:href="@{/css/simple.css}" />
-<style>
-	p {
-		color: red;
-	}
-</style>
 </head>
 
 <body>
@@ -17,27 +12,24 @@
 		<div class="row">
 			<div class="col-3"></div>
 			<div class="col-6">
-				<form action="#" th:action="@{/admin/students/create}" th:object="${student}" method="post">
-					<h5>New Student Page</h5>
-					<input type="hidden" th:field="*{id}">
-					<p th:if="${duplicate}">*Group name already taken!</p>
-					<p th:if="${email}">*Email already exists!</p>
-					<table class="table table-borderless" align="center">
+			<form action="#" th:action="@{/admin/students/edit}" th:object="${student}" method="post">
+				<h5 class="mt-5">Edit Student Profile</h5>
+				<input type="hidden" th:field="*{id}">
+				<table class="table table-borderless" align="center">
 						<tbody>
 							<tr>
 								<td><span th:text="#{fieldLabel.firstName}"></span></td>
 								<td>
 									<fieldset>
-										<input type="text" th:field="*{user.firstName}" required>
+										<input type="text" th:field="${student.user.firstName}" required>
 									</fieldset>
 								</td>
 								<td th:if="${#fields.hasErrors('user.firstName')}" th:errors="*{user.firstName}"></td>
-							</tr>
-							<tr>
+							</tr><tr>
 								<td><span th:text="#{fieldLabel.lastName}"></span></td>
 								<td>
 									<fieldset>
-										<input type="text" th:field="*{user.lastName}" required>
+										<input type="text" th:field="${student.user.lastName}" required>
 									</fieldset>
 								</td>
 								<td th:if="${#fields.hasErrors('user.lastName')}" th:errors="*{user.lastName}"></td>
@@ -46,28 +38,34 @@
 								<td><span th:text="#{fieldLabel.userName}"></span></td>
 								<td>
 									<fieldset>
-										<input type="text" name="groupName" required>
+										<input type="text" th:field="${student.user.groupName}" disabled>
 									</fieldset>
 								</td>
-								<td th:if="${#fields.hasErrors('user.groupName')}" th:errors="*{user.groupName}"></td>
-							</tr>
-							<tr>
-								<td><span th:text="#{fieldLabel.groupSize}"></span></td>
-								<td>
-									<fieldset>
-										<input type="number" th:field="*{user.groupSize}" min="1" max="10">
-									</fieldset>
-								</td>
-								<td th:if="${#fields.hasErrors('user.groupSize')}" th:errors="*{user.groupSize}"></td>
 							</tr>
 							<tr>
 								<td><span th:text="#{fieldLabel.email}"></span></td>
 								<td>
 									<fieldset>
-										<input type="email" name="email" required>
+										<input type="text" th:field="${student.user.email}" disabled>
 									</fieldset>
 								</td>
 								<td th:if="${#fields.hasErrors('user.email')}" th:errors="*{user.email}"></td>
+							</tr>
+							<tr>
+								<td><span th:text="#{fieldLabel.groupSize}"></span></td>
+								<td>
+									<fieldset>
+										<input type="number" th:field="${student.user.groupSize}" th:min="1" th:max="10">
+									</fieldset>
+								</td>
+							</tr>
+							<tr>
+								<td><span th:text="#{fieldLabel.score}"></span></td>
+								<td>
+									<fieldset>
+										<input type="number" th:field="${student.score}" th:min="1" th:max="10">
+									</fieldset>
+								</td>
 							</tr>
 							<tr>
 								<td>
@@ -77,13 +75,12 @@
 								</td>
 								<td colspan="2">
 									<fieldset>
-										<input type="submit" value="Create" class="btn btnblue" />
+										<input type="submit" value="Save" class="btn btnblue" />
 									</fieldset>
 								</td>
 							</tr>
 						</tbody>
 					</table>
-				</form>
 			</div>
 			<div class="col-3"></div>
 		</div>
