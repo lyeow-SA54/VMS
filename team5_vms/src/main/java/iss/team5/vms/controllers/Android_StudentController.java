@@ -99,7 +99,7 @@ public class Android_StudentController {
 		} else
 			return null;
 	}
-	
+
 	@PostMapping("/booking/nearest/{token}")
 	public Map<String, Object> bookingNearestAndroid(@PathVariable String token,
 			@RequestBody Map<String, Object> payload) {
@@ -107,40 +107,35 @@ public class Android_StudentController {
 		if (JWTGenerator.verifyJWT(token)) {
 			Student student = ss.findStudentById((String) payload.get("studentId"));
 			try {
-			Booking booking = bs.findStudentCurrentBooking(student); 
-			Map<String, Object> mapResponse = new HashMap<String, Object>();
-			String response = "NULL";
-			if (booking!=null)
-			{
+				Booking booking = bs.findStudentCurrentBooking(student);
+				Map<String, Object> mapResponse = new HashMap<String, Object>();
+				String response = "NULL";
+				if (booking != null) {
 					response = "FOUND";
-			}
-			else {
-				booking = bs.findStudentNextBooking(student);
-				if (booking!=null) {
-					response = "FOUND";
+				} else {
+					booking = bs.findStudentNextBooking(student);
+					if (booking != null) {
+						response = "FOUND";
+					}
 				}
-			}
-			if (response == "FOUND")
-			{
-				mapResponse.put("roomName", booking.getRoom().getRoomName());
-				mapResponse.put("date", booking.getDate().toString());
-				mapResponse.put("time", booking.getTime().toString());
-				mapResponse.put("duration", booking.getDuration());
-				mapResponse.put("inprogress", booking.isBookingInProgress());
-				mapResponse.put("checkin", booking.isCheckedIn());
-			}
-			
-			mapResponse.put("response", response);
-			return mapResponse;
-			}
-			catch (Exception e)
-			{
+				if (response == "FOUND") {
+					mapResponse.put("roomName", booking.getRoom().getRoomName());
+					mapResponse.put("date", booking.getDate().toString());
+					mapResponse.put("time", booking.getTime().toString());
+					mapResponse.put("duration", booking.getDuration());
+					mapResponse.put("inprogress", booking.isBookingInProgress());
+					mapResponse.put("checkin", booking.isCheckedIn());
+				}
+
+				mapResponse.put("response", response);
+				return mapResponse;
+			} catch (Exception e) {
 				Map<String, Object> mapResponse = new HashMap<String, Object>();
 				String response = "NULL";
 				mapResponse.put("response", response);
 				return mapResponse;
 			}
-			
+
 		} else
 			return null;
 	}
@@ -163,8 +158,7 @@ public class Android_StudentController {
 
 			List<Room> roomsExact = rms.findRoomsByExactAttributes(room);
 			List<Booking> bookings = bs.findBookingsAvailableExact(booking, roomsExact, student);
-			if (bookings.size()==0)
-			{
+			if (bookings.size() == 0) {
 //				System.out.println("Alternative list");
 				List<Room> roomsContaining = rms.findRoomsByContainingAttributes(room);
 				bookings.addAll(bs.findBookingsAvailableAlternative(booking, roomsExact, student));
@@ -181,46 +175,66 @@ public class Android_StudentController {
 		} else
 			return null;
 	}
-	
+
 	@PostMapping(value = "/booking/extend/{token}")
 	public Map<String, Object> extendBookingAndroid(@PathVariable String token,
 			@RequestBody Map<String, Object> payload) {
 		if (JWTGenerator.verifyJWT(token)) {
+
+			Student student = ss.findStudentById((String) payload.get("studentId"));
+			Booking currentBooking = bs.findStudentCurrentBooking(student);
+			String outcomeMsg = "";
+			Booking extendBooking = new Booking("placeholder", currentBooking.getDate(),
+					currentBooking.getTime().plusMinutes(currentBooking.getDuration()), 1, currentBooking.getRoom());
+			// check if current booking is less than 1 hour before end
+			if (LocalTime.now()
+					.isAfter(currentBooking.getTime().plusMinutes(currentBooking.getDuration()).minusMinutes(60))) {
+				// check if extension request clashes with next booking
+				if (!bs.checkBookingByDateTimeRoom(extendBooking, currentBooking.getRoom())) {
+					outcomeMsg = "APPROVED";
+					currentBooking.setDuration(currentBooking.getDuration() + 60);
+					bs.createBooking(currentBooking);
+				} else {
+					Booking overlapBooking = bs.findOverlapBookingByDateTimeRoom(extendBooking,
+							currentBooking.getRoom());
+					int newDuration = Math.toIntExact(currentBooking.getTime().plusMinutes(currentBooking.getDuration())
+							.until(overlapBooking.getTime(), ChronoUnit.MINUTES));
+					if (newDuration > 10) {
+						outcomeMsg = "APPROVED - EXTENDED BY " + newDuration;
+						currentBooking.setDuration(currentBooking.getDuration() + newDuration);
+						bs.createBooking(currentBooking);
+					} else {
+						outcomeMsg = "DENIED - NEXT BOOKING < 10 MINUTES AFTER CURRENT";
+					}
+				}
+			} else {
+				outcomeMsg = "DENIED - EXTENSION REQUEST TO BE MADE <1 HOUR BEFORE END OF CURRENT BOOKING";
+			}
+			Map<String, Object> mapResponse = new HashMap<String, Object>();
+			mapResponse.put("response", outcomeMsg);
+			return mapResponse;
+		} else
+			return null;
+	}
+
+	@PostMapping(value = "/booking/cancel/{token}")
+	public Map<String, Object> cancelBookingAndroid(@PathVariable String token,
+			@RequestBody Map<String, Object> payload) {
+		if (JWTGenerator.verifyJWT(token)) {
 			
-		Student student = ss.findStudentById((String) payload.get("studentId"));
-		Booking currentBooking = bs.findStudentCurrentBooking(student);
-		String outcomeMsg = "";
-		Booking extendBooking = new Booking("placeholder", 
-				currentBooking.getDate(), 
-				currentBooking.getTime().plusMinutes(currentBooking.getDuration()), 
-				1, currentBooking.getRoom());
-		//check if current booking is less than 1 hour before end
-		if (LocalTime.now().isAfter(currentBooking.getTime().plusMinutes(currentBooking.getDuration()).minusMinutes(60)))
+//		Student student = ss.findStudentById((String) payload.get("studentId"));
+		Booking booking = bs.findBookingById((String) payload.get("bookingId"));
+		String outcomeMsg = "FAILED - INVALID BOOKING";
+
+		//booking is successful and in the future
+		if (booking.getStatus().equals(BookingStatus.SUCCESSFUL)&&((booking.getDate().isAfter(LocalDate.now())||(booking.getDate().equals(LocalDate.now())&&booking.getTime().isAfter(LocalTime.now())))))
 		{
-			//check if extension request clashes with next booking
-			if (!bs.checkBookingByDateTimeRoom(extendBooking,currentBooking.getRoom())) {
-				outcomeMsg = "APPROVED";
-				currentBooking.setDuration(currentBooking.getDuration()+60);
-				bs.createBooking(currentBooking);
-			}
-			else
-			{
-				Booking overlapBooking = bs.findOverlapBookingByDateTimeRoom(extendBooking, currentBooking.getRoom());
-				int newDuration = Math.toIntExact(currentBooking.getTime().plusMinutes(currentBooking.getDuration()).until(overlapBooking.getTime(), ChronoUnit.MINUTES));
-				if (newDuration > 10)
-				{
-				outcomeMsg = "APPROVED - EXTENDED BY "+newDuration;
-				currentBooking.setDuration(currentBooking.getDuration()+newDuration);
-				bs.createBooking(currentBooking);
-				}
-				else
-				{
-				outcomeMsg = "DENIED - NEXT BOOKING < 10 MINUTES AFTER CURRENT";
-				}
-			}
+			booking.setStatus(BookingStatus.CANCELLED);
+			bs.createBooking(booking);
+			outcomeMsg = "COMPLETED";
 		}
 		else {
-			outcomeMsg = "DENIED - EXTENSION REQUEST TO BE MADE <1 HOUR BEFORE END OF CURRENT BOOKING";
+			outcomeMsg = "FAILED - INVALID BOOKING";
 		}
 		Map<String, Object> mapResponse = new HashMap<String, Object>();
 		mapResponse.put("response", outcomeMsg);

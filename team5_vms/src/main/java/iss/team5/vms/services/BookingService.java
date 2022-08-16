@@ -55,7 +55,4 @@ public interface BookingService {
 	
 	void addRoom(Booking booking, Room room);
 
-
-
-
 }
