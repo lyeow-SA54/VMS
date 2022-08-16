@@ -118,37 +118,35 @@ public class StudentController {
 		ModelAndView mav = new ModelAndView("student-home-page");
 		mav.addObject("bookings",availableBookings);
 		return mav;}	
-		
-		
 	}
 	
 
-	@RequestMapping("/checkin/{bookingId}/{studentId}")
-	public ModelAndView bookingCheckin(@PathVariable("bookingId") String bookingId, @PathVariable("studentId") String studentId) {
-		User user = userSessionService.findUserBySession();
-		if(!user.getRole().equals("STUDENT")) {
-			ModelAndView mav = new ModelAndView("unauthorized-admin");
-			return mav;
-		}
-		// pending login implementation
-		// hardcoded student object for now, final implementation should retrieve from
-		// logged in context
-		//String username = SecurityContextHolder.getContext().getAuthentication().getName();
-		//Student student = ss.findStudentByUser(us.findUserByUsername(username));
-		//Student student = ss.findStudentById("S00001");
-		Student student = ss.findStudentById(studentId);	
-		// pending proper url to be forwarded to on check-in completion
-		ModelAndView mav = new ModelAndView("student-bookings-list");
-		Booking booking = bs.findBookingById(bookingId);
-		String outcomeMsg = "";
-		if (booking == null) {
-			outcomeMsg = "Error: booking not found";
-		} else {
-			outcomeMsg = bs.checkIn(student, booking);
-		}
-		mav.addObject("outcomeMsg", outcomeMsg);
-		return mav;
-	}
+//	@RequestMapping("/checkin/{bookingId}/{studentId}")
+//	public ModelAndView bookingCheckin(@PathVariable("bookingId") String bookingId, @PathVariable("studentId") String studentId) {
+//		User user = userSessionService.findUserBySession();
+//		if(!user.getRole().equals("STUDENT")) {
+//			ModelAndView mav = new ModelAndView("unauthorized-admin");
+//			return mav;
+//		}
+//		// pending login implementation
+//		// hardcoded student object for now, final implementation should retrieve from
+//		// logged in context
+//		//String username = SecurityContextHolder.getContext().getAuthentication().getName();
+//		//Student student = ss.findStudentByUser(us.findUserByUsername(username));
+//		//Student student = ss.findStudentById("S00001");
+//		Student student = ss.findStudentById(studentId);	
+//		// pending proper url to be forwarded to on check-in completion
+//		ModelAndView mav = new ModelAndView("student-bookings-list");
+//		Booking booking = bs.findBookingById(bookingId);
+//		String outcomeMsg = "";
+//		if (booking == null) {
+//			outcomeMsg = "Error: booking not found";
+//		} else {
+//			outcomeMsg = bs.checkIn(student, booking);
+//		}
+//		mav.addObject("outcomeMsg", outcomeMsg);
+//		return mav;
+//	}
 	
 	@RequestMapping(value = "/booking/options", method = RequestMethod.GET)
 	public ModelAndView bookingOptionSelection() {
@@ -187,6 +185,7 @@ public class StudentController {
 			bookings.addAll(bs.findBookingsAvailableExact(booking, roomsContaining, student));
 
 		}
+
 		ModelAndView mav = new ModelAndView("student-bookings-slot_selection");
 		mav.addObject("bookings", bookings);
 		mav.addObject("room", room);
@@ -358,6 +357,10 @@ public class StudentController {
 		mav.addObject("booking", currentBooking);
 		mav.addObject("outcomeMsg", outcomeMsg);
 		return mav;
+//		}
+//		catch(Exception e) {
+//			
+//		}
 	}
 	
 	@RequestMapping(value = "report/save", method = RequestMethod.POST)

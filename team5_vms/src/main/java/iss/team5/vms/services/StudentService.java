@@ -23,5 +23,7 @@ public interface StudentService {
 	
 	Student updateStudent(Student student);
 	
+	Student editStudent(Student student);
+	
 	Student changePassword(Student student,String newPassword);
 }

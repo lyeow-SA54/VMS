@@ -17,9 +17,37 @@
 
 <body>
 	<div th:replace="fragments/general.html :: menu-student"></div>
+	
+	<div class="container">
+		<div class="row mt-5">
+			<div class="col-3 mb-3">
+				<h5>Check In</h5>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-3 text-center">
+				<div class="card mb-4 box-shadow">
+					<div class="card-header">
+						<h5>Room Check-In</h5>
+					</div>
+					<div class="card-body">
+						<!--<h5 class="card-title">Register Upon Arrival</h5>-->
+						<span class="card-text text-center font-weight-bold">Register Upon Arrival</span>
+						<ul class="list-unstyled mt-3 mb-5">
+							<li>Be punctual</li>
+							<li>Keep the room clean</li>
+							<li th:if="${bookingOfTheDay == null}">No Booking to Check-In</li>
+						</ul>
+						<a th:if="${bookingOfTheDay != null}" class="btn btn-block btn-block btnorange mt-5"
+							th:href="@{/barcodes/{bookingId}(bookingId=${bookingOfTheDay.id})}">Check-In</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
 	<div class="container" th:if="not ${#lists.isEmpty(bookings)}">
-		<div class="row">
+		<div class="row mt-5">
 			<div class="col-3 mb-3">
 				<h5>Available Rooms</h5>
 			</div>
@@ -55,75 +83,6 @@
 		</div>
 	</div>
 
-	<div class="container">
-		<div class="row mt-5">
-			<div class="col-3 text-center">
-				<!--<div class="card-deck mb-3 text-center">
-				<div class="card mb-4 box-shadow">
-					<div class="card-header">
-						<h5>New Booking</h5>
-					</div>
-					<div class="card-body">
-						<h5 class="card-title">Create booking based on</h5>
-						<ul class="list-unstyled mt-3 mb-4">
-							<li>Date</li>
-							<li>Time</li>
-							<li>Duration</li>
-							<li>Capacity</li>
-							<li>Facilities</li>
-						</ul>
-						<a class="btn btn-block btnblue" th:href="@{/student/booking/options}" role="button">Create
-							Booking</a>
-					</div>
-				</div>
-				<div class="card mb-4 box-shadow">
-					<div class="card-header">
-						<h5 class="card-title">File a Report</h5>
-					</div>
-					<div class="card-body">
-						<h5 class="card-title">Report based on</h5>
-						<ul class="list-unstyled mt-3 mb-4">
-							<li>Cleanliness</li>
-							<li>Misuse</li>
-							<li>Hogging of room</li>
-							<li>Vandalism</li>
-						</ul>
-						<a class="btn btn-block btnblue" style="margin-top:70px;" th:href="@{/report/save}">Create
-							Report</a>
-					</div>
-				</div>-->
-				<div class="card mb-4 box-shadow">
-					<div class="card-header">
-						<h5>Room Check-In</h5>
-					</div>
-					<div class="card-body">
-						<!--<h5 class="card-title">Register Upon Arrival</h5>-->
-						<span class="card-text text-center font-weight-bold">Register Upon Arrival</span>
-						<ul class="list-unstyled mt-3 mb-5">
-							<li>Be punctual</li>
-							<li>Keep the room clean</li>
-							<li th:if="${bookingOfTheDay == null}">No Booking to Check-In</li>
-						</ul>
-						<a th:if="${bookingOfTheDay != null}" class="btn btn-block btn-block btnorange mt-5"
-							th:href="@{/barcodes/{bookingId}(bookingId=${bookingOfTheDay.id})}">Check-In</a>
-					</div>
-				</div>
-				<!--<div class="card mb-4 box-shadow">
-					<div class="card-header">
-						<h5>Booking History</h5>
-					</div>
-					<div class="card-body">
-						<h5 class="card-title">List of Booking History</h5>
-						<ul class="list-unstyled mt-3 mb-4">
-							<li>Details of all bookings</li>
-						</ul>
-						<a class="btn btn-block btnblue" style="margin-top:120px;"
-							th:href="@{/student/booking/history}">History Details</a>
-					</div>
-				</div>-->
-			</div>
-		</div>
-	</div>
 	<footer class="page-footer">
 		<div class="footer-copyright text-center py-3" style="color:white; background-color: #003062">
 			VMS Copyright &copy; 2022

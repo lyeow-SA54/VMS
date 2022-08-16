@@ -40,7 +40,7 @@
 					<table class="table table-striped" align="center">
 						<thead>
 							<tr class="listHeading">
-								<!--<th>Room Name</th>-->
+								<th>Room Name</th>
 								<th>Date</th>
 								<th>Start Time</th>
 								<th>Duration</th>
@@ -51,6 +51,7 @@
 						</thead>
 						<tbody>
 							<tr th:each="booking:${bookings}">
+								<td th:text=${booking.room.roomName}></td>
 								<td th:text=${booking.date}></td>
 								<td th:text=${booking.time}></td>
 								<td th:text=${booking.duration}></td>

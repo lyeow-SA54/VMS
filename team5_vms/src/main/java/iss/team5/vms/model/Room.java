@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -39,6 +40,7 @@ public class Room {
             )
     private List<Facility> facilities = new ArrayList<>();
 	
+	@NotNull(message = "Room name should not be empty!")
 	private String roomName;
 	private int capacity;
 	@DateTimeFormat(iso = DateTimeFormat.ISO.TIME)

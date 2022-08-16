@@ -4,6 +4,11 @@
 <head th:replace="fragments/general.html :: headerfiles" />
 <title>VMS</title>
 <link rel="stylesheet" th:href="@{/css/simple.css}" />
+<style>
+	p {
+		color: red;
+	}
+</style>
 </head>
 
 <body>
@@ -15,13 +20,14 @@
 				<form action="#" th:action="@{/admin/rooms/create}" th:object="${room}" method="post">
 					<h5>New Room Page</h5>
 					<input type="hidden" th:field="*{id}">
+					<p th:if="${taken}">*Room name already taken!</p>
 					<table class="table table-borderless" align="center">
 						<tbody>
 							<tr>
 								<td><span th:text="#{fieldLabel.name}"></span></td>
 								<td>
 									<fieldset>
-										<input type="text" th:field="*{roomName}">
+										<input type="text" name="roomName" required>
 									</fieldset>
 								</td>
 								<td th:if="${#fields.hasErrors('roomName')}" th:errors="*{roomName}"></td>
@@ -57,7 +63,7 @@
 							<tr>
 								<td><span th:text="#{fieldLabel.blockedStartTime}"></span></td>
 								<td>
-									<fieldset><input type="time" th:field="*{blockedStartTime}" /></fieldset>
+									<fieldset><input type="time" th:field="*{blockedStartTime}" required/></fieldset>
 								</td>
 							</tr>
 							<tr>

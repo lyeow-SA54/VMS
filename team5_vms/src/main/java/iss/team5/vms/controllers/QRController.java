@@ -26,7 +26,7 @@ public class QRController {
 
 	@GetMapping(value = "/{bookingId}", produces = MediaType.IMAGE_PNG_VALUE)
     public ResponseEntity<BufferedImage> qrgenQRCode(@PathVariable String bookingId) throws Exception {
-		String data = "localhost:8080/student/checkin/"+bookingId;
+		String data = "http://10.0.2.2:8080/api/student/checkin/"+bookingId;
         return okResponse(QRGenerator.generateQRCodeImage(data));
     }
 

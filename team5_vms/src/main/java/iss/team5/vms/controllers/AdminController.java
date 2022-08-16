@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -39,16 +40,16 @@ public class AdminController {
 
 	@Autowired
 	private FacilityService fService;
-	
+
 	@Autowired
 	private StudentService sService;
-	
+
 	@Autowired
 	private BookingService bService;
 
 	@Autowired
 	private UserSessionService userSessionService;
-	
+
 	@Autowired
 	private EmailService eService;
 
@@ -67,15 +68,28 @@ public class AdminController {
 	}
 
 	@RequestMapping(value = "/rooms/create", method = RequestMethod.POST)
-	public ModelAndView createRoom(@ModelAttribute @Valid Room room, BindingResult result) {
+	public ModelAndView createRoom(@ModelAttribute @Valid Room room, BindingResult result, @RequestParam("roomName") String roomName) {
 		User user = userSessionService.findUserBySession();
+		List<Room> rooms = rService.findAllRooms();
+		HashSet<String> names = new HashSet<>();
+		for (Room r : rooms) {
+			names.add(r.getRoomName());
+		}
 		if (!user.getRole().equals("ADMIN")) {
 			ModelAndView mav = new ModelAndView("unauthorized-student");
 			return mav;
 		}
 		if (result.hasErrors())
 			return new ModelAndView("room-form");
+		for(String name : names) {
+			if(name.equalsIgnoreCase(roomName)) {
+				ModelAndView mav = new ModelAndView("room-form");
+				mav.addObject("taken", true);
+				return mav;
+			}
+		}
 		ModelAndView mav = new ModelAndView("forward:/admin/rooms/list");
+		room.setRoomName(roomName);
 		rService.createRoom(room);
 		return mav;
 	}
@@ -89,20 +103,16 @@ public class AdminController {
 			return mav;
 		}
 		ModelAndView mav = new ModelAndView("rooms");
-		
-		
+
 		List<Booking> bookings = bService.findAllBookings();
-        HashSet<String> roomIds = new HashSet<>();
-        for(Booking b : bookings) {
-            roomIds.add(b.getRoom().getId());
-        }
-        List<Room> rooms = rService.findAllRooms();
+		HashSet<String> roomIds = new HashSet<>();
+		for (Booking b : bookings) {
+			roomIds.add(b.getRoom().getId());
+		}
+		List<Room> rooms = rService.findAllRooms();
 		mav.addObject("rooms", rooms);
 		mav.addObject("roomids", roomIds);
-		
-		
-		
-		
+
 		List<Facility> facilities = (List<Facility>) fService.findAllFacilities();
 		mav.addObject("checkBoxFacilities", facilities);
 		mav.addObject("searchStr", roomName);
@@ -121,10 +131,10 @@ public class AdminController {
 	public ModelAndView roomList() {
 		User user = userSessionService.findUserBySession();
 		List<Booking> bookings = bService.findAllBookings();
-        HashSet<String> roomIds = new HashSet<>();
-        for(Booking b : bookings) {
-            roomIds.add(b.getRoom().getId());
-        }
+		HashSet<String> roomIds = new HashSet<>();
+		for (Booking b : bookings) {
+			roomIds.add(b.getRoom().getId());
+		}
 		if (user != null) {
 			if (!user.getRole().equals("ADMIN")) {
 				ModelAndView mav = new ModelAndView("unauthorized-student");
@@ -189,7 +199,7 @@ public class AdminController {
 		rService.removeRoom(room);
 		return mav;
 	}
-	
+
 	@RequestMapping(value = "/students/create", method = RequestMethod.GET)
 	public ModelAndView newStudent() {
 		User user = userSessionService.findUserBySession();
@@ -203,30 +213,60 @@ public class AdminController {
 	}
 
 	@RequestMapping(value = "/students/create", method = RequestMethod.POST)
-	public ModelAndView createStudent(@ModelAttribute @Valid Student student, BindingResult result) {
+	public ModelAndView createStudent(@ModelAttribute @Valid Student student, BindingResult result, @RequestParam("groupName") String groupName, @RequestParam("email") String email) {
 		User user = userSessionService.findUserBySession();
+		List<Student> students = sService.findAllStudents();
+		HashSet<String> names = new HashSet<>();
+		HashSet<String> emails = new HashSet<>();
+		for (Student stu : students) {
+			names.add(stu.getUser().getGroupName());
+		}
+		for (Student stu : students) {
+			emails.add(stu.getUser().getEmail());
+		}
 		if (!user.getRole().equals("ADMIN")) {
 			ModelAndView mav = new ModelAndView("unauthorized-student");
 			return mav;
 		}
 		if (result.hasErrors())
 			return new ModelAndView("student-form");
+		for(String name : names) {
+			if(name.equalsIgnoreCase(groupName)) {
+				ModelAndView mav = new ModelAndView("student-form");
+				mav.addObject("duplicate", true);
+				return mav;
+			}
+		}
+		for(String e : emails) {
+			if(e.equals(email)) {
+				ModelAndView mav = new ModelAndView("student-form");
+				mav.addObject("email", true);
+				return mav;
+			}
+		}
 		ModelAndView mav = new ModelAndView("forward:/admin/students/list");
+		student.getUser().setGroupName(groupName);
+		student.getUser().setEmail(email);
 		sService.createStudent(student);
 		User stu = student.getUser();
-		try{
+		try {
 			eService.sendMail(stu);
 			System.out.println("Success");
-		}catch(Exception e) {
+		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
 		return mav;
 	}
-	
+
 	@RequestMapping(value = "/students/list")
 	@ResponseBody
 	public ModelAndView studentList() {
 		User user = userSessionService.findUserBySession();
+		List<Booking> bookings = bService.findAllBookings();
+		HashSet<String> studentIds = new HashSet<>();
+		for (Booking b : bookings) {
+			studentIds.add(b.getStudent().getId());
+		}
 		if (user != null) {
 			if (!user.getRole().equals("ADMIN")) {
 				ModelAndView mav = new ModelAndView("unauthorized-student");
@@ -236,6 +276,49 @@ public class AdminController {
 		ModelAndView mav = new ModelAndView("students");
 		List<Student> students = sService.findAllStudents();
 		mav.addObject("students", students);
+		mav.addObject("studentids", studentIds);
+		return mav;
+	}
+
+	@RequestMapping(value = "/students/edit/{id}", method = RequestMethod.GET)
+	public ModelAndView editProfile(@PathVariable String id) {
+		User user = userSessionService.findUserBySession();
+		Student stu = sService.findStudentById(id);
+		if (!user.getRole().equals("ADMIN")) {
+			ModelAndView mav = new ModelAndView("unauthorized-student");
+			return mav;
+		}
+		ModelAndView mav = new ModelAndView("student-profile-edit-for-admin");
+		mav.addObject("student", stu);
+		return mav;
+	}
+
+	@RequestMapping(value = "/students/edit", method = RequestMethod.POST)
+	public ModelAndView saveProfile(@ModelAttribute @Valid Student student, BindingResult result) {
+		User user = userSessionService.findUserBySession();
+		if (!user.getRole().equals("ADMIN")) {
+			ModelAndView mav = new ModelAndView("unauthorized-student");
+			return mav;
+		}
+		if (result.hasErrors())
+			return new ModelAndView("student-profile-edit-for-admin");
+		sService.editStudent(student);
+		ModelAndView mav = new ModelAndView("students");
+		List<Student> students = sService.findAllStudents();
+		mav.addObject("students", students);
+		return mav;
+	}
+
+	@RequestMapping(value = "/students/delete/{id}")
+	public ModelAndView deleteStudent(@PathVariable("id") String id) {
+		User user = userSessionService.findUserBySession();
+		if (!user.getRole().equals("ADMIN")) {
+			ModelAndView mav = new ModelAndView("unauthorized-student");
+			return mav;
+		}
+		ModelAndView mav = new ModelAndView("forward:/admin/students/list");
+		Student student = sService.findStudentById(id);
+		sService.removeStudent(student);
 		return mav;
 	}
 }
