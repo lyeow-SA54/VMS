@@ -99,8 +99,6 @@
 								</span><br>
 								<form action="#" th:action="@{/student/booking/save}" method="post">
 									<input type="hidden" name="roomid" th:value="${booking.room.id}" />
-									<input type="hidden" th:value="${booking.room.roomName}"
-										th:field="${booking.room.roomName}" />
 									<input type="hidden" th:value="${booking.date}" th:field="${booking.date}" />
 									<input type="hidden" th:value="${booking.time}" th:field="${booking.time}" />
 									<input type="hidden" th:value="${booking.duration}"

@@ -186,7 +186,6 @@ public class StudentController {
 			bookings.addAll(bs.findBookingsAvailableExact(booking, roomsContaining, student));
 
 		}
-
 		ModelAndView mav = new ModelAndView("student-bookings-slot_selection");
 		mav.addObject("bookings", bookings);
 		mav.addObject("room", room);
@@ -194,7 +193,7 @@ public class StudentController {
 	}
 	
 	@RequestMapping(value = "/booking/save", method = RequestMethod.POST)
-	public String bookingNew(Booking booking, @RequestParam("roomid") String roomString, HttpServletRequest request) {
+	public Object bookingNew(Booking booking, @RequestParam("roomid") String roomString, HttpServletRequest request) {
 		
 		Student student = (Student) session.getAttribute("student");
 		Room room = rms.findRoomById(roomString);
@@ -202,9 +201,11 @@ public class StudentController {
 		booking.setStudent(student);
 		booking.setRoom(room);
 
-		if (!bs.checkBookingByDateTimeRoom(booking,room)) {
+		if (bs.checkBookingByDateTimeRoom(booking,room)) {
 			booking.setStatus(BookingStatus.REJECTED);
-			return "forward:/student/booking/status/"+booking.getId();
+			ModelAndView mav = new ModelAndView("booking-success");
+			mav.addObject("booking", booking);
+			return mav;
 		}
 		else
 		{
