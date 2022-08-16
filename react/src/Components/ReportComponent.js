@@ -1,6 +1,9 @@
+import { MDBFooter } from 'mdb-react-ui-kit';
 import React, { Component } from 'react';
 import { Button, ButtonGroup, Container } from 'reactstrap';
 import "../App.css";
+import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
+import './mycss.css';
 // import { Link } from 'react-router-dom';
 
 
@@ -64,13 +67,13 @@ class Report extends Component {
     };
 
 
-    
+
     handleShowDialog = value => {
         this.setState({ isOpen: !this.state.isOpen });
-        this.setState({ imageOpen: value})
+        this.setState({ imageOpen: value })
         console.log(this.state.imageOpen)
         console.log("clicked");
-      };
+    };
 
 
     handleChange(name, event) {
@@ -99,19 +102,19 @@ class Report extends Component {
                         <td> <img className="preview"
                             src={searchedReports.imgPath}
                             onClick={() => this.handleShowDialog(searchedReports.imgPath)}
-                            alt="report_image"/>
+                            alt="report_image" />
                             {this.state.isOpen && (
                                 <dialog
                                     className="dialog"
                                     style={{ position: "absolute" }}
                                     open
                                     onClick={() => this.handleShowDialog(searchedReports.imgPath)}
-                                    >
+                                >
                                     <img
                                         className="dialogImage"
                                         src={this.state.imageOpen}
                                         onClick={() => this.handleShowDialog(searchedReports.imgPath)}
-                                        alt="report_image_open"/>
+                                        alt="report_image_open" />
                                 </dialog>
                             )}</td>
                         <td>{searchedReports.details}</td>
@@ -129,33 +132,67 @@ class Report extends Component {
             });
 
         return (
-            <Container className='mt-5'>
-                <div className="float-end">
-                    {/* <label for="studentname">Student search:&nbsp;&nbsp;</label>
+            <div className=''>
+                <Navbar bg="light" style={{ paddingLeft: '15px', paddingRight: '15px' }}>
+                    <Navbar.Brand href="http://localhost:8080/admin/index" >
+                        <img src="/images/logo.png" width="131.375px" height="60px" />
+                    </Navbar.Brand>
+                    <Nav>
+                        <Nav.Link href="http://localhost:8080/admin/index">Home</Nav.Link>
+                    </Nav>
+                    <Nav>
+                        <NavDropdown title="Manage Rooms">
+                            <NavDropdown.Item href="http://localhost:8080/admin/rooms/create">Create Room</NavDropdown.Item>
+                            <NavDropdown.Item href="http://localhost:8080/admin/rooms/list">Room List</NavDropdown.Item>
+                        </NavDropdown>
+                    </Nav>
+                    <Nav>
+                        <NavDropdown title="Manage Students">
+                            <NavDropdown.Item href="http://localhost:8080/admin/students/create">Create Student</NavDropdown.Item>
+                            <NavDropdown.Item href="http://localhost:8080/admin/students/list">Student List</NavDropdown.Item>
+                        </NavDropdown>
+                    </Nav>
+                    <Nav>
+                        <Nav.Link href="/admin/bookings">Manage Bookings</Nav.Link>
+                        <Nav.Link href="/admin/reports">Manage Reports</Nav.Link>
+                    </Nav>
+                    <Nav.Link href="http://localhost:8080/logout" className="btn btnorange" >Logout</Nav.Link>
+
+
+                </Navbar>
+                <Container className='mt-5'>
+                    <div className="float-end">
+                        {/* <label for="studentname">Student search:&nbsp;&nbsp;</label>
                     <input type="text" onChange={this.onChange.studentFilter} id="studentname" /> */}
-                    <label for="date">Date:&nbsp;&nbsp;</label>
-                    <input type="date" onChange={this.onChange.dateFilter} id="date" min="2022-01-01" max="2023-12-31"></input>
-                </div>
-                <div>
-                    <h2>Report List</h2>
-                </div>
-                <table className='table table-hover text-center mt-3'>
-                    <thead className='table-light'>
-                        <tr>
-                            <th>Report ID</th>
-                            <th>Image</th>
-                            <th>Details</th>
-                            <th>Booking Date & Time</th>
-                            <th>Duration</th>
-                            <th>Status</th>
-                            <th>Options</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {ReportList}
-                    </tbody>
-                </table>
-            </Container>
+                        <label for="date">Date:&nbsp;&nbsp;</label>
+                        <input type="date" onChange={this.onChange.dateFilter} id="date" min="2022-01-01" max="2023-12-31"></input>
+                    </div>
+                    <div>
+                        <h2>Report List</h2>
+                    </div>
+                    <table className='table table-hover text-center mt-3'>
+                        <thead className='table-light'>
+                            <tr>
+                                <th>Report ID</th>
+                                <th>Image</th>
+                                <th>Details</th>
+                                <th>Booking Date & Time</th>
+                                <th>Duration</th>
+                                <th>Status</th>
+                                <th>Options</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {ReportList}
+                        </tbody>
+                    </table>
+                </Container>
+                <MDBFooter bgColor='light' className='text-center text-lg-start text-muted'>
+                    <div className='text-center p-4 myfooter' style={{ backgroundColor: '#003062', color:'white'}}>
+                    VMS Copyright © 2022
+                    </div>
+                </MDBFooter>
+            </div>
         );
     }
 }
