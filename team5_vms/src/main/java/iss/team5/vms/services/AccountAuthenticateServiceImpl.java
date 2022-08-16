@@ -18,22 +18,6 @@ import iss.team5.vms.repositories.UserRepo;
 @Service
 public class AccountAuthenticateServiceImpl implements AccountAuthenticateService {
 	
-//	private Map<Student, String> map = new HashMap<>();
-//	
-//	@Override
-//	public Map<Student, String> getMap(){
-//		return map;
-//	}
-//	
-//	private static final SecureRandom secureRandom = new SecureRandom(); //threadsafe
-//	private static final Base64.Encoder base64Encoder = Base64.getUrlEncoder(); //threadsafe
-//
-//	public String generateNewToken() {
-//	    byte[] randomBytes = new byte[24];
-//	    secureRandom.nextBytes(randomBytes);
-//	    return base64Encoder.encodeToString(randomBytes);
-//	}
-	
 	@Autowired
 	private UserRepo urepo;
 

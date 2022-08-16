@@ -1,7 +1,5 @@
 package iss.team5.vms.model;
 
-import javax.persistence.Column;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -29,9 +27,8 @@ public class User {
 	private String role;
 	@NotNull(message = "Email is mandatory")
 	private String email;
-	@NotNull(message = "Groupname is mandatory")
-	private String groupName;
-	
+//	@NotNull(message = "Groupname is mandatory")
+	private String groupName;	
 	private int groupSize;
 //	@NotNull(message = "Password is mandatory")
 //	@Column(columnDefinition="BINARY(32) NOT NULL")
