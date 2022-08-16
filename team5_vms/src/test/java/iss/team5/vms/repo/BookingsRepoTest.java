@@ -72,7 +72,7 @@ public class BookingsRepoTest {
 	public void findBookingByStudent()  {
     	Booking b1 = new Booking("B1", dateTimeInput.dateInput("01/08/2022"), LocalTime.now(), 1, BookingStatus.SUCCESSFUL);
 		br.saveAndFlush(b1);
-		Student s1 = new Student("first", "last", "email", "user");
+		Student s1 = new Student("first", "last", "email", "user", 7);
 		sr.saveAndFlush(s1);
 		b1.setStudent(s1);
 		List<Booking> bookinglist = br.findAllBookingByStudent(s1);

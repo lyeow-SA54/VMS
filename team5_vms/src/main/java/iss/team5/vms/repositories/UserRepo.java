@@ -9,9 +9,9 @@ import iss.team5.vms.model.User;
 public interface UserRepo extends JpaRepository<User,String>{
 	Boolean existsBy();
 	
-	@Query("SELECT u FROM User u WHERE u.username = :username")
+	@Query("SELECT u FROM User u WHERE u.groupName = :username")
 	User getUserByUsername(@Param("username") String username);
 
-	User getByUsername(String username);
+	User getByGroupName(String username);
 	
 }

@@ -7,21 +7,21 @@
 </head>
 
 <body>
-	<div th:replace="fragments/general.html :: menu-admin"></div>
+	<div th:replace="fragments/general.html :: menu-student"></div>
 	<div class="container">
 		<div class="row">
 			<div class="col-3"></div>
 			<div class="col-6">
-				<form action="#" th:action="@{/admin/students/create}" th:object="${student}" method="post">
-					<h5>New Student Page</h5>
-					<input type="hidden" th:field="*{id}">
-					<table class="table table-borderless" align="center">
+			<form action="#" th:action="@{/student/profile/edit}" th:object="${student}" method="post">
+				<h5>Student Profile Edit</h5>
+				<input type="hidden" th:field="*{id}">
+				<table class="table table-borderless" align="center">
 						<tbody>
 							<tr>
 								<td><span th:text="#{fieldLabel.firstName}"></span></td>
 								<td>
 									<fieldset>
-										<input type="text" th:field="*{user.firstName}">
+										<input type="text" th:field="${student.user.firstName}">
 									</fieldset>
 								</td>
 								<td th:if="${#fields.hasErrors('user.firstName')}" th:errors="*{user.firstName}"></td>
@@ -29,7 +29,7 @@
 								<td><span th:text="#{fieldLabel.lastName}"></span></td>
 								<td>
 									<fieldset>
-										<input type="text" th:field="*{user.lastName}">
+										<input type="text" th:field="${student.user.lastName}">
 									</fieldset>
 								</td>
 								<td th:if="${#fields.hasErrors('user.lastName')}" th:errors="*{user.lastName}"></td>
@@ -38,25 +38,23 @@
 								<td><span th:text="#{fieldLabel.userName}"></span></td>
 								<td>
 									<fieldset>
-										<input type="text" th:field="*{user.groupName}">
+										<input type="text" th:field="${student.user.groupName}" disabled>
 									</fieldset>
 								</td>
-								<td th:if="${#fields.hasErrors('user.groupName')}" th:errors="*{user.groupName}"></td>
 							</tr>
 							<tr>
 								<td><span th:text="#{fieldLabel.groupSize}"></span></td>
 								<td>
 									<fieldset>
-										<input type="number" th:field="*{user.groupSize}" min="1" max="10">
+										<input type="number" th:field="${student.user.groupSize}" disabled>
 									</fieldset>
 								</td>
-								<td th:if="${#fields.hasErrors('user.groupSize')}" th:errors="*{user.groupSize}"></td>
 							</tr>
 							<tr>
 								<td><span th:text="#{fieldLabel.email}"></span></td>
 								<td>
 									<fieldset>
-										<input type="text" th:field="*{user.email}">
+										<input type="text" th:field="${student.user.email}" disabled>
 									</fieldset>
 								</td>
 								<td th:if="${#fields.hasErrors('user.email')}" th:errors="*{user.email}"></td>
@@ -64,18 +62,17 @@
 							<tr>
 								<td>
 									<div style="padding-top:15px;">
-										<a th:href="@{/admin/students/list}">Back</a>
+										<a th:href="@{/student/profile}">Back</a>
 									</div>
 								</td>
 								<td colspan="2">
 									<fieldset>
-										<input type="submit" value="Create" class="btn btnblue" />
+										<input type="submit" value="Save" class="btn btnblue" />
 									</fieldset>
 								</td>
 							</tr>
 						</tbody>
 					</table>
-				</form>
 			</div>
 			<div class="col-3"></div>
 		</div>

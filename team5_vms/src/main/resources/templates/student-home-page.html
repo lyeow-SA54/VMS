@@ -18,7 +18,7 @@
 <body>
 	<div th:replace="fragments/general.html :: menu-student"></div>
 
-	<div class="container" th:if="${#lists.isEmpty(bookings)}">
+	<div class="container" th:if="not ${#lists.isEmpty(bookings)}">
 		<div class="row">
 			<div class="col-3 mb-3">
 				<h5>Available Rooms</h5>
@@ -56,7 +56,7 @@
 	</div>
 
 	<div class="container">
-		<div class="row">
+		<div class="row mt-5">
 			<div class="col-3 text-center">
 				<!--<div class="card-deck mb-3 text-center">
 				<div class="card mb-4 box-shadow">

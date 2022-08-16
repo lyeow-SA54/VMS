@@ -12,11 +12,14 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.security.core.Authentication;
 //import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import iss.team5.vms.DTO.Account;
 import iss.team5.vms.helper.BookingStatus;
 import iss.team5.vms.helper.ReportCategory;
 import iss.team5.vms.helper.ReportStatus;
@@ -34,6 +38,7 @@ import iss.team5.vms.model.Room;
 import iss.team5.vms.model.Student;
 import iss.team5.vms.model.User;
 import iss.team5.vms.repositories.StudentRepo;
+import iss.team5.vms.services.AccountAuthenticateService;
 import iss.team5.vms.services.BookingService;
 import iss.team5.vms.services.FacilityService;
 import iss.team5.vms.services.ReportService;
@@ -72,6 +77,9 @@ public class StudentController {
 	
 	@Autowired
 	private UserSessionService userSessionService;
+	
+	@Autowired
+	private AccountAuthenticateService accAuthService;
 	
 	@RequestMapping("/home")
 	public ModelAndView studentHome(HttpServletRequest request) {
@@ -148,6 +156,7 @@ public class StudentController {
 			ModelAndView mav = new ModelAndView("unauthorized-admin");
 			return mav;
 		}
+		System.out.println(user.getGroupSize()+"Persons");
 		Booking booking = new Booking();
 		Room room = new Room();
 		ModelAndView mav = new ModelAndView("student-bookings-filter_selection");
@@ -155,6 +164,7 @@ public class StudentController {
 		mav.addObject("fList", facilities);
 		mav.addObject("booking", booking);
 		mav.addObject("room", room);
+		mav.addObject("size", user.getGroupSize());
 		return mav;
 	}
 	
@@ -372,5 +382,92 @@ public class StudentController {
         return "report-success";
 
     }
+	
+	
+	@RequestMapping(value = "/profile", method = RequestMethod.GET)
+	public ModelAndView viewProfile() {
+		User user = userSessionService.findUserBySession();
+		Student stu = ss.findStudentByUser(user);
+		if (!user.getRole().equals("STUDENT")) {
+			ModelAndView mav = new ModelAndView("unauthorized-admin");
+			return mav;
+		}
+		ModelAndView mav = new ModelAndView("student-profile");
+		mav.addObject("student", stu);
+		return mav;
+	}
+	
+	@RequestMapping(value = "/profile/edit/{id}", method = RequestMethod.GET)
+	public ModelAndView editProfile(@PathVariable String id) {
+		User user = userSessionService.findUserBySession();
+		Student stu = ss.findStudentById(id);
+		if (!user.getRole().equals("STUDENT")) {
+			ModelAndView mav = new ModelAndView("unauthorized-admin");
+			return mav;
+		}
+		ModelAndView mav = new ModelAndView("student-profile-edit");
+		mav.addObject("student", stu);
+		return mav;
+	}
+
+	@RequestMapping(value = "/profile/edit", method = RequestMethod.POST)
+	public ModelAndView saveProfile(@ModelAttribute @Valid Student student, BindingResult result) {
+		User user = userSessionService.findUserBySession();
+		if (!user.getRole().equals("STUDENT")) {
+			ModelAndView mav = new ModelAndView("unauthorized-admin");
+			return mav;
+		}
+		if (result.hasErrors())
+			return new ModelAndView("student-profile-edit");
+		Student stu = ss.updateStudent(student);
+		ModelAndView mav = new ModelAndView("student-profile");
+		mav.addObject("student", stu);
+		return mav;
+	}
+	
+	@RequestMapping(value = "/change-password/{id}", method = RequestMethod.GET)
+	public ModelAndView changePassword(@PathVariable String id) {
+		User user = userSessionService.findUserBySession();
+		Student stu = ss.findStudentById(id);
+		if (!user.getRole().equals("STUDENT")) {
+			ModelAndView mav = new ModelAndView("unauthorized-admin");
+			return mav;
+		}
+		ModelAndView mav = new ModelAndView("student-reset-password");
+		mav.addObject("student", stu);
+		return mav;
+	}
+
+	@RequestMapping(value = "/change-password", method = RequestMethod.POST)
+	public ModelAndView changePassword(@ModelAttribute @Valid Student student, @RequestParam("oldPassword") String oldPassword, @RequestParam("password") String newPassword, @RequestParam("confirmPassword") String confirmPassword, BindingResult result) {
+		User user = userSessionService.findUserBySession();
+		if (!user.getRole().equals("STUDENT")) {
+			ModelAndView mav = new ModelAndView("unauthorized-admin");
+			return mav;
+		}
+
+		Account acc = new Account(user.getGroupName(), oldPassword);
+		User authUser = accAuthService.authenticateAccount(acc);
+		
+		if(authUser == null) {
+			ModelAndView mav = new ModelAndView("student-reset-password");
+			mav.addObject("error", true);
+			return mav;
+		}
+		System.out.println(newPassword.equals(confirmPassword)+"CHECK");
+		if(!(newPassword.equals(confirmPassword))) {
+			ModelAndView mav = new ModelAndView("student-reset-password");
+			mav.addObject("notMatch", true);
+			return mav;
+		}
+		
+		if (result.hasErrors())
+			return new ModelAndView("student-reset-password");
+		
+		Student stu = ss.changePassword(student, newPassword);
+		ModelAndView mav = new ModelAndView("student-profile");
+		mav.addObject("student", stu);
+		return mav;
+	}
 
 }

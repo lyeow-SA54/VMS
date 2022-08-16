@@ -43,7 +43,7 @@ public class StudentServiceImpl implements StudentService{
 	public Student createStudent(Student student) {
 		User user = student.getUser();
 		user.setRole("STUDENT");
-		user.setPassword(HashStringGenerator.getHash(student.getUser().getUsername(), "password"));
+		user.setPassword(HashStringGenerator.getHash(student.getUser().getGroupName(), "password"));
 		student.setUser(user);
 		return srepo.saveAndFlush(student);
 	}
@@ -59,6 +59,15 @@ public class StudentServiceImpl implements StudentService{
 	
 	@Override
 	@Transactional
+	public Student updateStudent(Student student) {
+		Student stu = srepo.getById(student.getId());
+		stu.getUser().setFirstName(student.getUser().getFirstName());
+		stu.getUser().setLastName(student.getUser().getLastName());
+		return srepo.saveAndFlush(stu);
+	}
+	
+	@Override
+	@Transactional
 	public void removeStudent(Student student) {
 		srepo.delete(student);
 		srepo.flush();
@@ -67,6 +76,14 @@ public class StudentServiceImpl implements StudentService{
 	@Override
 	public Student findStudentByUser(User user) {
 		return srepo.findStudentByUser(user);
+	}
+
+	@Override
+	public Student changePassword(Student student, String newPassword) {
+		Student stu = srepo.getById(student.getId());
+		stu.getUser().setPassword(HashStringGenerator.getHash(stu.getUser().getGroupName(), newPassword));
+		srepo.saveAndFlush(stu);
+		return stu;
 	}
 		
 }

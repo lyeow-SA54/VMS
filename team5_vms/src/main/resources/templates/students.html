@@ -45,9 +45,10 @@
 							<tr class="listHeading">
 								<th>First Name</th>
 								<th>Last Name</th>
-								<th>Username</th>
+								<th>Group Name</th>
 								<th>Email</th>
-								<th>Score</th>
+								<th>Group Size</th>
+								<th>Score</th>								
 								<!--<th>Edit</th>
 								<th>Delete</th>-->
 							</tr>
@@ -56,8 +57,9 @@
 							<tr th:each="student:${students}">
 								<td th:text=${student.user.firstName}></td>
 								<td th:text=${student.user.lastName}></td>
-								<td th:text=${student.user.username}></td>
+								<td th:text=${student.user.groupName}></td>
 								<td th:text=${student.user.email}></td>
+								<td th:text=${student.user.groupSize}></td>
 								<td th:text=${student.score}></td>
 								<!--<td><a href="" th:href="@{/admin/students/edit/}+${student.id}">Edit</a></td>
 								<td>

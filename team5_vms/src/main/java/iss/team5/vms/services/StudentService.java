@@ -20,5 +20,8 @@ public interface StudentService {
 	void removeStudent(Student student);
 
 	Student findStudentByUser(User user);	
-
+	
+	Student updateStudent(Student student);
+	
+	Student changePassword(Student student,String newPassword);
 }

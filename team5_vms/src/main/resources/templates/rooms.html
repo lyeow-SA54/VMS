@@ -33,9 +33,27 @@
 
 	<div th:if="${not #lists.isEmpty(rooms)}">
 		<div class="container">
+
 			<div class="row">
 				<div class="col-3" style="margin-top: 15px; margin-bottom: 15px;">
 					<h4>Room List</h4>
+				</div>
+				<div class="col-3"></div>
+				<div class="col-6 mt-3">
+					<form class="form-inline" role="search" action="#" th:action="@{/admin/rooms/search}" method="get">
+						<input class="form-control mr-sm-2" type="text" placeholder="Search..."
+							th:value="${searchStr != null} ? ${searchStr} : ''" name="searchRoom" />
+
+						<select class="form-control mr-sm-2" name="facility">
+							<option class="dropdown-item" th:each="facility : ${checkBoxFacilities}"
+								th:value="${facility.name}" th:text="${facility.name}"></option>
+						</select>
+						<select class="form-control mr-sm-2" name="availability">
+							<option class="dropdown-item" value="0">Open</option>
+							<option class="dropdown-item" value="1">Full</option>
+						</select>
+						<button class="btn btnorange" type="submit">Search</button>
+					</form>
 				</div>
 			</div>
 			<div class="row">
@@ -65,7 +83,7 @@
 								<td th:text="${room.availability} ? 'OPEN' : 'FULL'"></td>
 								<td th:text=${room.blockedStartTime}></td>
 								<td th:text=${room.blockDuration}></td>
-								<td><a href="" th:href="@{/admin/rooms/edit/}+${room.id}">Edit</a></td>								
+								<td><a href="" th:href="@{/admin/rooms/edit/}+${room.id}">Edit</a></td>
 								<td th:if="${not roomids.contains(room.id)}">
 									<a href="" th:href="@{/admin/rooms/delete/}+${room.id}">Delete</a>
 								</td>

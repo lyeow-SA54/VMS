@@ -17,7 +17,7 @@
 					<table class="table table-borderless" align="center">
 						<tbody>
 							<tr>
-								<td><span th:text="#{fieldLable.dt}"></span></td>
+								<td><span th:text="#{fieldLabel.dt}"></span></td>
 								<td>
 									<fieldset>
 										<input id="Date" type="date" name="Date" class="form-control" required="" th:field="${booking.date}" />
@@ -35,14 +35,14 @@
 								<!-- <td th:if="${#fields.hasErrors('user.lastName')}" th:errors="*{user.lastName}"></td> -->
 							</tr>
 							<tr>
-								<td><span th:text="#{fieldLable.pax}"></span></td>
+								<td><span th:text="#{fieldLabel.pax}"></span></td>
 								<td>
 									<fieldset>
-										<input id="Pax" type="number" name="Number of Pax" class="form-control" required="" min="1" max="10"
+										<input id="Pax" type="number" name="Number of Pax" class="form-control" required="" th:min="1" th:max="${size}"
 											th:field="${room.capacity}" />
 									</fieldset>
 								</td>
-								<!-- <td th:if="${#fields.hasErrors('user.username')}" th:errors="*{user.username}"></td> -->
+								<!-- <td th:if="${#fields.hasErrors('user.groupName')}" th:errors="*{user.groupName}"></td> -->
 							</tr>
 							<tr>
 								<td><span th:text="#{fieldLabel.blockDuration}"></span></td>

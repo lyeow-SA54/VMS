@@ -52,8 +52,8 @@ public class ReactAuthAPI {
 			Map<String, Object> response = new HashMap<String, Object>();
 			if(user!= null && user.getRole().equals("ADMIN")) {
 				String id = String.valueOf(user.getId());
-				String accessToken = JWTGenerator.generateJWT(id, "jwtauthenticator", user.getUsername(), 86400000);
-				AuthResponse authResponse = new AuthResponse(user.getUsername(), accessToken);
+				String accessToken = JWTGenerator.generateJWT(id, "jwtauthenticator", user.getGroupName(), 86400000);
+				AuthResponse authResponse = new AuthResponse(user.getGroupName(), accessToken);
 				response.put("response", authResponse.toString());
 				System.out.println(response);}
 //			response{} = new

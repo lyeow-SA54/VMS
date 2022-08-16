@@ -95,7 +95,7 @@
 								<span class="card-text text-center font-weight-bold"
 									th:text="#{fieldLabel.blockDuration}">
 								</span><br>
-								<span class="card-text text-center" th:text="${booking.duration} + #{fieldLable.min}">
+								<span class="card-text text-center" th:text="${booking.duration} + #{fieldLabel.min}">
 								</span><br>
 								<form action="#" th:action="@{/student/booking/save}" method="post">
 									<input type="hidden" name="roomid" th:value="${booking.room.id}" />

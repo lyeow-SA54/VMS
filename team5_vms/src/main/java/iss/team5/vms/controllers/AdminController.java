@@ -89,6 +89,20 @@ public class AdminController {
 			return mav;
 		}
 		ModelAndView mav = new ModelAndView("rooms");
+		
+		
+		List<Booking> bookings = bService.findAllBookings();
+        HashSet<String> roomIds = new HashSet<>();
+        for(Booking b : bookings) {
+            roomIds.add(b.getRoom().getId());
+        }
+        List<Room> rooms = rService.findAllRooms();
+		mav.addObject("rooms", rooms);
+		mav.addObject("roomids", roomIds);
+		
+		
+		
+		
 		List<Facility> facilities = (List<Facility>) fService.findAllFacilities();
 		mav.addObject("checkBoxFacilities", facilities);
 		mav.addObject("searchStr", roomName);

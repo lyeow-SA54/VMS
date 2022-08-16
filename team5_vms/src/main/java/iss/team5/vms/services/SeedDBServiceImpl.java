@@ -55,15 +55,15 @@ public class SeedDBServiceImpl implements SeedDBService {
 			user.setFirstName("admin");
 			user.setLastName("");
 			user.setRole("ADMIN");
-			user.setUsername("admin");
+			user.setGroupName("admin");
 			user.setPassword(HashStringGenerator.getHash("admin", "admin"));
 			us.createUser(user);
 			
-			ss.createStudent(new Student("Trevor", "Green", "email1@u.nus.edu", "user1"));
-			ss.createStudent(new Student("Tori", "Howe", "email2@u.nus.edu", "user2"));
-			ss.createStudent(new Student("Lula", "Thorpe", "email3@u.nus.edu", "user3"));
-			ss.createStudent(new Student("Manal", "White", "email4@u.nus.edu", "user4"));
-			ss.createStudent(new Student("Vanesa", "Reese", "email5@u.nus.edu", "user5"));
+			ss.createStudent(new Student("Trevor", "Green", "email1@u.nus.edu", "user1", 5));
+			ss.createStudent(new Student("Tori", "Howe", "email2@u.nus.edu", "user2", 7));
+			ss.createStudent(new Student("Lula", "Thorpe", "email3@u.nus.edu", "user3", 8));
+			ss.createStudent(new Student("Manal", "White", "email4@u.nus.edu", "user4", 9));
+			ss.createStudent(new Student("Vanesa", "Reese", "email5@u.nus.edu", "user5", 10));
 		}
 
 		if(!bs.tableExist()) {

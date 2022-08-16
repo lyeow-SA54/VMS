@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/general.html :: headerfiles" />
+<title>VMS</title>
+<link rel="stylesheet" th:href="@{/css/simple.css}" />
+</head>
+
+<body>
+	<div th:replace="fragments/general.html :: menu-student"></div>
+	<div class="container">
+		<div class="row">
+			<div class="col-3"></div>
+			<div class="col-6">
+				<h5>Student Profile</h5>
+				<table class="table table-borderless" align="center">
+					<tbody>
+						<tr>
+							<td><span th:text="#{fieldLabel.firstName}"></td>
+							<td th:text="${student.user.firstName}"></td>
+						</tr>
+						<tr>
+							<td th:text="#{fieldLabel.lastName}"></td>
+							<td th:text="${student.user.lastName}"></td>
+						</tr>
+						<tr>
+							<td th:text="#{fieldLabel.userName}"></td>
+							<td th:text="${student.user.groupName}"></td>
+						</tr>
+						<tr>
+							<td th:text="#{fieldLabel.groupSize}"></td>
+							<td th:text="${student.user.groupSize}"></td>
+						</tr>
+						<tr>
+							<td th:text="#{fieldLabel.email}"></td>
+							<td th:text="${student.user.email}"></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td>
+								<a th:href="@{/student/profile/edit/}+${student.id}" class="btn btnblue">Edit Profile</a>
+								<a th:href="@{/student/change-password/}+${student.id}" class="btn btnblue">Change
+									Password</a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="col-3"></div>
+		</div>
+	</div>
+	<footer class="page-footer">
+		<div class="footer-copyright text-center py-3" style="color:white; background-color: #003062">
+			VMS Copyright &copy; 2022
+		</div>
+	</footer>
+</body>
+
+</html>

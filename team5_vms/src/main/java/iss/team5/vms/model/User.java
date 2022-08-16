@@ -29,19 +29,22 @@ public class User {
 	private String role;
 	@NotNull(message = "Email is mandatory")
 	private String email;
-	@NotNull(message = "Username is mandatory")
-	private String username;
+	@NotNull(message = "Groupname is mandatory")
+	private String groupName;
+	
+	private int groupSize;
 //	@NotNull(message = "Password is mandatory")
 //	@Column(columnDefinition="BINARY(32) NOT NULL")
 	@JsonIgnore
 	private byte[] password;
 
-	public User(String firstName, String lastName, String email, String username) {
+	public User(String firstName, String lastName, String email, String username, int groupSize) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
-		this.username = username;
+		this.groupName = username;
 		this.role="STUDENT";
 		this.password = HashStringGenerator.getHash(username, "password");
+		this.groupSize = groupSize;
 	}
 }

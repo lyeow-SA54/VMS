@@ -4,10 +4,17 @@
 <head th:fragment="headerfiles">
 	<meta charset="utf-8">
 	<title>Team 5 VMS</title>
-	<link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+	<!--<link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
 	<script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<script src="/bootstrap/js/jquery.slim.min.js"></script>
 	<script src="/bootstrap/js/popper.min.js"></script>
-	<script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+	-->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+	<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+		integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
 	<link rel="stylesheet" th:href="@{/css/simple.css}" />
 	<style type="text/css">
 		.btnorange {
@@ -83,10 +90,43 @@
 							<a class="nav-link" th:href="@{/student/booking/report}">Report Booking</a>
 						</li>
 					</ul>
+
 					<ul class="navbar-nav ml-auto">
+						<!--<li class="nav-item dropdown">
+							<div th:if="${session.containsKey('student')}">
+								Welcome,&nbsp
+								<em th:text="${session.student.user.groupName}"></em>&nbsp
+							</div>
+							<ul class="dropdown-menu">
+								<li>
+									<a class="dropdown-item" th:href="@{/student/profile}">My Account</a>
+								</li>
+								<li>
+									<a class="dropdown-item" th:href="@{/logout}">Logout</a>
+								</li>
+							</ul>
+						</li>-->
+
+						<div class="dropdown">
+							<li class="dropdown-toggle" data-toggle="dropdown">
+								<span th:if="${session.containsKey('student')}">
+									Welcome,&nbsp
+									<em th:text="${session.student.user.groupName} + #{fieldLabel.space}"></em>
+								</span>
+								<i class='fas fa-user-circle' style='font-size:23px; color:#003062'></i>
+							</li>
+							<div class="dropdown-menu">
+								<a class="dropdown-item" th:href="@{/student/profile}">My Account</a>
+								<a class="dropdown-item" th:href="@{/logout}">Logout</a>
+							</div>
+						</div>
+					</ul>
+
+					<!--<ul class="navbar-nav ml-auto">
 						<li class="nav-item">
 							<a class="btn btnorange" th:href="@{/logout}">Logout</a>
 						</li>
+					</ul>-->
 				</div>
 			</div>
 		</nav>
@@ -154,20 +194,7 @@
 							<a class="nav-link" th:href="@{/admin/students/list}">Student List</a>
 						</li>
 					</ul>
-					<form class="form-inline" role="search" action="#" th:action="@{/admin/rooms/search}" method="get">
-						<input class="form-control mr-sm-2" type="text" placeholder="Search..."
-							th:value="${searchStr != null} ? ${searchStr} : ''" name="searchRoom" />
-
-						<select class="form-control mr-sm-2" name="facility">
-							<option class="dropdown-item" th:each="facility : ${checkBoxFacilities}"
-								th:value="${facility.name}" th:text="${facility.name}"></option>
-						</select>
-						<select class="form-control mr-sm-2" name="availability">
-							<option class="dropdown-item" value="0">Open</option>
-							<option class="dropdown-item" value="1">Full</option>
-						</select>
-						<button class="btn btnorange" type="submit">Search</button>
-					</form>
+					
 					<ul class="navbar-nav ml-auto">
 						<li class="nav-item">
 							<a class="btn btnorange" th:href="@{/logout}">Logout</a>
