@@ -65,7 +65,12 @@
 
         // Set a callback to run when the Google Visualization API is loaded.
         google.charts.setOnLoadCallback(drawChart);
-
+        
+		$(document).ready(function () {
+    		$(window).resize(function(){
+        	drawChart();
+    		});
+		});
         // Callback that creates and populates a data table,
         // instantiates the pie chart, passes in the data and
         // draws it.
@@ -78,10 +83,7 @@
             data.addRows([[${getBookingData}]]);
 
             // Set chart options
-            var options = {
-				'width':500,
-                'height':240,
-				
+            var options = {			
                 'pieHole':0.4};
 
             // Instantiate and draw our chart, passing in some options.
@@ -97,6 +99,12 @@
 
         // Set a callback to run when the Google Visualization API is loaded.
         google.charts.setOnLoadCallback(drawChart);
+        
+        $(document).ready(function () {
+    		$(window).resize(function(){
+        	drawChart();
+    		});
+		});
 
         // Callback that creates and populates a data table,
         // instantiates the pie chart, passes in the data and
@@ -111,9 +119,6 @@
 
             // Set chart options
             var options = {
-				'width':500,
-                'height':240,
-
                 'pieHole':0.4};
 
             // Instantiate and draw our chart, passing in some options.
@@ -128,6 +133,12 @@
 
         // Set a callback to run when the Google Visualization API is loaded.
         google.charts.setOnLoadCallback(drawChart);
+        
+        $(document).ready(function () {
+    		$(window).resize(function(){
+        	drawChart();
+    		});
+		});
 
         // Callback that creates and populates a data table,
         // instantiates the pie chart, passes in the data and
@@ -142,8 +153,6 @@
 
             // Set chart options
             var options = {
-				'width':500,
-                'height':240,
                 'pieHole':0.4};
 
             // Instantiate and draw our chart, passing in some options.
@@ -158,6 +167,12 @@
 
         // Set a callback to run when the Google Visualization API is loaded.
         google.charts.setOnLoadCallback(drawChart);
+        
+        $(document).ready(function () {
+    		$(window).resize(function(){
+        	drawChart();
+    		});
+		});
 
         // Callback that creates and populates a data table,
         // instantiates the pie chart, passes in the data and
@@ -172,8 +187,13 @@
             data.addRows([[${getOverallRoomForWeekData}]]);
             // Set chart options
             var options = {
-               'width':600,
-               'height':260,
+				'chartArea': {
+      				'left': 40,
+      				'width': '100%'
+    			},
+    			'legend': {
+      				'position': 'top'},
+    			'width': '100%',  				
                'hAxis' : {
                     'title' : 'Hours',
                 },
@@ -182,7 +202,7 @@
                 }};
 
             // Instantiate and draw our chart, passing in some options.
-            var chart = new google.visualization.BarChart(document.getElementById('donutchart'));
+            var chart = new google.visualization.BarChart(document.getElementById('roomWeeklychart'));
             chart.draw(data, options);
         }
     </script>
@@ -193,6 +213,12 @@
 
         // Set a callback to run when the Google Visualization API is loaded.
         google.charts.setOnLoadCallback(drawChart);
+        
+        $(document).ready(function () {
+    		$(window).resize(function(){
+        	drawChart();
+    		});
+		});
 
         // Callback that creates and populates a data table,
         // instantiates the pie chart, passes in the data and
@@ -207,8 +233,13 @@
             data.addRows([[${getTodayRoomsData}]]);
             // Set chart options
             var options = {
-               'width':600,
-               'height':260,
+				'chartArea': {
+      				'left': 40,
+      				'width': '100%'
+    			},
+    			'legend': {
+      				'position': 'top'},
+    			'width': '100%',
                'hAxis' : {
                     'title' : 'Hours',
                 },
@@ -231,13 +262,73 @@
         <h3>Dashboard</h3>
       	<p class="text-subtitle text-muted" th:text="${#dates.format(#dates.createNow(), 'dd MMM yyyy HH:mm')}"></p>
     </div>
-    <section class="section">
-    <div class="row mb-2">
-    	<div class="col-sm-2">
-    		<div class="card">
-    			<div class="card-body">
+    <div class="container-fluid">
+   <div class="row mt-5">
+    	<div class="col-4 mb-3">
+    		<h5>Report Statistics</h5>
+		</div>
+		<div class="col-4 mb-3">
+    		<h5>Booking Statistics</h5>
+		</div>
+		<div class="col-4 mb-3">
+    		<h5>Room Statistics</h5>
+		</div>
+   </div>
+   <div class="row">
+			<div class="col-xl-4 text-center">
+				<div class="card mb-4 box-shadow">
+					<div class="card-header">
+						<h5>Status</h5>
+					</div>
+				<div class="card-body">
                     <h6 class='card-title'>Reports to Process</h6>
-                       <p class="card-text" th:text=${getReportProcessingSize}>
+                       <p class="card-text text-center font-weight-bold" th:text=${getReportProcessingSize}>
+                </div>
+			</div>
+			<div class="card mb-4 box-shadow">
+					<div class="card-header">
+						<h5>Category</h5>
+					</div>
+				<div class="card-body">
+                    <h6 class='card-title'>Reports to Process</h6>
+                       <p class="card-text text-center font-weight-bold" th:text=${getReportProcessingSize}>
+                </div>
+			</div>
+			<div class="card mb-4 box-shadow">
+					<div class="card-header">
+						<h5>For the Week</h5>
+					</div>
+				<div class="card-body">
+                    <h6 class='card-title'>Reports to Process</h6>
+                       <p class="card-text text-center font-weight-bold" th:text=${getReportProcessingSize}>
+                </div>
+			</div>
+        </div>
+        
+        <div class="col-xl-4 text-center">
+				<div class="card mb-4 box-shadow">
+					<div class="card-header">
+						<h5>For the Day</h5>
+					</div>
+					<div class="card-body">
+                   		<p id="donutchart"></p>
+                	</div>
+				</div>
+				<div class="card mb-4 box-shadow">
+					<div class="card-header">
+						<h5>For the Week</h5>
+					</div>
+					<div class="card-body">
+                   		<p id="WeekChart"></p>
+                	</div>
+				</div>
+			
+			<div class="card mb-4 box-shadow">
+					<div class="card-header">
+						<h5>For the Month</h5>
+					</div>
+				<div class="card-body">
+                       <p id="MonthChart"></p>
                 </div>
 			</div>
         </div>
@@ -286,7 +377,11 @@
                 </div>  
             </div>	
     </div>
-    </section>
-  <div id="donutchart"></div> 
+    </div>
+	<footer class="page-footer">
+		<div class="footer-copyright text-center py-3" style="color:white; background-color: #003062">
+			VMS Copyright &copy; 2022
+		</div>
+	</footer>
 </body>
 </html>

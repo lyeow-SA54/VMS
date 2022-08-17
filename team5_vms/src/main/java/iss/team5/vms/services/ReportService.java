@@ -28,6 +28,8 @@ public interface ReportService {
 	void approveReportScoring(Report report);
 	
 	ArrayList<Report> findAllReportByStudent(Student student);
+	
+	void resetWeeklyScoring();
 
 
     

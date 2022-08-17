@@ -377,7 +377,6 @@ public class AdminController {
 		
 		LocalDate date = LocalDate.now();
 		int week  = date.get(WeekFields.ISO.weekOfWeekBasedYear());
-		int month = date.getMonth().getValue();
 		int year = date.getYear();
 		
 		Calendar calendar = Calendar.getInstance();
