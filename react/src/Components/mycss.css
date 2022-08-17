@@ -1,0 +1,17 @@
+.btnorange {
+    background-color: #F27C36;
+    color: white;
+    margin-left: auto!important;
+}
+
+.btnorange:hover {
+    background-color: white;
+    color: #F27C36;
+    border-color: #F27C36;
+}
+.myfooter{
+    position: absolute;
+			bottom: 0;
+			width: 100%;
+			height: 56px;
+}
