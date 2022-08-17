@@ -26,6 +26,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import iss.team5.vms.email.service.EmailService;
 import iss.team5.vms.helper.BookingStatus;
+import iss.team5.vms.helper.FirstDayOfCurrentWeek;
 import iss.team5.vms.helper.ReportStatus;
 import iss.team5.vms.model.Booking;
 import iss.team5.vms.model.Facility;
@@ -350,128 +351,128 @@ public class AdminController {
 		}
 		ModelAndView mav = new ModelAndView("dashboard");
 		
-		List<Room> rooms = rService.findAllRooms();
+//		List<Room> rooms = rService.findAllRooms();
 		List<Student> students = sService.findAllStudents();
 		List<Booking> bookings = bService.findAllBookings();
-		List<Booking> successBookings = bookings.stream()
-				.filter(b->b.getDate()==LocalDate.now()&&b.getStatus()==BookingStatus.SUCCESSFUL)
-				.collect(Collectors.toList());
-		List<Booking> rejectBookings = bookings.stream()
-				.filter(b->b.getDate()==LocalDate.now()&&b.getStatus()==BookingStatus.REJECTED)
-				.collect(Collectors.toList());
-		List<Booking> cancelBookings = bookings.stream()
-				.filter(b->b.getDate()==LocalDate.now()&&b.getStatus()==BookingStatus.CANCELLED)
-				.collect(Collectors.toList());
-		List<Booking> waitBookings = bookings.stream()
-				.filter(b->b.getDate()==LocalDate.now()&&b.getStatus()==BookingStatus.WAITINGLIST)
-				.collect(Collectors.toList());
+//		List<Booking> successBookings = bookings.stream()
+//				.filter(b->b.getDate()==LocalDate.now()&&b.getStatus()==BookingStatus.SUCCESSFUL)
+//				.collect(Collectors.toList());
+//		List<Booking> rejectBookings = bookings.stream()
+//				.filter(b->b.getDate()==LocalDate.now()&&b.getStatus()==BookingStatus.REJECTED)
+//				.collect(Collectors.toList());
+//		List<Booking> cancelBookings = bookings.stream()
+//				.filter(b->b.getDate()==LocalDate.now()&&b.getStatus()==BookingStatus.CANCELLED)
+//				.collect(Collectors.toList());
+//		List<Booking> waitBookings = bookings.stream()
+//				.filter(b->b.getDate()==LocalDate.now()&&b.getStatus()==BookingStatus.WAITINGLIST)
+//				.collect(Collectors.toList());
 		List<List<Object>> getBookingData = 
 				List.of(
-                List.of("SUCCESSFUL", successBookings.size()),
-                List.of("REJECTED", rejectBookings.size()),
-                List.of("CANCELLED", cancelBookings.size()),
-                List.of("WAITINGLIST", waitBookings.size())
+                List.of("SUCCESSFUL", bService.getBookingStatusCounts(bookings, BookingStatus.SUCCESSFUL)),
+                List.of("REJECTED", bService.getBookingStatusCounts(bookings, BookingStatus.REJECTED)),
+                List.of("CANCELLED", bService.getBookingStatusCounts(bookings, BookingStatus.CANCELLED)),
+                List.of("WAITINGLIST", bService.getBookingStatusCounts(bookings, BookingStatus.WAITINGLIST))
         );
 		
 		
 		
-		LocalDate date = LocalDate.now();
-		int week  = date.get(WeekFields.ISO.weekOfWeekBasedYear());
-		int month = date.getMonth().getValue();
-		int year = date.getYear();
+//		LocalDate date = LocalDate.now();
+//		int week  = date.get(WeekFields.ISO.weekOfWeekBasedYear());
+//		int month = date.getMonth().getValue();
+//		int year = date.getYear();
+//		
+//		Calendar calendar = Calendar.getInstance();
+//		calendar.clear();
+//		calendar.set(Calendar.WEEK_OF_YEAR, week);
+//		calendar.set(Calendar.YEAR, year);
 		
-		Calendar calendar = Calendar.getInstance();
-		calendar.clear();
-		calendar.set(Calendar.WEEK_OF_YEAR, week);
-		calendar.set(Calendar.YEAR, year);
-		
-		LocalDate firstDayOfWeek = LocalDate.ofInstant(calendar.getTime().toInstant(), ZoneOffset.ofHours(8)).plusDays(8);
+		LocalDate firstDayOfWeek = FirstDayOfCurrentWeek.value(LocalDate.now());
 		System.out.println(firstDayOfWeek);
-		calendar.add(Calendar.DAY_OF_MONTH, 1);
-		LocalDate tuesday = LocalDate.ofInstant(calendar.getTime().toInstant(), ZoneOffset.ofHours(8)).plusDays(8);
-		calendar.add(Calendar.DAY_OF_MONTH, 1);
-		LocalDate wednesday = LocalDate.ofInstant(calendar.getTime().toInstant(), ZoneOffset.ofHours(8)).plusDays(8);
-		calendar.add(Calendar.DAY_OF_MONTH, 1);
-		LocalDate thursday = LocalDate.ofInstant(calendar.getTime().toInstant(), ZoneOffset.ofHours(8)).plusDays(8);
-		calendar.add(Calendar.DAY_OF_MONTH, 1);
-		LocalDate friday = LocalDate.ofInstant(calendar.getTime().toInstant(), ZoneOffset.ofHours(8)).plusDays(8);
-		calendar.add(Calendar.DAY_OF_MONTH, 2);
-		LocalDate lastDayOfWeek = LocalDate.ofInstant(calendar.getTime().toInstant(), ZoneOffset.ofHours(8)).plusDays(8);
-		System.out.println(lastDayOfWeek);
+//		calendar.add(Calendar.DAY_OF_MONTH, 1);
+//		LocalDate tuesday = LocalDate.ofInstant(calendar.getTime().toInstant(), ZoneOffset.ofHours(8)).plusDays(8);
+//		calendar.add(Calendar.DAY_OF_MONTH, 1);
+//		LocalDate wednesday = LocalDate.ofInstant(calendar.getTime().toInstant(), ZoneOffset.ofHours(8)).plusDays(8);
+//		calendar.add(Calendar.DAY_OF_MONTH, 1);
+//		LocalDate thursday = LocalDate.ofInstant(calendar.getTime().toInstant(), ZoneOffset.ofHours(8)).plusDays(8);
+//		calendar.add(Calendar.DAY_OF_MONTH, 1);
+//		LocalDate friday = LocalDate.ofInstant(calendar.getTime().toInstant(), ZoneOffset.ofHours(8)).plusDays(8);
+//		calendar.add(Calendar.DAY_OF_MONTH, 2);
+//		LocalDate lastDayOfWeek = LocalDate.ofInstant(calendar.getTime().toInstant(), ZoneOffset.ofHours(8)).plusDays(8);
+//		System.out.println(lastDayOfWeek);
 		
-		List<Booking> weekBookings = br.findByDateBetween(firstDayOfWeek, lastDayOfWeek);
+		List<Booking> weekBookings = bService.findBookingsInCurrentWeek(LocalDate.now());
 		
-		List<Booking> successWeekBookings = weekBookings.stream()
-				.filter(b->b.getStatus()==BookingStatus.SUCCESSFUL)
-				.collect(Collectors.toList());
-		List<Booking> rejectWeekBookings = weekBookings.stream()
-				.filter(b->b.getStatus()==BookingStatus.REJECTED)
-				.collect(Collectors.toList());
-		List<Booking> cancelWeekBookings = weekBookings.stream()
-				.filter(b->b.getStatus()==BookingStatus.CANCELLED)
-				.collect(Collectors.toList());
-		List<Booking> waitWeekBookings = weekBookings.stream()
-				.filter(b->b.getStatus()==BookingStatus.WAITINGLIST)
-				.collect(Collectors.toList());
+//		List<Booking> successWeekBookings = weekBookings.stream()
+//				.filter(b->b.getStatus()==BookingStatus.SUCCESSFUL)
+//				.collect(Collectors.toList());
+//		List<Booking> rejectWeekBookings = weekBookings.stream()
+//				.filter(b->b.getStatus()==BookingStatus.REJECTED)
+//				.collect(Collectors.toList());
+//		List<Booking> cancelWeekBookings = weekBookings.stream()
+//				.filter(b->b.getStatus()==BookingStatus.CANCELLED)
+//				.collect(Collectors.toList());
+//		List<Booking> waitWeekBookings = weekBookings.stream()
+//				.filter(b->b.getStatus()==BookingStatus.WAITINGLIST)
+//				.collect(Collectors.toList());
 		List<List<Object>> getWeekBookingData = 
 				List.of(
-                List.of("SUCCESSFUL", successWeekBookings.size()),
-                List.of("REJECTED", rejectWeekBookings.size()),
-                List.of("CANCELLED", cancelWeekBookings.size()),
-                List.of("WAITINGLIST", waitWeekBookings.size())
+                List.of("SUCCESSFUL", bService.getBookingStatusCounts(weekBookings, BookingStatus.SUCCESSFUL)),
+                List.of("REJECTED", bService.getBookingStatusCounts(weekBookings, BookingStatus.REJECTED)),
+                List.of("CANCELLED", bService.getBookingStatusCounts(weekBookings, BookingStatus.CANCELLED)),
+                List.of("WAITINGLIST", bService.getBookingStatusCounts(weekBookings, BookingStatus.WAITINGLIST))
         );
 		
 		
 		
-		int monOpenHours = 8 - successWeekBookings.stream()
-				.filter(r->r.getDate()==firstDayOfWeek)
-				.map(r->r.getRoom().getBlockDuration())
-				.reduce(0, (a, b) -> a + b);
-		
-		int tueOpenHours = 8 - successWeekBookings.stream()
-				.filter(r->r.getDate()==tuesday)
-				.map(r->r.getRoom().getBlockDuration())
-				.reduce(0, (a, b) -> a + b);
-		
-		int wedOpenHours = 8 - successWeekBookings.stream()
-				.filter(r->r.getDate()==wednesday)
-				.map(r->r.getRoom().getBlockDuration())
-				.reduce(0, (a, b) -> a + b);
-		
-		int thurOpenHours = 8 - successWeekBookings.stream()
-				.filter(r->r.getDate()==thursday)
-				.map(r->r.getRoom().getBlockDuration())
-				.reduce(0, (a, b) -> a + b);
-		
-		int friOpenHours = 8 - successWeekBookings.stream()
-				.filter(r->r.getDate()==friday)
-				.map(r->r.getRoom().getBlockDuration())
-				.reduce(0, (a, b) -> a + b);
-		
-		int monBookedHours = successWeekBookings.stream()
-				.filter(r->r.getDate()==firstDayOfWeek&&r.getStatus()==BookingStatus.SUCCESSFUL)
-				.map(r->r.getDuration())
-				.reduce(0, (a, b) -> a + b);
-		
-		int tueBookedHours = successWeekBookings.stream()
-				.filter(r->r.getDate()==tuesday&&r.getStatus()==BookingStatus.SUCCESSFUL)
-				.map(r->r.getDuration())
-				.reduce(0, (a, b) -> a + b);
-		
-		int wedBookedHours = successWeekBookings.stream()
-				.filter(r->r.getDate()==wednesday&&r.getStatus()==BookingStatus.SUCCESSFUL)
-				.map(r->r.getDuration())
-				.reduce(0, (a, b) -> a + b);
-		
-		int thurBookedHours = successWeekBookings.stream()
-				.filter(r->r.getDate()==thursday&&r.getStatus()==BookingStatus.SUCCESSFUL)
-				.map(r->r.getDuration())
-				.reduce(0, (a, b) -> a + b);;
-		
-		int friBookedHours = successWeekBookings.stream()
-				.filter(r->r.getDate()==friday&&r.getStatus()==BookingStatus.SUCCESSFUL)
-				.map(r->r.getDuration())
-				.reduce(0, (a, b) -> a + b);
+//		int monOpenHours = 8 - weekBookings.stream()
+//				.filter(r->r.getDate()==firstDayOfWeek)
+//				.map(r->r.getRoom().getBlockDuration())
+//				.reduce(0, (a, b) -> a + b);
+//		
+//		int tueOpenHours = 8 - successWeekBookings.stream()
+//				.filter(r->r.getDate()==tuesday)
+//				.map(r->r.getRoom().getBlockDuration())
+//				.reduce(0, (a, b) -> a + b);
+//		
+//		int wedOpenHours = 8 - successWeekBookings.stream()
+//				.filter(r->r.getDate()==wednesday)
+//				.map(r->r.getRoom().getBlockDuration())
+//				.reduce(0, (a, b) -> a + b);
+//		
+//		int thurOpenHours = 8 - successWeekBookings.stream()
+//				.filter(r->r.getDate()==thursday)
+//				.map(r->r.getRoom().getBlockDuration())
+//				.reduce(0, (a, b) -> a + b);
+//		
+//		int friOpenHours = 8 - successWeekBookings.stream()
+//				.filter(r->r.getDate()==friday)
+//				.map(r->r.getRoom().getBlockDuration())
+//				.reduce(0, (a, b) -> a + b);
+//		
+//		int monBookedHours = successWeekBookings.stream()
+//				.filter(r->r.getDate()==firstDayOfWeek&&r.getStatus()==BookingStatus.SUCCESSFUL)
+//				.map(r->r.getDuration())
+//				.reduce(0, (a, b) -> a + b);
+//		
+//		int tueBookedHours = successWeekBookings.stream()
+//				.filter(r->r.getDate()==tuesday&&r.getStatus()==BookingStatus.SUCCESSFUL)
+//				.map(r->r.getDuration())
+//				.reduce(0, (a, b) -> a + b);
+//		
+//		int wedBookedHours = successWeekBookings.stream()
+//				.filter(r->r.getDate()==wednesday&&r.getStatus()==BookingStatus.SUCCESSFUL)
+//				.map(r->r.getDuration())
+//				.reduce(0, (a, b) -> a + b);
+//		
+//		int thurBookedHours = successWeekBookings.stream()
+//				.filter(r->r.getDate()==thursday&&r.getStatus()==BookingStatus.SUCCESSFUL)
+//				.map(r->r.getDuration())
+//				.reduce(0, (a, b) -> a + b);;
+//		
+//		int friBookedHours = successWeekBookings.stream()
+//				.filter(r->r.getDate()==friday&&r.getStatus()==BookingStatus.SUCCESSFUL)
+//				.map(r->r.getDuration())
+//				.reduce(0, (a, b) -> a + b);
 		
 		List<List<Object>> getTodayRoomsData = 
 				List.of(
@@ -481,49 +482,47 @@ public class AdminController {
                 List.of("Mercury", 0, 8),
                 List.of("Venus", 4, 4)
         );
-		
+		int roomOpenHours = rService.getRoomOpenHours();
 		List<List<Object>> getOverallRoomForWeekData = 
 				List.of(
-                List.of("MONDAY", monOpenHours, monBookedHours),
-                List.of("TUESDAY", tueOpenHours, tueBookedHours),
-                List.of("WEDNESDAY", wedOpenHours, wedBookedHours),
-                List.of("THURSDAY", thurOpenHours, thurBookedHours),
+                List.of("MONDAY", roomOpenHours, bService.getSuccessBookingsDurationForDate(weekBookings, firstDayOfWeek)),
+                List.of("TUESDAY", roomOpenHours, bService.getSuccessBookingsDurationForDate(weekBookings, firstDayOfWeek.plusDays(1))),
+                List.of("WEDNESDAY", roomOpenHours, bService.getSuccessBookingsDurationForDate(weekBookings, firstDayOfWeek.plusDays(2))),
+                List.of("THURSDAY", roomOpenHours, bService.getSuccessBookingsDurationForDate(weekBookings, firstDayOfWeek.plusDays(3))),
                 List.of("FRIDAY", 4, 4)
         );
 		
 		
 		
-		LocalDate firstDayOfMonth = date.withDayOfMonth(1);
-		LocalDate lastDayOfMonth = date.withDayOfMonth(date.getMonth().length(date.isLeapYear()));
+		LocalDate firstDayOfMonth = firstDayOfWeek.withDayOfMonth(1);
+		LocalDate lastDayOfMonth = firstDayOfWeek.withDayOfMonth(firstDayOfWeek.getMonth().length(firstDayOfWeek.isLeapYear()));
 		
 		List<Booking> monthBookings = br.findByDateBetween(firstDayOfMonth, lastDayOfMonth);
 		
-		List<Booking> successMonthBookings = monthBookings.stream()
-				.filter(b->b.getStatus()==BookingStatus.SUCCESSFUL)
-				.collect(Collectors.toList());
-		List<Booking> rejectMonthBookings = monthBookings.stream()
-				.filter(b->b.getStatus()==BookingStatus.REJECTED)
-				.collect(Collectors.toList());
-		List<Booking> cancelMonthBookings = monthBookings.stream()
-				.filter(b->b.getStatus()==BookingStatus.CANCELLED)
-				.collect(Collectors.toList());
-		List<Booking> waitMonthBookings = monthBookings.stream()
-				.filter(b->b.getStatus()==BookingStatus.WAITINGLIST)
-				.collect(Collectors.toList());
+//		List<Booking> successMonthBookings = monthBookings.stream()
+//				.filter(b->b.getStatus()==BookingStatus.SUCCESSFUL)
+//				.collect(Collectors.toList());
+//		List<Booking> rejectMonthBookings = monthBookings.stream()
+//				.filter(b->b.getStatus()==BookingStatus.REJECTED)
+//				.collect(Collectors.toList());
+//		List<Booking> cancelMonthBookings = monthBookings.stream()
+//				.filter(b->b.getStatus()==BookingStatus.CANCELLED)
+//				.collect(Collectors.toList());
+//		List<Booking> waitMonthBookings = monthBookings.stream()
+//				.filter(b->b.getStatus()==BookingStatus.WAITINGLIST)
+//				.collect(Collectors.toList());
 		List<List<Object>> getMonthBookingData = 
 				List.of(
-                List.of("SUCCESSFUL", successMonthBookings.size()),
-                List.of("REJECTED", rejectMonthBookings.size()),
-                List.of("CANCELLED", cancelMonthBookings.size()),
-                List.of("WAITINGLIST", waitMonthBookings.size())
+                List.of("SUCCESSFUL", bService.getBookingStatusCounts(monthBookings, BookingStatus.SUCCESSFUL)),
+                List.of("REJECTED", bService.getBookingStatusCounts(monthBookings, BookingStatus.REJECTED)),
+                List.of("CANCELLED", bService.getBookingStatusCounts(monthBookings, BookingStatus.CANCELLED)),
+                List.of("WAITINGLIST", bService.getBookingStatusCounts(monthBookings, BookingStatus.WAITINGLIST))
         );
 		
 		List<Report> reports = ReService.findAllReports();
-		List<Report> processingReports = reports.stream()
+		List<Report> processingReports = ReService.findAllReports().stream()
 				.filter(r->r.getReportStatus()==ReportStatus.PROCESSING)
 				.collect(Collectors.toList());		
-		
-		
 		
 		mav.addObject("getBookingData", getBookingData);
 		System.out.println(getOverallRoomForWeekData);
