@@ -65,7 +65,12 @@
 
         // Set a callback to run when the Google Visualization API is loaded.
         google.charts.setOnLoadCallback(drawChart);
-
+        
+		$(document).ready(function () {
+    		$(window).resize(function(){
+        	drawChart();
+    		});
+		});
         // Callback that creates and populates a data table,
         // instantiates the pie chart, passes in the data and
         // draws it.
@@ -78,10 +83,7 @@
             data.addRows([[${getBookingData}]]);
 
             // Set chart options
-            var options = {
-				'width':500,
-                'height':240,
-				
+            var options = {			
                 'pieHole':0.4};
 
             // Instantiate and draw our chart, passing in some options.
@@ -97,6 +99,12 @@
 
         // Set a callback to run when the Google Visualization API is loaded.
         google.charts.setOnLoadCallback(drawChart);
+        
+        $(document).ready(function () {
+    		$(window).resize(function(){
+        	drawChart();
+    		});
+		});
 
         // Callback that creates and populates a data table,
         // instantiates the pie chart, passes in the data and
@@ -111,9 +119,6 @@
 
             // Set chart options
             var options = {
-				'width':500,
-                'height':240,
-
                 'pieHole':0.4};
 
             // Instantiate and draw our chart, passing in some options.
@@ -128,6 +133,80 @@
 
         // Set a callback to run when the Google Visualization API is loaded.
         google.charts.setOnLoadCallback(drawChart);
+        
+        $(document).ready(function () {
+    		$(window).resize(function(){
+        	drawChart();
+    		});
+		});
+
+        // Callback that creates and populates a data table,
+        // instantiates the pie chart, passes in the data and
+        // draws it.
+        function drawChart() {
+
+            // Create the data table.
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Report Status');
+            data.addColumn('number', 'Number');
+            data.addRows([[${getReportStatusData}]]);
+
+            // Set chart options
+            var options = {
+                'pieHole':0.4};
+
+            // Instantiate and draw our chart, passing in some options.
+            var chart = new google.visualization.PieChart(document.getElementById('ReportDayChart'));
+            chart.draw(data, options);
+        }
+    </script>
+    <script type="text/javascript" th:inline="javascript"> 
+
+        // Load the Visualization API and the corechart package.
+        google.charts.load('current', {'packages':['corechart']});
+
+        // Set a callback to run when the Google Visualization API is loaded.
+        google.charts.setOnLoadCallback(drawChart);
+        
+        $(document).ready(function () {
+    		$(window).resize(function(){
+        	drawChart();
+    		});
+		});
+
+        // Callback that creates and populates a data table,
+        // instantiates the pie chart, passes in the data and
+        // draws it.
+        function drawChart() {
+
+            // Create the data table.
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Report Category');
+            data.addColumn('number', 'Number');
+            data.addRows([[${getReportCatData}]]);
+
+            // Set chart options
+            var options = {
+                'pieHole':0.4};
+
+            // Instantiate and draw our chart, passing in some options.
+            var chart = new google.visualization.PieChart(document.getElementById('ReportCatChart'));
+            chart.draw(data, options);
+        }
+    </script>
+    <script type="text/javascript" th:inline="javascript"> 
+
+        // Load the Visualization API and the corechart package.
+        google.charts.load('current', {'packages':['corechart']});
+
+        // Set a callback to run when the Google Visualization API is loaded.
+        google.charts.setOnLoadCallback(drawChart);
+        
+        $(document).ready(function () {
+    		$(window).resize(function(){
+        	drawChart();
+    		});
+		});
 
         // Callback that creates and populates a data table,
         // instantiates the pie chart, passes in the data and
@@ -142,8 +221,6 @@
 
             // Set chart options
             var options = {
-				'width':500,
-                'height':240,
                 'pieHole':0.4};
 
             // Instantiate and draw our chart, passing in some options.
@@ -158,6 +235,12 @@
 
         // Set a callback to run when the Google Visualization API is loaded.
         google.charts.setOnLoadCallback(drawChart);
+        
+        $(document).ready(function () {
+    		$(window).resize(function(){
+        	drawChart();
+    		});
+		});
 
         // Callback that creates and populates a data table,
         // instantiates the pie chart, passes in the data and
@@ -167,22 +250,102 @@
             // Create the data table.
             var data = new google.visualization.DataTable();
      		data.addColumn('string', 'Day of Week');
-            data.addColumn('number', 'Available Hours');
             data.addColumn('number', 'Booked Hours');
             data.addRows([[${getOverallRoomForWeekData}]]);
             // Set chart options
             var options = {
-               'width':600,
-               'height':260,
-               'hAxis' : {
-                    'title' : 'Hours',
-                },
-                'vAxis' : {
-                    'title' : 'Day of Week'
-                }};
+    			'legend': {
+      				'position': 'none'},
+    			'width': '100%',
+    			'height' : '100%',
+    			'vAxis' : {
+                    'title' : 'Hours usage'
+                } 				               
+                };
 
             // Instantiate and draw our chart, passing in some options.
-            var chart = new google.visualization.BarChart(document.getElementById('donutchart'));
+            var chart = new google.visualization.ColumnChart(document.getElementById('roomWeeklychart'));
+            chart.draw(data, options);
+        }
+    </script>
+        <script type="text/javascript" th:inline="javascript"> 
+
+        // Load the Visualization API and the corechart package.
+        google.charts.load('current', {'packages':['corechart']});
+
+        // Set a callback to run when the Google Visualization API is loaded.
+        google.charts.setOnLoadCallback(drawChart);
+        
+        $(document).ready(function () {
+    		$(window).resize(function(){
+        	drawChart();
+    		});
+		});
+
+        // Callback that creates and populates a data table,
+        // instantiates the pie chart, passes in the data and
+        // draws it.
+        function drawChart() {
+
+            // Create the data table.
+            var data = new google.visualization.DataTable();
+     		data.addColumn('string', 'Room Name');
+            data.addColumn('number', 'Booking Count');
+            data.addRows([[${getBookingFequencyData}]]);
+            // Set chart options
+            var options = {
+    			'legend': {
+      				'position': 'none'},
+    			'width': '100%',
+    			'height' : '100%',
+    			'vAxis' : {
+                    'title' : 'Booking Counts'
+                } 				               
+                };
+
+            // Instantiate and draw our chart, passing in some options.
+            var chart = new google.visualization.ColumnChart(document.getElementById('BookingFequencyChart'));
+            chart.draw(data, options);
+        }
+    </script>
+    </script>
+        <script type="text/javascript" th:inline="javascript"> 
+
+        // Load the Visualization API and the corechart package.
+        google.charts.load('current', {'packages':['corechart']});
+
+        // Set a callback to run when the Google Visualization API is loaded.
+        google.charts.setOnLoadCallback(drawChart);
+        
+        $(document).ready(function () {
+    		$(window).resize(function(){
+        	drawChart();
+    		});
+		});
+
+        // Callback that creates and populates a data table,
+        // instantiates the pie chart, passes in the data and
+        // draws it.
+        function drawChart() {
+
+            // Create the data table.
+            var data = new google.visualization.DataTable();
+     		data.addColumn('string', 'Room Name');
+            data.addColumn('number', 'Booking Hours');
+            data.addRows([[${getTodayRoomUsageData}]]);
+            // Set chart options
+            var options = {
+    			'legend': {
+      				'position': 'none'},
+    			'width': '100%',
+    			'height' : '100%',
+    			'vAxis' : {
+                    'title' : 'Booking Hours'
+                } 				               
+                };
+
+            // Instantiate and draw our chart, passing in some options.
+            var chart = new google.visualization.ColumnChart(document.getElementById('todayRoomUsageChart'));
             chart.draw(data, options);
         }
     </script>
@@ -193,6 +356,51 @@
 
         // Set a callback to run when the Google Visualization API is loaded.
         google.charts.setOnLoadCallback(drawChart);
+        
+        $(document).ready(function () {
+    		$(window).resize(function(){
+        	drawChart();
+    		});
+		});
+
+        // Callback that creates and populates a data table,
+        // instantiates the pie chart, passes in the data and
+        // draws it.
+        function drawChart() {
+
+            // Create the data table.
+            var data = new google.visualization.DataTable();
+     		data.addColumn('string', 'Room Name');
+            data.addColumn('number', 'Report Count');
+            data.addRows([[${getReportRoomData}]]);
+            // Set chart options
+            var options = {  
+    			'legend': {
+      				'position': 'none'},
+				'width': '100%',
+    			'height' : '100%',   					
+                'vAxis' : {
+                    'title' : 'Count'
+                }};
+
+            // Instantiate and draw our chart, passing in some options.
+            var chart = new google.visualization.ColumnChart(document.getElementById('reportRoomchart'));
+            chart.draw(data, options);
+        }
+    </script>
+    <script type="text/javascript" th:inline="javascript"> 
+
+        // Load the Visualization API and the corechart package.
+        google.charts.load('current', {'packages':['corechart']});
+
+        // Set a callback to run when the Google Visualization API is loaded.
+        google.charts.setOnLoadCallback(drawChart);
+        
+        $(document).ready(function () {
+    		$(window).resize(function(){
+        	drawChart();
+    		});
+		});
 
         // Callback that creates and populates a data table,
         // instantiates the pie chart, passes in the data and
@@ -207,8 +415,13 @@
             data.addRows([[${getTodayRoomsData}]]);
             // Set chart options
             var options = {
-               'width':600,
-               'height':260,
+				'chartArea': {
+      				'left': 40,
+      				'width': '100%'
+    			},
+    			'legend': {
+      				'position': 'top'},
+    			'width': '100%',
                'hAxis' : {
                     'title' : 'Hours',
                 },
@@ -227,66 +440,122 @@
 <body>
 	<div th:replace="fragments/general.html :: menu-admin"></div>
 <div class="main-content container-fluid">
-    <div class="page-title">
-        <h3>Dashboard</h3>
-      	<p class="text-subtitle text-muted" th:text="${#dates.format(#dates.createNow(), 'dd MMM yyyy HH:mm')}"></p>
+    <div class="page-title text-center">
+        <h2>Dashboard</h2>
+      	<p class="text-subtitle text-muted text-center" th:text="${#dates.format(#dates.createNow(), 'dd MMM yyyy HH:mm')}"></p>
     </div>
-    <section class="section">
-    <div class="row mb-2">
-    	<div class="col-sm-2">
-    		<div class="card">
-    			<div class="card-body">
-                    <h6 class='card-title'>Reports to Process</h6>
-                       <p class="card-text" th:text=${getReportProcessingSize}>
+    <div class="container-fluid">
+   <div class="row mt-5">
+    	<div class="col-4 mb-3">
+    		<h4>Report Statistics</h4>
+		</div>
+		<div class="col-4 mb-3">
+    		<h4>Booking Statistics</h5>
+		</div>
+		<div class="col-4 mb-3">
+    		<h4>Room Statistics</h5>
+		</div>
+   </div>
+   <div class="row">
+			<div class="col-xl-4 text-center">
+				<div class="card mb-4 box-shadow" style="height: 400px;">
+					<div class="card-header">
+						<h5>Status</h5>
+					</div>
+				<div class="card-body">                 	
+                       <p class="card-text text-center font-weight-bold" th:text=${strTodayReport}></p>
+                       <p class="card-text text-center font-weight-bold" th:text=${strProcessReport}></p>
+                       <p id="ReportDayChart" style="width:100%; height:200px"></p>
+                </div>
+			</div>
+			<div class="card mb-4 box-shadow">
+					<div class="card-header">
+						<h5>Category</h5>
+					</div>
+				<div class="card-body">
+                       <p id="ReportCatChart"></p>
+                </div>
+			</div>
+			<div class="card mb-4 box-shadow">
+					<div class="card-header">
+						<h5>Report Counts for Rooms</h5>
+					</div>
+				<div class="card-body">
+                       <p id="reportRoomchart"></p>
                 </div>
 			</div>
         </div>
-        <div class="col-sm-5">
-    		<div class="card">
-    			<div class="card-body">   
-    			<h6 class='card-title'>Rooms Availabilty of the Day</h6>                
-                       <p class="card-text" id="roomchart">
+        
+        <div class="col-xl-4 text-center">
+				<div class="card mb-4 box-shadow" style="height: 400px;">
+					<div class="card-header">
+						<h5>For the Day</h5>
+					</div>
+					<div class="card-body">
+                   		<p th:if="${not todayBooking}" class="card-text mt-5 text-center font-weight-bold  d-flex justify-content-center">
+                   		No Bookings Submitted</p>
+                   		<p class="mt-5 text-center" th:if="${todayBooking}" id="donutchart"></p>
+                	</div>
+				</div>
+				<div class="card mb-4 box-shadow">
+					<div class="card-header">
+						<h5 th:text="${weekPeriod}"></h5>
+					</div>
+					<div class="card-body">
+                   		<p id="WeekChart"></p>
+                	</div>
+				</div>
+			
+			<div class="card mb-4 box-shadow">
+					<div class="card-header">
+						<h5 th:text="${monthPeriod}"></h5>
+					</div>
+				<div class="card-body">
+                       <p id="MonthChart"></p>
                 </div>
 			</div>
         </div>
-         <div class="col-sm-5">
-    		<div class="card">
-    			<div class="card-body">   
-    			<h6 class='card-title'>Rooms Usuage of the Week</h6>                
-                       <p class="card-text" id="donutchart">
+        <div class="col-xl-4 text-center">
+			<div class="card mb-4 box-shadow" style="height: 400px;">
+				<div class="card-header">
+					<h5>Room Usage for Day</h5>
+				</div>
+				<div class="card-body">                   		
+                   	<p th:if="${!todayBooking}" class="card-text mt-5 text-center font-weight-bold">
+                   		No Bookings Submitted</p>
+                   	<p class="mt-5 text-center" th:if="${todayBooking}" id="todayRoomUsageChart"></p>
+                </div>
+           </div>
+				<div class="card mb-4 box-shadow">
+					<div class="card-header">
+						<h5 th:text="${roomWeek}"></h5>
+					</div>
+					<div class="card-body">
+                   		<p id="roomWeeklychart"></p>
+                	</div>
+				</div>
+			
+			<div class="card mb-4 box-shadow">
+					<div class="card-header">
+						<h5>Booking frequency</h5>
+					</div>
+				<div class="card-body">
+                       <p id="BookingFequencyChart"></p>
                 </div>
 			</div>
         </div>
     </div>
-    <div class="row">
-            <div class="col">
-                <div class="card">
-                    <div class="card-body">
-                    <h6 class="card-title">Bookings of the Day</h6>
-                    <p th:if="${#lists.isEmpty(getBookingData)}">No Bookings Today</p>
-                    <p class="card-text" id="donutchart"></p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col">
-                <div class="card" >
-                    <div class="card-body" >
-                    <h6 class="card-title">Bookings of the Week</h6>
-                    <p class="card-text" id="WeekChart"></p>
-                    </div>
-                </div>  
-            </div>
-            <div class="col">
-                <div class="card" >
-                    <div class="card-body" >
-                    <h6 class="card-title">Bookings of the Month</h6>
-                    <p class="card-text" id="MonthChart"></p>
-                    </div>
-                </div>  
-            </div>	
+
     </div>
-    </section>
-  <div id="donutchart"></div> 
+</div>
+<div class="row mb-15">
+	<div class="col"></div>
+	<br>
+</div>
+	<footer class="page-footer mt-10">
+		<div class="footer-copyright text-center py-3" style="color:white; background-color: #003062">
+			VMS Copyright &copy; 2022
+		</div>
+	</footer>
 </body>
 </html>

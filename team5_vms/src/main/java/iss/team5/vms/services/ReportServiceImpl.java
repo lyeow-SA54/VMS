@@ -3,8 +3,10 @@ package iss.team5.vms.services;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -17,8 +19,10 @@ import org.springframework.stereotype.Service;
 
 import iss.team5.vms.helper.BookingStatus;
 import iss.team5.vms.helper.ReportCategory;
+import iss.team5.vms.helper.ReportStatus;
 import iss.team5.vms.model.Booking;
 import iss.team5.vms.model.Report;
+import iss.team5.vms.model.Room;
 import iss.team5.vms.model.Student;
 import iss.team5.vms.repositories.BookingRepo;
 import iss.team5.vms.repositories.ReportRepo;
@@ -135,6 +139,59 @@ public class ReportServiceImpl implements ReportService {
 						+ report.getBooking().getRoom().getRoomName() + "WAS APPROVED",
 				"Your current score is now: " + student.getScore()
 						+ ". Please note your future booking application requests will be a lower priority once above 3.");
+	}
+	
+	@Override
+	public void resetWeeklyScoring() {
+		// scheduled to run at every Sunday 11pm
+		LocalDateTime now = LocalDateTime.now();
+		WeekFields weekFields = WeekFields.of(Locale.getDefault());
+		LocalDateTime nextRun = LocalDateTime.now()
+									.plusWeeks(1)
+		                            .with(weekFields.dayOfWeek(),1)//sunday
+		                            .withHour(23)
+		                            .withMinute(59)
+		                            .withSecond(0);
+		
+		System.out.println(nextRun);
+		
+		if (now.compareTo(nextRun) > 0)
+			nextRun = nextRun.plusDays(6);
+
+		Duration duration = Duration.between(now, nextRun);
+		long initialDelay = duration.getSeconds();
+
+		ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
+		// pulls list students
+		// set all student score to 0
+		Runnable getStudentWithScore = () -> {
+			List<Student> students = ss.findAllStudents().stream()
+					.filter(s->s.getScore()>0)
+					.collect(Collectors.toList());					
+			students.stream().forEach(s -> s.setScore(s.getScore() - 1));
+			students.stream().forEach(s -> ss.changeStudent(s));
+		};
+
+		scheduler.scheduleAtFixedRate(getStudentWithScore, initialDelay, TimeUnit.DAYS.toSeconds(6), TimeUnit.SECONDS);
+	}
+	
+	@Override
+	public int getReportStatusCounts(List<Report> report, ReportStatus status) {
+		long count = report.stream().filter(b -> b.getReportStatus().equals(status)).count();
+		return (int) count;
+	}
+	
+	@Override
+	public int getReportCatCounts(List<Report> report, ReportCategory category) {
+		long count = report.stream().filter(b -> b.getCategory().equals(category)).count();
+		return (int) count;
+	}
+	
+	@Override
+	public int getReportRoomCounts(List<Report> report, Room room) {
+		long count = report.stream().filter(b -> b.getBooking().getRoom().equals(room)).count();
+		return (int) count;
 	}
 
 }

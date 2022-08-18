@@ -208,8 +208,7 @@ public class BookingServiceImpl implements BookingService {
 	public boolean checkBookingsOverlap(Booking newBooking, Booking existingBooking) {
 		if (newBooking.getTime().isBefore(existingBooking.getTime().plusMinutes(existingBooking.getDuration()))
 				&& (newBooking.getTime().plusMinutes(newBooking.getDuration()).isAfter(existingBooking.getTime()))
-				&& (existingBooking.getStatus().equals(BookingStatus.SUCCESSFUL)
-						|| existingBooking.getStatus().equals(BookingStatus.WAITINGLIST))) {
+				&& (existingBooking.getStatus().equals(BookingStatus.SUCCESSFUL))) {
 			return true;
 		}
 		return false;
@@ -361,9 +360,9 @@ public class BookingServiceImpl implements BookingService {
 //				.plusDays(8);
 ////		System.out.println(lastDayOfWeek);
 //
-		List<Booking> bookings = findBookingsInCurrentWeek(booking.getDate());
+		List<Booking> pastWeekBookings = findBookingsInCurrentWeek(booking.getDate().minusDays(6));
 
-		int volume = (int) bookings.stream().count();
+		int volume = (int) pastWeekBookings.stream().count();
 //		System.out.println(volume);
 
 		String uri = "http://127.0.0.1:5000/peakpredict?week=" + week + "&volume=" + volume;
@@ -411,8 +410,23 @@ public class BookingServiceImpl implements BookingService {
 
 	@Override
 	public Integer getSuccessBookingsDurationForDate(List<Booking> bookings, LocalDate date) {
-		return bookings.stream().filter(b -> b.getStatus().equals(BookingStatus.SUCCESSFUL) && b.getDate().equals(date))
+		int minutes = bookings.stream().filter(b -> b.getStatus().equals(BookingStatus.SUCCESSFUL) && b.getDate().equals(date))
 				.map(Booking::getDuration).mapToInt(Integer::intValue).sum();
+		return minutes/60;
+	}
+	@Override
+	public int getBookingCountsForRoom(List<Booking> bookings, Room room) {
+		long count = bookings.stream().filter(b -> b.getRoom().equals(room)).count();
+		return (int) count;
+	}
+	
+	@Override
+	public Integer getBookingHoursForRoom(List<Booking> bookings, Room room) {
+		int minutes = bookings.stream().filter(b -> b.getRoom().equals(room))
+				.map(Booking::getDuration).mapToInt(Integer::intValue).sum();
+
+			return minutes/60;
+
 	}
 
 }
