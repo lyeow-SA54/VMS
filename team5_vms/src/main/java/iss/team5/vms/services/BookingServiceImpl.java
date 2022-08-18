@@ -361,9 +361,9 @@ public class BookingServiceImpl implements BookingService {
 //				.plusDays(8);
 ////		System.out.println(lastDayOfWeek);
 //
-		List<Booking> bookings = findBookingsInCurrentWeek(booking.getDate());
+		List<Booking> pastWeekBookings = findBookingsInCurrentWeek(booking.getDate().minusDays(6));
 
-		int volume = (int) bookings.stream().count();
+		int volume = (int) pastWeekBookings.stream().count();
 //		System.out.println(volume);
 
 		String uri = "http://127.0.0.1:5000/peakpredict?week=" + week + "&volume=" + volume;

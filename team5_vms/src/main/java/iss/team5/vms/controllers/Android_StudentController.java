@@ -279,10 +279,12 @@ public class Android_StudentController {
 	}
 
 	@PostMapping(value = "/report/save/{token}")
-	public String newReportAndroid(@PathVariable String token, @RequestBody List<Map<String, Object>> rawPayload) {
+	public List<Map<String, Object>> newReportAndroid(@PathVariable String token, @RequestBody List<Map<String, Object>> rawPayload) {
 
 		if (JWTGenerator.verifyJWT(token)) {
 			Map<String, Object> payload = rawPayload.get(0);
+			List<Map<String, Object>> jsonArrayResponse = new ArrayList<Map<String, Object>>();
+			Map<String, Object> mapResponse = new HashMap<String, Object>();
 
 			String encodedString = (String) payload.get("image");
 			byte[] encodedByte = Base64.decodeBase64(encodedString);
@@ -302,17 +304,26 @@ public class Android_StudentController {
 
 			// add path to report
 			Student student = ss.findStudentById((String) payload.get("studentId"));
+			try {
 			Booking booking = bs.findStudentCurrentBooking(student);
 			Booking lastBooking = bs.findBookingBefore(booking);
-
 			rs.createReport(new Report((String) payload.get("details"), name + imageType, lastBooking,
 					ReportStatus.PROCESSING, ReportCategory.valueOf((String) payload.get("category")), student));
-//		System.out.println("4 success");
-			// test for getting real path for app
-			System.out.println(filePath + name + imageType);// real path in local
+
 			/*ms.sendSimpleMail("e0838388@u.nus.edu","report test","new report generated!");*/
-//		System.out.println("report success");
-			return "report-success";
+
+			mapResponse.put("response", "REPORT CREATED");
+			jsonArrayResponse.add(mapResponse);
+			return jsonArrayResponse;
+			}
+			
+			catch(Exception e)
+			{
+				mapResponse.put("response", "NO BOOKING FOUND BEFORE CURRENT");
+				jsonArrayResponse.add(mapResponse);
+				return jsonArrayResponse;
+			}
+
 		} else
 			return null;
 	}

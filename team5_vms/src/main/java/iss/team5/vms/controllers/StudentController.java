@@ -105,9 +105,8 @@ public class StudentController {
 //		List<Booking> findTodayBooking=sBooking.stream()
 //		.filter(b-> b.getDate()==LocalDate.now() && b.getStatus().toString().equalsIgnoreCase("SUCCESSFUL") )
 //		.collect(Collectors.toList());
-
+		
 		if (studentBookingToday.size() == 3) { 
-
 			Booking bookingOfTheDay = studentBookingToday.get(0);
 			ModelAndView mav = new ModelAndView("student-home-page");
 			mav.addObject("bookingOfTheDay",bookingOfTheDay);
@@ -365,7 +364,7 @@ public class StudentController {
 	}
 	
 	@RequestMapping(value = "report/save", method = RequestMethod.POST)
-    private String uploadReport(@RequestParam(value="file",required=false) MultipartFile file,
+    private String uploadReport(@RequestParam(value="file",required=true) MultipartFile file,
                                 @RequestParam(value = "details",required=true) String details,
                                 HttpServletRequest request) throws IOException {
         String path = "";
