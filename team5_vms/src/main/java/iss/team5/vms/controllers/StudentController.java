@@ -106,7 +106,7 @@ public class StudentController {
 //		.filter(b-> b.getDate()==LocalDate.now() && b.getStatus().toString().equalsIgnoreCase("SUCCESSFUL") )
 //		.collect(Collectors.toList());
 		
-		if (studentBookingToday.size() == 1) { 
+		if (studentBookingToday.size() == 1) {
 			Booking bookingOfTheDay = studentBookingToday.get(0);
 			ModelAndView mav = new ModelAndView("student-home-page");
 			mav.addObject("bookingOfTheDay",bookingOfTheDay);

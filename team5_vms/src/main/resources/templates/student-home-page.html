@@ -59,13 +59,13 @@
 						<h5 th:text="${booking.room.roomName}"></h5>
 					</div>
 					<div class="card-body">
-						<span "card-text text-center" th:if="${#lists.isEmpty(booking.room.facilities)}">
+						<span class="card-text text-center" th:if="${#lists.isEmpty(booking.room.facilities)}">
 							<span class="card-text text-center font-weight-bold">Facilities :
 							</span>
 							<span class="card-text text-center">&nbsp;NA
 							</span><br>
 						</span>
-						<span "card-text text-center" th:if="${not #lists.isEmpty(booking.room.facilities)}">
+						<span class="card-text text-center" th:if="${not #lists.isEmpty(booking.room.facilities)}">
 							<span class="card-text text-center font-weight-bold">Facilities : </span>
 							<span class="card-text text-center">
 								<ul class="list-unstyled mt-3 mb-4" th:each="fac:${booking.room.facilities}">

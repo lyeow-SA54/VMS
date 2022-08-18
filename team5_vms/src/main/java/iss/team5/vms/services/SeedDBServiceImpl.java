@@ -72,7 +72,10 @@ public class SeedDBServiceImpl implements SeedDBService {
 		bs.createBooking(new Booking("B3", dateTimeInput.dateInput("08/14/2022"), LocalTime.now(), 60, BookingStatus.REJECTED));
 		bs.createBooking(new Booking("B4", dateTimeInput.dateInput("08/15/2022"), LocalTime.now(), 60, BookingStatus.WAITINGLIST));
 		bs.createBooking(new Booking("B5", LocalDate.now().plusDays(1), LocalTime.now(), 60, BookingStatus.SUCCESSFUL));
-		bs.createBooking(new Booking("B6", LocalDate.now(), LocalTime.now().minusMinutes(35), 120, BookingStatus.SUCCESSFUL));
+		bs.createBooking(new Booking("B6", LocalDate.now(), LocalTime.now().minusMinutes(90), 60, BookingStatus.SUCCESSFUL));
+		bs.createBooking(new Booking("B7", dateTimeInput.dateInput("08/17/2022"), LocalTime.now().minusMinutes(120), 45, BookingStatus.SUCCESSFUL));
+		bs.createBooking(new Booking("B8", dateTimeInput.dateInput("08/17/2022"), LocalTime.now().minusMinutes(45), 90, BookingStatus.SUCCESSFUL));
+		bs.createBooking(new Booking("B9", dateTimeInput.dateInput("08/17/2022"), dateTimeInput.timeInput("14:00:05"), 120, BookingStatus.SUCCESSFUL));
 		}
 		
 		if(!rs.tableExist()) {
@@ -167,5 +170,18 @@ public class SeedDBServiceImpl implements SeedDBService {
 		bs.addRoom(b4, r1);
 		bs.addRoom(b5, r3);
 		bs.addRoom(b6, r3);
+
+		Student s3 = ss.findStudentById("S1003");
+		Booking b7 = bs.findBookingById("B1007");
+		Booking b8 = bs.findBookingById("B1008");
+		Booking b9 = bs.findBookingById("B1009");
+		bs.addStudent(b7,s1);
+		bs.addStudent(b8,s1);
+		bs.addStudent(b9,s1);
+		bs.addRoom(b7,r1);
+		bs.addRoom(b8,r1);
+		bs.addRoom(b9,r1);
+		s3.setScore(5);
+		ss.changeStudent(s3);
 	}
 }
