@@ -365,7 +365,7 @@ public class StudentController {
 	}
 	
 	@RequestMapping(value = "report/save", method = RequestMethod.POST)
-    private String uploadReport(@RequestParam(value="file",required=false) MultipartFile file,
+    private String uploadReport(@RequestParam(value="file",required=true) MultipartFile file,
                                 @RequestParam(value = "details",required=true) String details,
                                 HttpServletRequest request) throws IOException {
         String path = "";
