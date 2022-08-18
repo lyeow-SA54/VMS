@@ -104,140 +104,100 @@
 		</div>
 	</div>-->
 
-	<div class="container" th:if="not ${#lists.isEmpty(bookings)}">
+	<div class="container">
 		<div class="row mt-5">
 			<div class="col-3 mb-3">
 				<h5>Available Rooms</h5>
+				<p th:if="${#lists.isEmpty(bookings)}">No Rooms Available</p>
 			</div>
 		</div>
-		<div class="row">
+		<div class="row" th:if="not ${#lists.isEmpty(bookings)}">
 			<div class="container">
 				<div id="carouselExampleControls" class="carousel carousel-dark slide" data-ride="carousel"
 					data-interval="false">
 					<div class="carousel-inner">
-						<div class="carousel-item active">
+						<div class="carousel-item active" th:if="not ${#lists.isEmpty(bookingsCarousel1)}">
 							<div class="card-wrapper">
-								<div class="card mycarousel-card" style="width: 18rem;">
-									<img class="card-img-top" src="image1.jpg" alt="Card image cap">
-									<div class="card-body">
-										<h5 class="card-title">Card title</h5>
-										<p class="card-text">Some quick example text to build on the card title and make
-											up the
-											bulk
-											of the card's content.</p>
-										<a href="#" class="btn btn-primary">Go somewhere</a>
+								<div class="card mycarousel-card" style="width: 18rem;"
+									th:each="booking:${bookingsCarousel1}">
+									<div class="card-header">
+										<h5 th:text="${booking.room.roomName}"></h5>
 									</div>
-								</div>
-								<div class="card mycarousel-card" style="width: 18rem;">
-									<img class="card-img-top" src="image2.jpg" alt="Card image cap">
 									<div class="card-body">
-										<h5 class="card-title">Card title</h5>
-										<p class="card-text">Some quick example text to build on the card title and make
-											up the
-											bulk
-											of the card's content.</p>
-										<a href="#" class="btn btn-primary">Go somewhere</a>
-									</div>
-								</div>
-								<div class="card mycarousel-card" style="width: 18rem;">
-									<img class="card-img-top" src="image3.jpg" alt="Card image cap">
-									<div class="card-body">
-										<h5 class="card-title">Card title</h5>
-										<p class="card-text">Some quick example text to build on the card title and make
-											up the
-											bulk
-											of the card's content.</p>
-										<a href="#" class="btn btn-primary">Go somewhere</a>
+										<span "card-text text-center"
+											th:if="${#lists.isEmpty(booking.room.facilities)}">
+											<span class="card-text text-center font-weight-bold">Facilities :
+											</span>
+											<span class="card-text text-center">&nbsp;NA
+											</span><br>
+										</span>
+										<span "card-text text-center"
+											th:if="${not #lists.isEmpty(booking.room.facilities)}">
+											<span class="card-text text-center font-weight-bold">Facilities : </span>
+											<span class="card-text text-center">
+												<ul class="list-unstyled mt-3 mb-4"
+													th:each="fac:${booking.room.facilities}">
+													<li th:text="${fac.name}"></li>
+												</ul>
+											</span>
+										</span>
+										<span class="card-text text-center font-weight-bold"
+											th:text="#{fieldLabel.rmcapacity}">
+										</span>
+										<span class="card-text text-center" th:text="${booking.room.capacity}">
+										</span>
 									</div>
 								</div>
 							</div>
 						</div>
-						<div class="carousel-item">
+						<div class="carousel-item" th:each="bookingC:${bookingsCarousel}">
 							<div class="card-wrapper">
-								<div class="card mycarousel-card" style="width: 18rem;">
-									<img class="card-img-top" src="image4.jpg" alt="Card image cap">
-									<div class="card-body">
-										<h5 class="card-title">Card title</h5>
-										<p class="card-text">Some quick example text to build on the card title and make
-											up the
-											bulk
-											of the card's content.</p>
-										<a href="#" class="btn btn-primary">Go somewhere</a>
+								<div class="card mycarousel-card" style="width: 18rem;" th:each="booking:${bookingC}">
+									<div class="card-header">
+										<h5 th:text="${booking.room.roomName}"></h5>
 									</div>
-								</div>
-								<div class="card mycarousel-card" style="width: 18rem;">
-									<img class="card-img-top" src="image5.jpg" alt="Card image cap">
 									<div class="card-body">
-										<h5 class="card-title">Card title</h5>
-										<p class="card-text">Some quick example text to build on the card title and make
-											up the
-											bulk
-											of the card's content.</p>
-										<a href="#" class="btn btn-primary">Go somewhere</a>
-									</div>
-								</div>
-								<div class="card mycarousel-card" style="width: 18rem;">
-									<img class="card-img-top" src="image6.jpg" alt="Card image cap">
-									<div class="card-body">
-										<h5 class="card-title">Card title</h5>
-										<p class="card-text">Some quick example text to build on the card title and make
-											up the
-											bulk
-											of the card's content.</p>
-										<a href="#" class="btn btn-primary">Go somewhere</a>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="carousel-item">
-							<div class="card-wrapper">
-								<div class="card mycarousel-card" style="width: 18rem;">
-									<img class="card-img-top" src="image3.jpg" alt="Card image cap">
-									<div class="card-body">
-										<h5 class="card-title">Card title</h5>
-										<p class="card-text">Some quick example text to build on the card title and make
-											up the
-											bulk
-											of the card's content.</p>
-										<a href="#" class="btn btn-primary">Go somewhere</a>
-									</div>
-								</div>
-								<div class="card mycarousel-card " style="width: 18rem;">
-									<img class="card-img-top" src="image1.jpg" alt="Card image cap">
-									<div class="card-body">
-										<h5 class="card-title">Card title</h5>
-										<p class="card-text">Some quick example text to build on the card title and make
-											up the
-											bulk
-											of the card's content.</p>
-										<a href="#" class="btn btn-primary">Go somewhere</a>
-									</div>
-								</div>
-								<div class="card mycarousel-card" style="width: 18rem;">
-									<img class="card-img-top" src="image6.jpg" alt="Card image cap">
-									<div class="card-body">
-										<h5 class="card-title">Card title</h5>
-										<p class="card-text">Some quick example text to build on the card title and make
-											up the
-											bulk
-											of the card's content.</p>
-										<a href="#" class="btn btn-primary">Go somewhere</a>
+										<span "card-text text-center"
+											th:if="${#lists.isEmpty(booking.room.facilities)}">
+											<span class="card-text text-center font-weight-bold">Facilities :
+											</span>
+											<span class="card-text text-center">&nbsp;NA
+											</span><br>
+										</span>
+										<span "card-text text-center"
+											th:if="${not #lists.isEmpty(booking.room.facilities)}">
+											<span class="card-text text-center font-weight-bold">Facilities : </span>
+											<span class="card-text text-center">
+												<ul class="list-unstyled mt-3 mb-4"
+													th:each="fac:${booking.room.facilities}">
+													<li th:text="${fac.name}"></li>
+												</ul>
+											</span>
+										</span>
+										<span class="card-text text-center font-weight-bold"
+											th:text="#{fieldLabel.rmcapacity}">
+										</span>
+										<span class="card-text text-center" th:text="${booking.room.capacity}">
+										</span>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-					<a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
-						<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-						<span class="sr-only">Previous</span>
-					</a>
-					<a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
-						<span class="carousel-control-next-icon" aria-hidden="true"></span>
-						<span class="sr-only">Next</span>
-					</a>
 				</div>
 			</div>
 		</div>
+		<a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+			<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+			<span class="sr-only">Previous</span>
+		</a>
+		<a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+			<span class="carousel-control-next-icon" aria-hidden="true"></span>
+			<span class="sr-only">Next</span>
+		</a>
+	</div>
+	</div>
+	</div>
 	</div>
 
 	<footer class="page-footer">
