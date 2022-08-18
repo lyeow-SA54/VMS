@@ -1,0 +1,30 @@
+.card-wrapper  {
+    display:flex;
+}
+
+.mycarousel-card  {
+    margin: 0.5em; 
+    width: calc(100%/3);
+}
+
+.carousel-control-prev  {
+    /* filter: invert(100%); */
+    background-color: #ea0d0d;
+    width: 6vh;
+    height: 6vh;
+    border-radius: 50%;
+    top:50%;
+    transform: translateY(50%);
+    margin-left: -50px;
+}
+
+.carousel-control-next  {
+    /* filter: invert(100%); */
+    background-color: #ea0d0d;
+    width: 6vh;
+    height: 6vh;
+    border-radius: 50%;
+    top:50%;
+    transform: translateY(50%);
+    margin-right: -50px;
+}
