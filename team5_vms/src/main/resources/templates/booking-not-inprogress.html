@@ -4,22 +4,23 @@
 <head th:replace="fragments/general.html :: headerfiles" />
 
 <body>
-<div th:replace="fragments/general.html :: menu-student"></div>
-
-<div >
-  <div class="container">
-    <div class="row" style="margin-top:100px;">
-      <div class="col" align="center">
-        <img src="/image/no-data.png">
-      </div>
-    </div><br>
-    <div class="row">
-      <div class="col" style="text-align:center;">
-        <h5>There are no booking in progress, so you can not extend or report booking.</h5>
-      </div>
-    </div>
-  </div>
-</div>
-
-
+	<div th:replace="fragments/general.html :: menu-student"></div>
+	<div class="container">
+		<div class="row" style="margin-top:100px;">
+			<div class="col" align="center">
+				<img src="/image/no-data.png">
+			</div>
+		</div><br>
+		<div class="row">
+			<div class="col" style="text-align:center;">
+				<h5>No booking in progress.</h5>
+				<h5>You can't extend or report booking!</h5>
+			</div>
+		</div>
+	</div>
+	<footer class="page-footer">
+		<div class="footer-copyright text-center py-3" style="color:white; background-color: #003062">
+			VMS Copyright &copy; 2022
+		</div>
+	</footer>
 </html>

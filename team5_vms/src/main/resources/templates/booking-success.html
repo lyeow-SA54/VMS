@@ -34,15 +34,15 @@
 				<h5 class="card-title" th:text="${booking.room.roomName}">
 				</h5>
 				<div class="mx-auto text-center">
-					<span>Booking Date and Time: </span>
+					<span class="font-weight-bold">Booking Date and Time: </span>
 					<span th:text="${booking.date}" /></span>
 					<span th:text="${booking.time}"></span>
 				</div>
 				<div class="mx-auto text-center">
-    <span>Booking Status: </span>
+    <span class="font-weight-bold">Booking Status: </span>
     <span th:text="${booking.status}"></span></div>
     <div class="mx-auto text-center" th:if="${outcomeMsg}!= null">
-    <span>Extension Request Outcome: </span>
+    <span class="font-weight-bold">Extension Request Outcome: </span>
 	<span th:text="${outcomeMsg}"></span></span>
     </div>
 				<br />
