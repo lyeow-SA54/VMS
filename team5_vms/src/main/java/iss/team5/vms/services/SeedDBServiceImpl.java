@@ -102,6 +102,7 @@ public class SeedDBServiceImpl implements SeedDBService {
 			rms.createRoom(new Room(true ,"Mercury",10));
 			rms.createRoom(new Room(true ,"Venus",6));
 			}
+		
 	}
 	
 	public void loadBookingData() {

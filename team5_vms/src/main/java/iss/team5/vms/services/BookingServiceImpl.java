@@ -2,7 +2,6 @@ package iss.team5.vms.services;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.WeekFields;
@@ -10,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -24,6 +22,7 @@ import org.springframework.web.client.RestTemplate;
 
 import iss.team5.vms.DTO.ResponsePojo;
 import iss.team5.vms.helper.BookingStatus;
+import iss.team5.vms.helper.FirstDayOfCurrentWeek;
 import iss.team5.vms.model.Booking;
 import iss.team5.vms.model.Room;
 import iss.team5.vms.model.Student;
@@ -151,10 +150,8 @@ public class BookingServiceImpl implements BookingService {
 //			}
 		}
 		List<Room> frooms = rms.findAllRoomsOpenForBooking(booking, rooms);
-		Booking bookingBefore1 = new Booking("placeholder", booking.getDate(), booking.getTime(),
-				duration);
-		Booking bookingBefore2 = new Booking("placeholder", booking.getDate(), booking.getTime(),
-				duration);
+		Booking bookingBefore1 = new Booking("placeholder", booking.getDate(), booking.getTime(), duration);
+		Booking bookingBefore2 = new Booking("placeholder", booking.getDate(), booking.getTime(), duration);
 		Booking bookingAfter1 = new Booking("placeholder", booking.getDate(), booking.getTime(), duration);
 		Booking bookingAfter2 = new Booking("placeholder", booking.getDate(), booking.getTime(), duration);
 
@@ -347,26 +344,26 @@ public class BookingServiceImpl implements BookingService {
 
 		LocalDate date = booking.getDate();
 		int week = date.get(WeekFields.ISO.weekOfWeekBasedYear());
-		int year = date.getYear();
-//		
-//		System.out.println(week + ", "+ year);
+//		int year = date.getYear();
+////		
+////		System.out.println(week + ", "+ year);
+//
+//		Calendar calendar = Calendar.getInstance();
+//		calendar.clear();
+//		calendar.set(Calendar.WEEK_OF_YEAR, week);
+//		calendar.set(Calendar.YEAR, year);
+//
+//		LocalDate firstDayOfWeek = LocalDate.ofInstant(calendar.getTime().toInstant(), ZoneOffset.ofHours(8))
+//				.plusDays(8);
+////		System.out.println(firstDayOfWeek);
+//		calendar.add(Calendar.DAY_OF_MONTH, 6);
+//		LocalDate lastDayOfWeek = LocalDate.ofInstant(calendar.getTime().toInstant(), ZoneOffset.ofHours(8))
+//				.plusDays(8);
+////		System.out.println(lastDayOfWeek);
+//
+		List<Booking> bookings = findBookingsInCurrentWeek(booking.getDate());
 
-		Calendar calendar = Calendar.getInstance();
-		calendar.clear();
-		calendar.set(Calendar.WEEK_OF_YEAR, week);
-		calendar.set(Calendar.YEAR, year);
-
-		LocalDate firstDayOfWeek = LocalDate.ofInstant(calendar.getTime().toInstant(), ZoneOffset.ofHours(8))
-				.plusDays(8);
-//		System.out.println(firstDayOfWeek);
-		calendar.add(Calendar.DAY_OF_MONTH, 6);
-		LocalDate lastDayOfWeek = LocalDate.ofInstant(calendar.getTime().toInstant(), ZoneOffset.ofHours(8))
-				.plusDays(8);
-//		System.out.println(lastDayOfWeek);
-
-		List<Booking> bookings = br.findByDateBetween(firstDayOfWeek, lastDayOfWeek);
-
-		long volume = bookings.stream().count();
+		int volume = (int) bookings.stream().count();
 //		System.out.println(volume);
 
 		String uri = "http://127.0.0.1:5000/peakpredict?week=" + week + "&volume=" + volume;
@@ -379,4 +376,43 @@ public class BookingServiceImpl implements BookingService {
 		}
 		return false;
 	}
+
+	@Override
+	public List<Booking> findBookingsInCurrentWeek(LocalDate date) {
+//		int week = date.get(WeekFields.ISO.weekOfWeekBasedYear());
+//		int year = date.getYear();
+////		
+////		System.out.println(week + ", "+ year);
+//
+//		Calendar calendar = Calendar.getInstance();
+//		calendar.clear();
+//		calendar.set(Calendar.WEEK_OF_YEAR, week);
+//		calendar.set(Calendar.YEAR, year);
+//
+//		LocalDate firstDayOfWeek = LocalDate.ofInstant(calendar.getTime().toInstant(), ZoneOffset.ofHours(8))
+//				.plusDays(8);
+////		System.out.println(firstDayOfWeek);
+//		calendar.add(Calendar.DAY_OF_MONTH, 6);
+//		LocalDate lastDayOfWeek = LocalDate.ofInstant(calendar.getTime().toInstant(), ZoneOffset.ofHours(8))
+//				.plusDays(8);
+////		System.out.println(lastDayOfWeek);
+
+		LocalDate firstDayOfWeek = FirstDayOfCurrentWeek.value(date);
+		return br.findByDateBetween(firstDayOfWeek, firstDayOfWeek.plusDays(6));
+
+//		return (int) bookings.stream().count();
+	}
+
+	@Override
+	public int getBookingStatusCounts(List<Booking> bookings, BookingStatus status) {
+		long count = bookings.stream().filter(b -> b.getStatus().equals(status)).count();
+		return (int) count;
+	}
+
+	@Override
+	public Integer getSuccessBookingsDurationForDate(List<Booking> bookings, LocalDate date) {
+		return bookings.stream().filter(b -> b.getStatus().equals(BookingStatus.SUCCESSFUL) && b.getDate().equals(date))
+				.map(Booking::getDuration).mapToInt(Integer::intValue).sum();
+	}
+
 }
