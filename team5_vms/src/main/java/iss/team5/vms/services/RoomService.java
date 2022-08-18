@@ -1,5 +1,6 @@
 package iss.team5.vms.services;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +15,8 @@ public interface RoomService {
 	boolean compareFacilityListsExact(List<Facility> facilities1, List<Facility> facilities2);
 	
 	boolean compareFacilityListsContains(List<Facility> facilities1, List<Facility> facilities2);
+	
+	int getRoomOpenHours();
 	
 	List<Room> findAllRooms();
 	
@@ -36,6 +39,7 @@ public interface RoomService {
 	void changeRoom(Room room);
 
 	void removeRoom(Room room);
+
 
 
 

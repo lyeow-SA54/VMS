@@ -19,8 +19,10 @@ import org.springframework.stereotype.Service;
 
 import iss.team5.vms.helper.BookingStatus;
 import iss.team5.vms.helper.ReportCategory;
+import iss.team5.vms.helper.ReportStatus;
 import iss.team5.vms.model.Booking;
 import iss.team5.vms.model.Report;
+import iss.team5.vms.model.Room;
 import iss.team5.vms.model.Student;
 import iss.team5.vms.repositories.BookingRepo;
 import iss.team5.vms.repositories.ReportRepo;
@@ -172,6 +174,24 @@ public class ReportServiceImpl implements ReportService {
 		};
 
 		scheduler.scheduleAtFixedRate(getStudentWithScore, initialDelay, TimeUnit.DAYS.toSeconds(6), TimeUnit.SECONDS);
+	}
+	
+	@Override
+	public int getReportStatusCounts(List<Report> report, ReportStatus status) {
+		long count = report.stream().filter(b -> b.getReportStatus().equals(status)).count();
+		return (int) count;
+	}
+	
+	@Override
+	public int getReportCatCounts(List<Report> report, ReportCategory category) {
+		long count = report.stream().filter(b -> b.getCategory().equals(category)).count();
+		return (int) count;
+	}
+	
+	@Override
+	public int getReportRoomCounts(List<Report> report, Room room) {
+		long count = report.stream().filter(b -> b.getBooking().getRoom().equals(room)).count();
+		return (int) count;
 	}
 
 }

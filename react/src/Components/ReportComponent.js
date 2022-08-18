@@ -119,7 +119,7 @@ class Report extends Component {
                             )}</td>
                         <td>{searchedReports.details}</td>
                         <td>{searchedReports.booking.date} / {searchedReports.booking.time}</td>
-                        <td>{searchedReports.booking.duration} hour</td>
+                        <td>{searchedReports.booking.duration} minutes</td>
                         <td>{searchedReports.reportStatus}</td>
                         {/* <td>{searchedReports.room.roomName}</td> */}
                         <td>

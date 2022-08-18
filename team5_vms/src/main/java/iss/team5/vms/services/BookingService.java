@@ -3,6 +3,7 @@ package iss.team5.vms.services;
 import java.time.LocalDate;
 import java.util.List;
 
+import iss.team5.vms.helper.BookingStatus;
 import iss.team5.vms.model.Booking;
 import iss.team5.vms.model.Room;
 import iss.team5.vms.model.Student;
@@ -43,9 +44,15 @@ public interface BookingService {
 	
 	List<Booking> findBookingsAvailableAlternative(Booking booking, List<Room> rooms, Student student);
 	
+	List<Booking> findBookingsInCurrentWeek(LocalDate date);
+	
 	List<Booking> updateBookingInProgress(List<Booking> bookings);
 
 	String checkIn(Student student, Booking booking);
+	
+	int getBookingStatusCounts(List<Booking> bookings, BookingStatus status);
+
+	Integer getSuccessBookingsDurationForDate(List<Booking> bookings, LocalDate date);
 
 	void cancelCourseById(String id);
 
@@ -54,5 +61,9 @@ public interface BookingService {
 	void addStudent(Booking booking, Student student);
 	
 	void addRoom(Booking booking, Room room);
+
+	int getBookingCountsForRoom(List<Booking> bookings, Room room);
+	
+	Integer getBookingHoursForRoom(List<Booking> bookings, Room room);
 
 }

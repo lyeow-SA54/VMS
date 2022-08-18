@@ -1,5 +1,6 @@
 package iss.team5.vms.services;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +11,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
+import iss.team5.vms.helper.BookingStatus;
 import iss.team5.vms.model.Booking;
 import iss.team5.vms.model.Facility;
 import iss.team5.vms.model.Room;
@@ -132,6 +134,15 @@ public class RoomServiceImpl implements RoomService {
 	@Override
 	public Room findRoomByRoomName(String name) {
 		return rrepo.findRoomByRoomName(name);
+	}
+	
+	@Override
+	public int getRoomOpenHours()
+	{
+		List<Room> rooms = rrepo.findAll();
+		int blockedDuration = (int)rooms.stream().filter(r->r.isAvailability()).map(Room::getBlockDuration).reduce(0, (a, b) -> a + b);
+		int openDuration = (int)rooms.stream().filter(r->r.isAvailability()).count()*8*5*60;
+		return openDuration-blockedDuration;
 	}
 
 }

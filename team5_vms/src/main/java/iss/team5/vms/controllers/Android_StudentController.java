@@ -12,6 +12,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
@@ -78,13 +82,41 @@ public class Android_StudentController {
 //			JWTGenerator.verifyJWT(accessToken);
 			Student s = ss.findStudentByUser(user);
 			mapResponse.put("studentId", s.getId());
-			mapResponse.put("studentName", s.getUser().getFirstName()+" "+s.getUser().getLastName());
+			mapResponse.put("studentName", s.getUser().getFirstName() + " " + s.getUser().getLastName());
 			mapResponse.put("studentScore", s.getScore());
 			mapResponse.put("response", accessToken);
 			return mapResponse;
 		}
 		mapResponse.put("response", "Invalid login");
 		return mapResponse;
+	}
+
+	@RequestMapping("/rooms/{token}")
+	public List<Room> homeAndroidRooms(@PathVariable String token, @RequestBody List<Map<String, Object>> rawPayload) {
+		if (JWTGenerator.verifyJWT(token)) {
+			Map<String, Object> payload = rawPayload.get(0);
+			List<Room> rooms = rms.findAllRooms();
+			Booking bookingForTheDay = new Booking();
+			bookingForTheDay.setDate(LocalDate.now());
+			bookingForTheDay.setTime(LocalTime.now());
+			List<Room> availableRooms = new ArrayList<Room>();
+			Student student = ss.findStudentById((String) payload.get("studentId"));
+//			System.out.println(token);
+			try {
+				List<Booking> availableBookings = bs.findBookingsAvailableExact(bookingForTheDay, rooms, student);
+				availableRooms = availableBookings.stream().map(Booking::getRoom).distinct()
+						.collect(Collectors.toList());
+//				for (Room r: availableRooms)
+//				{
+//					System.out.println(r.getRoomName());
+//				}
+				return availableRooms;
+			} catch (Exception e) {
+				return availableRooms;
+			}
+		} else
+			return null;
+
 	}
 
 	@PostMapping("/booking/history/{token}")
@@ -94,9 +126,9 @@ public class Android_StudentController {
 		if (JWTGenerator.verifyJWT(token)) {
 			Map<String, Object> payload = rawPayload.get(0);
 			Student s = ss.findStudentById((String) payload.get("studentId"));
-			System.out.println(payload.get("studentId"));
+//			System.out.println(payload.get("studentId"));
 			List<Booking> bookings = bs.findBookingsByStudent(s);
-			System.out.println("returning list");
+//			System.out.println("returning list");
 			return bs.updateBookingInProgress(bookings);
 		} else
 			return null;
@@ -108,34 +140,39 @@ public class Android_StudentController {
 
 		if (JWTGenerator.verifyJWT(token)) {
 			Student student = ss.findStudentById((String) payload.get("studentId"));
+			System.out.println(payload.get("studentId"));
 			try {
 				Booking booking = bs.findStudentCurrentBooking(student);
 				Map<String, Object> mapResponse = new HashMap<String, Object>();
-				String response = "NULL";
-				if (booking != null) {
-					response = "FOUND";
-				} else {
-					booking = bs.findStudentNextBooking(student);
-					if (booking != null) {
-						response = "FOUND";
-					}
-				}
-				if (response == "FOUND") {
+				String response = "FOUND";
+				mapResponse.put("roomName", booking.getRoom().getRoomName());
+				mapResponse.put("date", booking.getDate().toString());
+				mapResponse.put("time", booking.getTime().toString());
+				mapResponse.put("duration", booking.getDuration());
+				mapResponse.put("inprogress", booking.isBookingInProgress());
+				mapResponse.put("checkin", booking.isCheckedIn());
+				mapResponse.put("response", response);
+				System.out.println(booking.getDate());
+				return mapResponse;
+			} catch (Exception e) {
+				try {
+					Booking booking = bs.findStudentNextBooking(student);
+					Map<String, Object> mapResponse = new HashMap<String, Object>();
+					String response = "FOUND";
 					mapResponse.put("roomName", booking.getRoom().getRoomName());
 					mapResponse.put("date", booking.getDate().toString());
 					mapResponse.put("time", booking.getTime().toString());
 					mapResponse.put("duration", booking.getDuration());
 					mapResponse.put("inprogress", booking.isBookingInProgress());
 					mapResponse.put("checkin", booking.isCheckedIn());
+					mapResponse.put("response", response);
+					return mapResponse;
+				} catch (Exception e2) {
+					Map<String, Object> mapResponse = new HashMap<String, Object>();
+					String response = "NULL";
+					mapResponse.put("response", response);
+					return mapResponse;
 				}
-
-				mapResponse.put("response", response);
-				return mapResponse;
-			} catch (Exception e) {
-				Map<String, Object> mapResponse = new HashMap<String, Object>();
-				String response = "NULL";
-				mapResponse.put("response", response);
-				return mapResponse;
 			}
 
 		} else
@@ -223,26 +260,25 @@ public class Android_StudentController {
 	public Map<String, Object> cancelBookingAndroid(@PathVariable String token,
 			@RequestBody Map<String, Object> payload) {
 		if (JWTGenerator.verifyJWT(token)) {
-			
-//		Student student = ss.findStudentById((String) payload.get("studentId"));
-		Booking booking = bs.findBookingById((String) payload.get("bookingId"));
-		String outcomeMsg = "FAILED - INVALID BOOKING";
 
-		//booking is successful and in the future
-		if (booking.getStatus().equals(BookingStatus.SUCCESSFUL)&&((booking.getDate().isAfter(LocalDate.now())||(booking.getDate().equals(LocalDate.now())&&booking.getTime().isAfter(LocalTime.now())))))
-		{
-			booking.setStatus(BookingStatus.CANCELLED);
-			bs.createBooking(booking);
-			outcomeMsg = "COMPLETED";
-		}
-		else {
-			outcomeMsg = "FAILED - INVALID BOOKING";
-		}
-		Map<String, Object> mapResponse = new HashMap<String, Object>();
-		mapResponse.put("response", outcomeMsg);
-		return mapResponse;
-		}
-		else return null;
+//		Student student = ss.findStudentById((String) payload.get("studentId"));
+			Booking booking = bs.findBookingById((String) payload.get("bookingId"));
+			String outcomeMsg = "FAILED - INVALID BOOKING";
+
+			// booking is successful and in the future
+			if (booking.getStatus().equals(BookingStatus.SUCCESSFUL) && ((booking.getDate().isAfter(LocalDate.now())
+					|| (booking.getDate().equals(LocalDate.now()) && booking.getTime().isAfter(LocalTime.now()))))) {
+				booking.setStatus(BookingStatus.CANCELLED);
+				bs.createBooking(booking);
+				outcomeMsg = "COMPLETED";
+			} else {
+				outcomeMsg = "FAILED - INVALID BOOKING";
+			}
+			Map<String, Object> mapResponse = new HashMap<String, Object>();
+			mapResponse.put("response", outcomeMsg);
+			return mapResponse;
+		} else
+			return null;
 	}
 
 	@PostMapping(value = "/report/save/{token}")
@@ -327,28 +363,27 @@ public class Android_StudentController {
 		} else
 			return null;
 	}
-	
-	@PostMapping(value="/checkin/{bookingId}/{token}")
-	public Map<String, Object> bookingCheckin(@PathVariable("bookingId") String bookingId, @PathVariable("token") String token, @RequestBody Map<String, Object> payload) {
-		
+
+	@PostMapping(value = "/checkin/{bookingId}/{token}")
+	public Map<String, Object> bookingCheckin(@PathVariable("bookingId") String bookingId,
+			@PathVariable("token") String token, @RequestBody Map<String, Object> payload) {
+
 		if (JWTGenerator.verifyJWT(token)) {
 			try {
-			Student student = ss.findStudentById((String) payload.get("studentId"));
-			Booking booking = bs.findBookingById(bookingId);
-			String outcomeMsg = "";
-			outcomeMsg = bs.checkIn(student, booking);
-			Map<String, Object> mapResponse = new HashMap<String, Object>();
-			mapResponse.put("response", outcomeMsg);
-			return mapResponse;
+				Student student = ss.findStudentById((String) payload.get("studentId"));
+				Booking booking = bs.findBookingById(bookingId);
+				String outcomeMsg = "";
+				outcomeMsg = bs.checkIn(student, booking);
+				Map<String, Object> mapResponse = new HashMap<String, Object>();
+				mapResponse.put("response", outcomeMsg);
+				return mapResponse;
+			} catch (Exception e) {
+				Map<String, Object> mapResponse = new HashMap<String, Object>();
+				mapResponse.put("response", "BOOKING NOT FOUND");
+				return mapResponse;
 			}
-			catch (Exception e)
-			{
-			Map<String, Object> mapResponse = new HashMap<String, Object>();
-			mapResponse.put("response", "BOOKING NOT FOUND");
-			return mapResponse;
-			}
-		}
-		else return null;
+		} else
+			return null;
 	}
 
 }

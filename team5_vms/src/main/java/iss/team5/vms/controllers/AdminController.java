@@ -2,6 +2,7 @@ package iss.team5.vms.controllers;
 
 import java.time.LocalDate;
 import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -26,6 +27,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import iss.team5.vms.email.service.EmailService;
 import iss.team5.vms.helper.BookingStatus;
+import iss.team5.vms.helper.FirstDayOfCurrentWeek;
+import iss.team5.vms.helper.ReportCategory;
 import iss.team5.vms.helper.ReportStatus;
 import iss.team5.vms.model.Booking;
 import iss.team5.vms.model.Facility;
@@ -351,188 +354,171 @@ public class AdminController {
 		ModelAndView mav = new ModelAndView("dashboard");
 		
 		List<Room> rooms = rService.findAllRooms();
-		List<Student> students = sService.findAllStudents();
-		List<Booking> bookings = bService.findAllBookings();
-		List<Booking> successBookings = bookings.stream()
-				.filter(b->b.getDate()==LocalDate.now()&&b.getStatus()==BookingStatus.SUCCESSFUL)
-				.collect(Collectors.toList());
-		List<Booking> rejectBookings = bookings.stream()
-				.filter(b->b.getDate()==LocalDate.now()&&b.getStatus()==BookingStatus.REJECTED)
-				.collect(Collectors.toList());
-		List<Booking> cancelBookings = bookings.stream()
-				.filter(b->b.getDate()==LocalDate.now()&&b.getStatus()==BookingStatus.CANCELLED)
-				.collect(Collectors.toList());
-		List<Booking> waitBookings = bookings.stream()
-				.filter(b->b.getDate()==LocalDate.now()&&b.getStatus()==BookingStatus.WAITINGLIST)
-				.collect(Collectors.toList());
+		List<Booking> bookings = br.findAllByDate(LocalDate.now());
 		List<List<Object>> getBookingData = 
 				List.of(
-                List.of("SUCCESSFUL", successBookings.size()),
-                List.of("REJECTED", rejectBookings.size()),
-                List.of("CANCELLED", cancelBookings.size()),
-                List.of("WAITINGLIST", waitBookings.size())
+                List.of("SUCCESSFUL", bService.getBookingStatusCounts(bookings, BookingStatus.SUCCESSFUL)),
+                List.of("REJECTED", bService.getBookingStatusCounts(bookings, BookingStatus.REJECTED)),
+                List.of("CANCELLED", bService.getBookingStatusCounts(bookings, BookingStatus.CANCELLED)),
+                List.of("WAITINGLIST", bService.getBookingStatusCounts(bookings, BookingStatus.WAITINGLIST))
         );
 		
-		
-		
+		boolean todayBooking = true;
+		if (bService.getBookingStatusCounts(bookings, BookingStatus.SUCCESSFUL)==0 
+				&&bService.getBookingStatusCounts(bookings, BookingStatus.REJECTED)==0
+				&&bService.getBookingStatusCounts(bookings, BookingStatus.CANCELLED)==0
+				&&bService.getBookingStatusCounts(bookings, BookingStatus.WAITINGLIST)==0){
+			todayBooking = false;
+		};
+
 		LocalDate date = LocalDate.now();
 		int week  = date.get(WeekFields.ISO.weekOfWeekBasedYear());
 		int year = date.getYear();
+
+//		LocalDate date = LocalDate.now();
+//		int week  = date.get(WeekFields.ISO.weekOfWeekBasedYear());
+//		int month = date.getMonth().getValue();
+//		int year = date.getYear();
+//		
+//		Calendar calendar = Calendar.getInstance();
+//		calendar.clear();
+//		calendar.set(Calendar.WEEK_OF_YEAR, week);
+//		calendar.set(Calendar.YEAR, year);
 		
-		Calendar calendar = Calendar.getInstance();
-		calendar.clear();
-		calendar.set(Calendar.WEEK_OF_YEAR, week);
-		calendar.set(Calendar.YEAR, year);
-		
-		LocalDate firstDayOfWeek = LocalDate.ofInstant(calendar.getTime().toInstant(), ZoneOffset.ofHours(8)).plusDays(8);
+		LocalDate firstDayOfWeek = FirstDayOfCurrentWeek.value(LocalDate.now());
 		System.out.println(firstDayOfWeek);
-		calendar.add(Calendar.DAY_OF_MONTH, 1);
-		LocalDate tuesday = LocalDate.ofInstant(calendar.getTime().toInstant(), ZoneOffset.ofHours(8)).plusDays(8);
-		calendar.add(Calendar.DAY_OF_MONTH, 1);
-		LocalDate wednesday = LocalDate.ofInstant(calendar.getTime().toInstant(), ZoneOffset.ofHours(8)).plusDays(8);
-		calendar.add(Calendar.DAY_OF_MONTH, 1);
-		LocalDate thursday = LocalDate.ofInstant(calendar.getTime().toInstant(), ZoneOffset.ofHours(8)).plusDays(8);
-		calendar.add(Calendar.DAY_OF_MONTH, 1);
-		LocalDate friday = LocalDate.ofInstant(calendar.getTime().toInstant(), ZoneOffset.ofHours(8)).plusDays(8);
-		calendar.add(Calendar.DAY_OF_MONTH, 2);
-		LocalDate lastDayOfWeek = LocalDate.ofInstant(calendar.getTime().toInstant(), ZoneOffset.ofHours(8)).plusDays(8);
-		System.out.println(lastDayOfWeek);
 		
-		List<Booking> weekBookings = br.findByDateBetween(firstDayOfWeek, lastDayOfWeek);
+		List<Booking> weekBookings = bService.findBookingsInCurrentWeek(LocalDate.now());
 		
-		List<Booking> successWeekBookings = weekBookings.stream()
-				.filter(b->b.getStatus()==BookingStatus.SUCCESSFUL)
-				.collect(Collectors.toList());
-		List<Booking> rejectWeekBookings = weekBookings.stream()
-				.filter(b->b.getStatus()==BookingStatus.REJECTED)
-				.collect(Collectors.toList());
-		List<Booking> cancelWeekBookings = weekBookings.stream()
-				.filter(b->b.getStatus()==BookingStatus.CANCELLED)
-				.collect(Collectors.toList());
-		List<Booking> waitWeekBookings = weekBookings.stream()
-				.filter(b->b.getStatus()==BookingStatus.WAITINGLIST)
-				.collect(Collectors.toList());
 		List<List<Object>> getWeekBookingData = 
 				List.of(
-                List.of("SUCCESSFUL", successWeekBookings.size()),
-                List.of("REJECTED", rejectWeekBookings.size()),
-                List.of("CANCELLED", cancelWeekBookings.size()),
-                List.of("WAITINGLIST", waitWeekBookings.size())
+                List.of("SUCCESSFUL", bService.getBookingStatusCounts(weekBookings, BookingStatus.SUCCESSFUL)),
+                List.of("REJECTED", bService.getBookingStatusCounts(weekBookings, BookingStatus.REJECTED)),
+                List.of("CANCELLED", bService.getBookingStatusCounts(weekBookings, BookingStatus.CANCELLED)),
+                List.of("WAITINGLIST", bService.getBookingStatusCounts(weekBookings, BookingStatus.WAITINGLIST))
         );
-		
-		
-		
-		int monOpenHours = 8 - successWeekBookings.stream()
-				.filter(r->r.getDate()==firstDayOfWeek)
-				.map(r->r.getRoom().getBlockDuration())
-				.reduce(0, (a, b) -> a + b);
-		
-		int tueOpenHours = 8 - successWeekBookings.stream()
-				.filter(r->r.getDate()==tuesday)
-				.map(r->r.getRoom().getBlockDuration())
-				.reduce(0, (a, b) -> a + b);
-		
-		int wedOpenHours = 8 - successWeekBookings.stream()
-				.filter(r->r.getDate()==wednesday)
-				.map(r->r.getRoom().getBlockDuration())
-				.reduce(0, (a, b) -> a + b);
-		
-		int thurOpenHours = 8 - successWeekBookings.stream()
-				.filter(r->r.getDate()==thursday)
-				.map(r->r.getRoom().getBlockDuration())
-				.reduce(0, (a, b) -> a + b);
-		
-		int friOpenHours = 8 - successWeekBookings.stream()
-				.filter(r->r.getDate()==friday)
-				.map(r->r.getRoom().getBlockDuration())
-				.reduce(0, (a, b) -> a + b);
-		
-		int monBookedHours = successWeekBookings.stream()
-				.filter(r->r.getDate()==firstDayOfWeek&&r.getStatus()==BookingStatus.SUCCESSFUL)
-				.map(r->r.getDuration())
-				.reduce(0, (a, b) -> a + b);
-		
-		int tueBookedHours = successWeekBookings.stream()
-				.filter(r->r.getDate()==tuesday&&r.getStatus()==BookingStatus.SUCCESSFUL)
-				.map(r->r.getDuration())
-				.reduce(0, (a, b) -> a + b);
-		
-		int wedBookedHours = successWeekBookings.stream()
-				.filter(r->r.getDate()==wednesday&&r.getStatus()==BookingStatus.SUCCESSFUL)
-				.map(r->r.getDuration())
-				.reduce(0, (a, b) -> a + b);
-		
-		int thurBookedHours = successWeekBookings.stream()
-				.filter(r->r.getDate()==thursday&&r.getStatus()==BookingStatus.SUCCESSFUL)
-				.map(r->r.getDuration())
-				.reduce(0, (a, b) -> a + b);;
-		
-		int friBookedHours = successWeekBookings.stream()
-				.filter(r->r.getDate()==friday&&r.getStatus()==BookingStatus.SUCCESSFUL)
-				.map(r->r.getDuration())
-				.reduce(0, (a, b) -> a + b);
-		
-		List<List<Object>> getTodayRoomsData = 
-				List.of(
-                List.of("Beacon", 2, 6),
-                List.of("Frontier", 3, 5),
-                List.of("Jupiter", 8, 0),
-                List.of("Mercury", 0, 8),
-                List.of("Venus", 4, 4)
-        );
+
 		
 		List<List<Object>> getOverallRoomForWeekData = 
 				List.of(
-                List.of("MONDAY", monOpenHours, monBookedHours),
-                List.of("TUESDAY", tueOpenHours, tueBookedHours),
-                List.of("WEDNESDAY", wedOpenHours, wedBookedHours),
-                List.of("THURSDAY", thurOpenHours, thurBookedHours),
-                List.of("FRIDAY", 4, 4)
+                List.of("MONDAY", bService.getSuccessBookingsDurationForDate(weekBookings, firstDayOfWeek)),
+                List.of("TUESDAY", bService.getSuccessBookingsDurationForDate(weekBookings, firstDayOfWeek.plusDays(1))),
+                List.of("WEDNESDAY", bService.getSuccessBookingsDurationForDate(weekBookings, firstDayOfWeek.plusDays(2))),
+                List.of("THURSDAY", bService.getSuccessBookingsDurationForDate(weekBookings, firstDayOfWeek.plusDays(3))),
+                List.of("FRIDAY",
+                	bService.getSuccessBookingsDurationForDate(weekBookings, firstDayOfWeek.plusDays(4)))
         );
 		
 		
 		
-		LocalDate firstDayOfMonth = date.withDayOfMonth(1);
-		LocalDate lastDayOfMonth = date.withDayOfMonth(date.getMonth().length(date.isLeapYear()));
+		LocalDate firstDayOfMonth = firstDayOfWeek.withDayOfMonth(1);
+		LocalDate lastDayOfMonth = firstDayOfWeek.withDayOfMonth(firstDayOfWeek.getMonth().length(firstDayOfWeek.isLeapYear()));
 		
 		List<Booking> monthBookings = br.findByDateBetween(firstDayOfMonth, lastDayOfMonth);
 		
-		List<Booking> successMonthBookings = monthBookings.stream()
-				.filter(b->b.getStatus()==BookingStatus.SUCCESSFUL)
-				.collect(Collectors.toList());
-		List<Booking> rejectMonthBookings = monthBookings.stream()
-				.filter(b->b.getStatus()==BookingStatus.REJECTED)
-				.collect(Collectors.toList());
-		List<Booking> cancelMonthBookings = monthBookings.stream()
-				.filter(b->b.getStatus()==BookingStatus.CANCELLED)
-				.collect(Collectors.toList());
-		List<Booking> waitMonthBookings = monthBookings.stream()
-				.filter(b->b.getStatus()==BookingStatus.WAITINGLIST)
-				.collect(Collectors.toList());
 		List<List<Object>> getMonthBookingData = 
 				List.of(
-                List.of("SUCCESSFUL", successMonthBookings.size()),
-                List.of("REJECTED", rejectMonthBookings.size()),
-                List.of("CANCELLED", cancelMonthBookings.size()),
-                List.of("WAITINGLIST", waitMonthBookings.size())
+                List.of("SUCCESSFUL", bService.getBookingStatusCounts(monthBookings, BookingStatus.SUCCESSFUL)),
+                List.of("REJECTED", bService.getBookingStatusCounts(monthBookings, BookingStatus.REJECTED)),
+                List.of("CANCELLED", bService.getBookingStatusCounts(monthBookings, BookingStatus.CANCELLED)),
+                List.of("WAITINGLIST", bService.getBookingStatusCounts(monthBookings, BookingStatus.WAITINGLIST))
         );
 		
 		List<Report> reports = ReService.findAllReports();
-		List<Report> processingReports = reports.stream()
-				.filter(r->r.getReportStatus()==ReportStatus.PROCESSING)
-				.collect(Collectors.toList());		
 		
+		List<List<Object>> getReportStatusData = 
+				List.of(
+                List.of("PROCESSING", ReService.getReportStatusCounts(reports, ReportStatus.PROCESSING)),
+                List.of("REJECTED", ReService.getReportStatusCounts(reports, ReportStatus.REJECTED)),
+                List.of("APPROVED", ReService.getReportStatusCounts(reports, ReportStatus.APPROVED))
+        );
 		
+		List<List<Object>> getReportCatData = 
+				List.of(
+                List.of("CLEANLINESS", ReService.getReportCatCounts(reports, ReportCategory.CLEANLINESS)),
+                List.of("VANDALISE", ReService.getReportCatCounts(reports, ReportCategory.VANDALISE)),
+                List.of("HOGGING", ReService.getReportCatCounts(reports, ReportCategory.HOGGING)),
+                List.of("MISUSE", ReService.getReportCatCounts(reports, ReportCategory.MISUSE))
+        );
+		
+		Room beacon = rooms.stream()
+				.filter(rm->rm.getRoomName().equalsIgnoreCase("Beacon")).findAny().get();
+		Room frontier = rooms.stream()
+				.filter(rm->rm.getRoomName().equalsIgnoreCase("Frontier")).findAny().get();
+		Room jupiter = rooms.stream()
+				.filter(rm->rm.getRoomName().equalsIgnoreCase("Jupiter")).findAny().get();
+		Room mercury = rooms.stream()
+				.filter(rm->rm.getRoomName().equalsIgnoreCase("Mercury")).findAny().get();	
+		Room venus = rooms.stream()
+				.filter(rm->rm.getRoomName().equalsIgnoreCase("Venus")).findAny().get();
+		
+//		List<String> roomNameList = rooms.stream()
+//				.map(Room::getRoomName)
+//				.collect(Collectors.toList());
+//		rooms.forEach(e->ReService.getReportRoomCounts(reports, e));
+//		
+		List<List<Object>> getReportRoomData = 
+				List.of(
+                List.of("Beacon", ReService.getReportRoomCounts(reports, beacon)),
+                List.of("Frontier", ReService.getReportRoomCounts(reports,frontier)),
+                List.of("Jupiter", ReService.getReportRoomCounts(reports,jupiter)),
+                List.of("Mercury", ReService.getReportRoomCounts(reports,mercury)),
+                List.of("Venus", ReService.getReportRoomCounts(reports,venus))
+        );
+		
+		List<List<Object>> getBookingFequencyData = 
+				List.of(
+                List.of("Beacon", bService.getBookingCountsForRoom(bService.findAllBookings(), beacon)),
+                List.of("Frontier", bService.getBookingCountsForRoom(bService.findAllBookings(),frontier)),
+                List.of("Jupiter", bService.getBookingCountsForRoom(bService.findAllBookings(),jupiter)),
+                List.of("Mercury", bService.getBookingCountsForRoom(bService.findAllBookings(),mercury)),
+                List.of("Venus", bService.getBookingCountsForRoom(bService.findAllBookings(),venus))
+        );
+		
+		List<List<Object>> getTodayRoomUsageData = 
+				List.of(
+                List.of("Beacon", bService.getBookingHoursForRoom(bookings, beacon)),
+                List.of("Frontier", bService.getBookingHoursForRoom(bookings,frontier)),
+                List.of("Jupiter", bService.getBookingHoursForRoom(bookings,jupiter)),
+                List.of("Mercury", bService.getBookingHoursForRoom(bookings,mercury)),
+                List.of("Venus", bService.getBookingHoursForRoom(bookings,venus))
+        );
+		
+		 long todayReport = ReService.findAllReports().stream()
+				 .filter(r->r.getBooking().getDate()==date)
+				 .count();
+		
+		long processingReports = ReService.findAllReports().stream()
+				.filter(r->r.getReportStatus().equals(ReportStatus.PROCESSING))
+				.count();	
+		String monthPeriod = "Bookings For " + date.getMonth();
+		
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM");
+		  String monday = firstDayOfWeek.format(formatter);
+		  String friday = firstDayOfWeek.plusDays(4).format(formatter);
+		String weekPeriod = "Bookings From " + monday +" to " + friday;
+		
+		String roomWeek = "Room Usage for " + monday +" to " + friday;
+		String strTodayReport = "Reports filed Today: " + (int)todayReport;
+		String strProcessReport = "Pending Reports to process: " + (int)processingReports;
 		
 		mav.addObject("getBookingData", getBookingData);
-		System.out.println(getOverallRoomForWeekData);
+		System.out.println(getBookingData);
 		mav.addObject("reports", reports);
-		mav.addObject("getReportProcessingSize", processingReports.size());
-		System.out.println(processingReports.size());
+		mav.addObject("strProcessReport", strProcessReport);
+		mav.addObject("strTodayReport", strTodayReport);
+		mav.addObject("getReportStatusData", getReportStatusData);
 		mav.addObject("getWeekBookingData", getWeekBookingData);
 		mav.addObject("getMonthBookingData", getMonthBookingData);
 		mav.addObject("getOverallRoomForWeekData", getOverallRoomForWeekData);
-		mav.addObject("getTodayRoomsData", getTodayRoomsData);
+		mav.addObject("getReportCatData", getReportCatData);
+		mav.addObject("getReportRoomData", getReportRoomData);
+		mav.addObject("todayBooking", todayBooking);
+		mav.addObject("getBookingFequencyData", getBookingFequencyData);
+		mav.addObject("getTodayRoomUsageData", getTodayRoomUsageData);
+		mav.addObject("monthPeriod", monthPeriod);
+		mav.addObject("weekPeriod", weekPeriod);
+		mav.addObject("roomWeek", roomWeek);
 		return mav;
 	}
 }
