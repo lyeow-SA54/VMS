@@ -197,7 +197,6 @@ public class StudentController {
 			List<Room> roomsContaining = rms.findRoomsByContainingAttributes(room);
 			bookings.addAll(bs.findBookingsAvailableAlternative(booking, roomsExact, student));
 			bookings.addAll(bs.findBookingsAvailableExact(booking, roomsContaining, student));
-
 		}
 
 		ModelAndView mav = new ModelAndView("student-bookings-slot_selection");

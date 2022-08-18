@@ -208,8 +208,7 @@ public class BookingServiceImpl implements BookingService {
 	public boolean checkBookingsOverlap(Booking newBooking, Booking existingBooking) {
 		if (newBooking.getTime().isBefore(existingBooking.getTime().plusMinutes(existingBooking.getDuration()))
 				&& (newBooking.getTime().plusMinutes(newBooking.getDuration()).isAfter(existingBooking.getTime()))
-				&& (existingBooking.getStatus().equals(BookingStatus.SUCCESSFUL)
-						|| existingBooking.getStatus().equals(BookingStatus.WAITINGLIST))) {
+				&& (existingBooking.getStatus().equals(BookingStatus.SUCCESSFUL))) {
 			return true;
 		}
 		return false;
