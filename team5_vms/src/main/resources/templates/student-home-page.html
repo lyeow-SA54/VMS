@@ -32,13 +32,19 @@
 					</div>
 					<div class="card-body">
 						<!--<h5 class="card-title">Register Upon Arrival</h5>-->
-						<span class="card-text text-center font-weight-bold">Register Upon Arrival</span>
-						<ul class="list-unstyled mt-3 mb-5">
-							<li>Be punctual</li>
-							<li>Keep the room clean</li>
-							<li th:if="${bookingOfTheDay == null}">No Booking to Check-In</li>
-						</ul>
-						<a th:if="${bookingOfTheDay != null}" class="btn btn-block btn-block btnorange mt-5"
+						<p class="card-text text-center font-weight-bold" th:if="${bookingOfTheDay == null}">No Upcoming Booking</p>
+						<p class="card-text" th:if="${bookingOfTheDay == null}">Room Name :  -</p>
+						<p class="card-text" th:if="${bookingOfTheDay == null}">Date/Time :  -</p>
+						<p class="card-text" th:if="${bookingOfTheDay == null}">Duration  :  -</p>
+						<p class="card-text" th:if="${bookingOfTheDay == null}">Checked-In:  -</p>
+						
+						<p class="card-text text-center font-weight-bold" th:if="${bookingOfTheDay != null}">Upcoming Booking</p>
+						<p class="card-text" th:if="${bookingOfTheDay != null}" th:text="${strRoomName}"></p>
+						<p class="card-text" th:if="${bookingOfTheDay != null}" th:text="${strDateTime}"></p>
+						<p class="card-text" th:if="${bookingOfTheDay != null}" th:text="${strDuration}"></p>
+						<p class="card-text" th:if="${bookingInProgress} and ${bookingOfTheDay != null}" th:text="${strBookingInProgress}"></p>
+						<p class="card-text" th:if="${!bookingInProgress} and ${bookingOfTheDay != null}" th:text="${strBookingNotInProgress}"></p>
+						<a th:if="${bookingInProgress} and ${bookingOfTheDay != null}" class="btn btn-block btn-block btnorange mt-5"
 							th:href="@{/barcodes/{bookingId}(bookingId=${bookingOfTheDay.id})}">Check-In</a>
 					</div>
 				</div>

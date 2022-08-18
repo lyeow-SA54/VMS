@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -107,14 +108,43 @@ public class StudentController {
 //		.collect(Collectors.toList());
 
 		if (studentBookingToday.size() == 3) { 
-
+			
 			Booking bookingOfTheDay = studentBookingToday.get(0);
+			
+			String strRoomName = "Room Name :  " + bookingOfTheDay.getRoom().getRoomName();
+			
+			DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+			String bookingDate = bookingOfTheDay.getDate().format(dateFormatter);
+			DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+			String bookingTime = bookingOfTheDay.getTime().format(timeFormatter);	
+			String strDateTime = "Date/Time :  " + bookingDate +" "+bookingTime;
+			String strDuration = "Duration  :  " + bookingOfTheDay.getDuration() + " minutes";
+			if (bookingOfTheDay.isBookingInProgress())
+			{
+				String strBookingInProgress = "Checked-In:  In Progress";
+				ModelAndView mav = new ModelAndView("student-home-page");
+				mav.addObject("bookingOfTheDay",bookingOfTheDay);
+				mav.addObject("bookings",availableBookings);
+				mav.addObject("strRoomName",strRoomName);
+				mav.addObject("strDateTime",strDateTime);
+				mav.addObject("strDuration",strDuration);
+				mav.addObject("bookingInProgress",bookingOfTheDay.isBookingInProgress());
+				mav.addObject("strBookingInProgress",strBookingInProgress);
+				return mav;
+			}
+			else {
 			ModelAndView mav = new ModelAndView("student-home-page");
+			String strBookingInProgress = "Checked-In:  Under Waiting List";
 			mav.addObject("bookingOfTheDay",bookingOfTheDay);
 			mav.addObject("bookings",availableBookings);
-			
+			mav.addObject("strRoomName",strRoomName);
+			mav.addObject("strDateTime",strDateTime);
+			mav.addObject("strDuration",strDuration);
+			mav.addObject("strBookingNotInProgress",strBookingInProgress);
 			return mav;
-		} else {
+			}
+		} 
+		else {
 		
 		ModelAndView mav = new ModelAndView("student-home-page");
 		mav.addObject("bookings",availableBookings);
