@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import iss.team5.vms.services.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,13 +40,6 @@ import iss.team5.vms.model.Report;
 import iss.team5.vms.model.Room;
 import iss.team5.vms.model.Student;
 import iss.team5.vms.model.User;
-import iss.team5.vms.services.AccountAuthenticateService;
-import iss.team5.vms.services.BookingService;
-import iss.team5.vms.services.FacilityService;
-import iss.team5.vms.services.ReportService;
-import iss.team5.vms.services.RoomService;
-import iss.team5.vms.services.StudentService;
-import iss.team5.vms.services.UserService;
 
 @RestController
 @RequestMapping(path = "api/student", produces = "application/json")
@@ -68,6 +62,9 @@ public class Android_StudentController {
 
 	@Autowired
 	UserService us;
+
+	@Autowired
+	MailService ms;
 
 	@Autowired
 	private AccountAuthenticateService accAuthService;
@@ -313,10 +310,7 @@ public class Android_StudentController {
 //		System.out.println("4 success");
 			// test for getting real path for app
 			System.out.println(filePath + name + imageType);// real path in local
-			/*
-			 * ms.sendSimpleMail("e0838388@u.nus.edu","report test","new report generated!"
-			 * );
-			 */
+			/*ms.sendSimpleMail("e0838388@u.nus.edu","report test","new report generated!");*/
 //		System.out.println("report success");
 			return "report-success";
 		} else
