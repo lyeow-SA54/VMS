@@ -411,8 +411,23 @@ public class BookingServiceImpl implements BookingService {
 
 	@Override
 	public Integer getSuccessBookingsDurationForDate(List<Booking> bookings, LocalDate date) {
-		return bookings.stream().filter(b -> b.getStatus().equals(BookingStatus.SUCCESSFUL) && b.getDate().equals(date))
+		int minutes = bookings.stream().filter(b -> b.getStatus().equals(BookingStatus.SUCCESSFUL) && b.getDate().equals(date))
 				.map(Booking::getDuration).mapToInt(Integer::intValue).sum();
+		return minutes/60;
+	}
+	@Override
+	public int getBookingCountsForRoom(List<Booking> bookings, Room room) {
+		long count = bookings.stream().filter(b -> b.getRoom().equals(room)).count();
+		return (int) count;
+	}
+	
+	@Override
+	public Integer getBookingHoursForRoom(List<Booking> bookings, Room room) {
+		int minutes = bookings.stream().filter(b -> b.getRoom().equals(room))
+				.map(Booking::getDuration).mapToInt(Integer::intValue).sum();
+
+			return minutes/60;
+
 	}
 
 }

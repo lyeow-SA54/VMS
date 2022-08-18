@@ -62,8 +62,8 @@ public interface BookingService {
 	
 	void addRoom(Booking booking, Room room);
 
-
+	int getBookingCountsForRoom(List<Booking> bookings, Room room);
 	
-
+	Integer getBookingHoursForRoom(List<Booking> bookings, Room room);
 
 }
