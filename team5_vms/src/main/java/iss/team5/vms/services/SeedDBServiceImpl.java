@@ -73,9 +73,22 @@ public class SeedDBServiceImpl implements SeedDBService {
 		bs.createBooking(new Booking("B4", dateTimeInput.dateInput("08/15/2022"), LocalTime.now(), 60, BookingStatus.WAITINGLIST));
 		bs.createBooking(new Booking("B5", LocalDate.now().plusDays(1), LocalTime.now(), 60, BookingStatus.SUCCESSFUL));
 		bs.createBooking(new Booking("B6", LocalDate.now(), LocalTime.now().minusMinutes(90), 60, BookingStatus.SUCCESSFUL));
-		bs.createBooking(new Booking("B7", dateTimeInput.dateInput("08/17/2022"), LocalTime.now().minusMinutes(120), 45, BookingStatus.SUCCESSFUL));
-		bs.createBooking(new Booking("B8", dateTimeInput.dateInput("08/17/2022"), LocalTime.now().minusMinutes(45), 90, BookingStatus.SUCCESSFUL));
-		bs.createBooking(new Booking("B9", dateTimeInput.dateInput("08/17/2022"), dateTimeInput.timeInput("14:00:05"), 120, BookingStatus.SUCCESSFUL));
+		bs.createBooking(new Booking("B7", LocalDate.now(), LocalTime.now().minusMinutes(120), 45, BookingStatus.SUCCESSFUL));
+		bs.createBooking(new Booking("B8", LocalDate.now(), LocalTime.now().minusMinutes(45), 90, BookingStatus.SUCCESSFUL));
+		bs.createBooking(new Booking("B9", LocalDate.now(), dateTimeInput.timeInput("14:00:05"), 120, BookingStatus.SUCCESSFUL));
+
+		bs.createBooking(new Booking("B10", LocalDate.now().minusDays(24), LocalTime.now().minusMinutes(60), 60, BookingStatus.SUCCESSFUL));
+		bs.createBooking(new Booking("B11", LocalDate.now().minusDays(22), LocalTime.now().minusMinutes(15), 45, BookingStatus.SUCCESSFUL));
+		bs.createBooking(new Booking("B12", LocalDate.now().minusDays(21), LocalTime.now().minusMinutes(45), 90, BookingStatus.REJECTED));
+		bs.createBooking(new Booking("B13", LocalDate.now().minusDays(18), LocalTime.now().minusMinutes(45),75, BookingStatus.SUCCESSFUL));
+		bs.createBooking(new Booking("B14", LocalDate.now().minusDays(16), LocalTime.now().minusMinutes(75), 60, BookingStatus.CANCELLED));
+		bs.createBooking(new Booking("B15", LocalDate.now().minusDays(15), LocalTime.now().plusMinutes(60), 45, BookingStatus.SUCCESSFUL));
+		bs.createBooking(new Booking("B16", LocalDate.now().minusDays(11), LocalTime.now().minusMinutes(45), 90, BookingStatus.SUCCESSFUL));
+		bs.createBooking(new Booking("B17", LocalDate.now().minusDays(10), LocalTime.now().plusMinutes(45), 30, BookingStatus.SUCCESSFUL));
+		bs.createBooking(new Booking("B18", LocalDate.now().minusDays(8), LocalTime.now().minusMinutes(90), 60, BookingStatus.CANCELLED));
+		bs.createBooking(new Booking("B19", LocalDate.now().minusDays(4), LocalTime.now().minusMinutes(30), 45, BookingStatus.SUCCESSFUL));
+		bs.createBooking(new Booking("B20", LocalDate.now().minusDays(2), LocalTime.now().minusMinutes(45), 90, BookingStatus.SUCCESSFUL));
+		bs.createBooking(new Booking("B21", LocalDate.now().minusDays(1), LocalTime.now().minusMinutes(45), 75, BookingStatus.CANCELLED));
 		}
 		
 		if(!rs.tableExist()) {
