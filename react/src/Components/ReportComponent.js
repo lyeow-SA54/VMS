@@ -18,12 +18,14 @@ class Report extends Component {
             isLoaded: false,
             isOpen: false,
             imageOpen: '',
-            statusFilter: 'PROCESSING'
+            statusFilter: 'PROCESSING',
+            categoryFilter: ''
         };
 
         this.onChange = {
             dateFilter: this.handleChange.bind(this, 'dateFilter'),
-            statusFilter: this.handleChange.bind(this, 'statusFilter')
+            statusFilter: this.handleChange.bind(this, 'statusFilter'),
+            categoryFilter: this.handleChange.bind(this, 'categoryFilter')
             
         }
     };
@@ -89,11 +91,12 @@ class Report extends Component {
         // const ReportListProcessed = reports.forEach(x => x.imgPath = "/img/"+x.imgPath);
         const ReportList = reports
             .filter(report =>
-                report.booking.date.includes(this.state.dateFilter)&&report.reportStatus.includes(this.state.statusFilter))
+                report.booking.date.includes(this.state.dateFilter)&&report.reportStatus.includes(this.state.statusFilter)&&report.category.includes(this.state.categoryFilter))
             .map(searchedReports => {
                 return (
                     <tr>
                         <td>{searchedReports.id}</td>
+                        <td>{searchedReports.category}</td>
                         <td> <img className="preview"
                             src={searchedReports.imgPath}
                             onClick={() => this.handleShowDialog(searchedReports.imgPath)}
@@ -101,7 +104,7 @@ class Report extends Component {
                             {this.state.isOpen && (
                                 <dialog
                                     className="dialog"
-                                    style={{ position: "absolute" }}
+                                    style={{ position: "fixed" }}
                                     open
                                     onClick={() => this.handleShowDialog(searchedReports.imgPath)}
                                 >
@@ -163,12 +166,20 @@ class Report extends Component {
                         {/* <label for="studentname">Student search:&nbsp;&nbsp;</label>
                     <input type="text" onChange={this.onChange.studentFilter} id="studentname" /> */}
                         <label for="date">Date:&nbsp;&nbsp;</label>
-                        <input type="date" onChange={this.onChange.dateFilter} id="date" min="2022-01-01" max="2023-12-31"></input>
+                        <input type="date" onChange={this.onChange.dateFilter} id="date" min="2022-01-01" max="2023-12-31" style={{marginRight: '25px'}}></input>
                         <label for="status">Status:&nbsp;&nbsp;</label>
-                        <select id="status" onChange={this.onChange.statusFilter} >
+                        <select id="status" onChange={this.onChange.statusFilter} style={{marginRight: '25px'}}>
                             <option value="PROCESSING">Processing</option>
                             <option value="APPROVED">Approved</option>
                             <option value="REJECTED">Rejected</option>
+                        </select>
+                        <label for="category">Category:&nbsp;&nbsp;</label>
+                        <select id="category" onChange={this.onChange.categoryFilter} >
+                            <option disabled selected value></option>
+                            <option value="CLEANLINESS">Cleanliness</option>
+                            <option value="VANDALISE">Vandalise</option>
+                            <option value="HOGGING">Hogging</option>
+                            <option value="MISUSE">Misuse</option>
                         </select>
                     </div>
                     <div>
@@ -178,6 +189,7 @@ class Report extends Component {
                         <thead className='table-light'>
                             <tr>
                                 <th>Report ID</th>
+                                <th>Category</th>
                                 <th>Image</th>
                                 <th>Details</th>
                                 <th>Booking Date & Time</th>

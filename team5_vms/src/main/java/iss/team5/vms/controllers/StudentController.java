@@ -472,7 +472,7 @@ public class StudentController {
 
 	@RequestMapping(value = "report/save", method = RequestMethod.POST)
 	private String createReport(@RequestParam(value = "file", required = true) MultipartFile file,
-			@RequestParam(value = "details", required = true) String details, HttpServletRequest request)
+			@RequestParam(value = "details", required = true) String details, @RequestParam(value = "category", required = true) String category, HttpServletRequest request)
 			throws IOException {
 		String path = "";
 		String fileName = "";
@@ -497,12 +497,12 @@ public class StudentController {
 		Booking booking = bs.findStudentCurrentBooking(student);
 		Booking lastBooking = bs.findBookingBefore(booking);
 		Report newReport = new Report(details, fileName, lastBooking, ReportStatus.PROCESSING,
-				ReportCategory.CLEANLINESS, student);
+				ReportCategory.valueOf(category), student);
 		if (!rs.checkMultipleReports(newReport))
 		{
 		rs.createReport(newReport);
 		if (newReport.getCategory().equals(ReportCategory.HOGGING)) {
-			if (bs.predictHogging(path)) {
+			if (bs.predictHogging(fileName)) {
 				rs.approveReportScoring(newReport);
 			}
 			else

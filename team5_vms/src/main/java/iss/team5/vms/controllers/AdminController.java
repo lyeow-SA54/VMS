@@ -471,7 +471,7 @@ public class AdminController {
 			getTodayRoomUsageData.add(List.of(r.getRoomName(), bService.getBookingHoursForRoom(bookings, r)));
 		}
 
-		long todayReport = ReService.findAllReports().stream().filter(r -> r.getBooking().getDate() == date).count();
+		long todayReport = ReService.findAllReports().stream().filter(r -> r.getBooking().getDate().equals(date)).count();
 
 		long processingReports = ReService.findAllReports().stream()
 				.filter(r -> r.getReportStatus().equals(ReportStatus.PROCESSING)).count();

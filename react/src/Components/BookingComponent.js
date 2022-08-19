@@ -125,9 +125,9 @@ class Booking extends Component {
                 <Container className='mt-5'>
                     <div className="float-end">
                         <label for="room">Room name:&nbsp;&nbsp;</label>
-                        <input type="text" onChange={this.onChange.roomNameFilter} id="room" />
+                        <input type="text" onChange={this.onChange.roomNameFilter} id="room" style={{marginRight: '25px'}}/>
                         <label for="studentname">Student search:&nbsp;&nbsp;</label>
-                        <input type="text" onChange={this.onChange.studentFilter} id="studentname" />
+                        <input type="text" onChange={this.onChange.studentFilter} id="studentname" style={{marginRight: '25px'}}/>
                         <label for="date">Date:&nbsp;&nbsp;</label>
                         <input type="date" onChange={this.onChange.dateFilter} id="date" min="2022-01-01" max="2023-12-31"></input>
                     </div>
