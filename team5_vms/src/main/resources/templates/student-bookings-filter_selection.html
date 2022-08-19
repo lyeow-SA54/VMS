@@ -4,6 +4,11 @@
 <head th:replace="fragments/general.html :: headerfiles" />
 <title>VMS</title>
 <link rel="stylesheet" th:href="@{/css/simple.css}" />
+<style>
+	p {
+		color: red;
+	}
+</style>
 </head>
 
 <body>
@@ -14,13 +19,17 @@
 			<div class="col-6">
 				<form th:action="@{/student/booking/options}" method="post">
 					<h5>Choose your Booking Preferences</h5>
+					<p th:if="${weekend}">*You can only book for weekdays!</p>
+					<p th:if="${yesterday}">*You can't book for the past date!</p>
+					<p th:if="${max}">*You can only book for 2 weeks ahead!</p>
 					<table class="table table-borderless" align="center">
 						<tbody>
 							<tr>
 								<td><span th:text="#{fieldLabel.dt}"></span></td>
 								<td>
 									<fieldset>
-										<input id="Date" type="date" name="Date" class="form-control" required="" th:field="${booking.date}" />
+										<input id="Date" type="date" name="date" class="form-control" required=""
+											th:field="${booking.date}" />
 									</fieldset>
 								</td>
 								<!-- <td th:if="${#fields.hasErrors('user.firstName')}" th:errors="*{user.firstName}"></td> -->
@@ -29,7 +38,8 @@
 								<td><span th:text="#{fieldLabel.blockedStartTime}"></span></td>
 								<td>
 									<fieldset>
-										<input id="Time" type="time" name="Time" class="form-control" required="" th:field="${booking.time}" />
+										<input id="Time" type="time" name="Time" class="form-control" required=""
+											th:field="${booking.time}" />
 									</fieldset>
 								</td>
 								<!-- <td th:if="${#fields.hasErrors('user.lastName')}" th:errors="*{user.lastName}"></td> -->
@@ -38,8 +48,8 @@
 								<td><span th:text="#{fieldLabel.pax}"></span></td>
 								<td>
 									<fieldset>
-										<input id="Pax" type="number" name="Number of Pax" class="form-control" required="" th:min="1" th:max="${size}"
-											th:field="${room.capacity}" />
+										<input id="Pax" type="number" name="Number of Pax" class="form-control"
+											required="" th:min="1" th:max="${size}" th:field="${room.capacity}" />
 									</fieldset>
 								</td>
 								<!-- <td th:if="${#fields.hasErrors('user.groupName')}" th:errors="*{user.groupName}"></td> -->
@@ -48,8 +58,8 @@
 								<td><span th:text="#{fieldLabel.blockDuration}"></span></td>
 								<td>
 									<fieldset>
-										<input id="Duration" type="number" name="Duration" class="form-control" required="" min="30" max="180"
-											th:field="${booking.duration}" />
+										<input id="Duration" type="number" name="Duration" class="form-control"
+											required="" min="30" max="180" th:field="${booking.duration}" />
 									</fieldset>
 								</td>
 								<!-- <td th:if="${#fields.hasErrors('user.email')}" th:errors="*{user.email}"></td> -->
@@ -61,8 +71,8 @@
 										<div class="form-group agileits_form w3_agileits_margin">
 											<div class="wthree_input">
 												<input type="checkbox" name="facilities" th:each="facility : ${fList}"
-													th:text="${facility.name} + #{fieldLabel.space}" th:value="${facility.id}"
-													th:field="${room.facilities}" />
+													th:text="${facility.name} + #{fieldLabel.space}"
+													th:value="${facility.id}" th:field="${room.facilities}" />
 											</div>
 										</div>
 										<div class="clear"> </div>
