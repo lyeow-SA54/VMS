@@ -468,20 +468,21 @@
                        <p id="ReportDayChart" style="width:100%; height:200px"></p>
                 </div>
 			</div>
+
 			<div class="card mb-4 box-shadow">
 					<div class="card-header">
-						<h5>Category</h5>
-					</div>
-				<div class="card-body">
-                       <p id="ReportCatChart"></p>
-                </div>
-			</div>
-			<div class="card mb-4 box-shadow">
-					<div class="card-header">
-						<h5>Report Counts for Rooms</h5>
+						<h5 th:text="${strReportWeek}"></h5>
 					</div>
 				<div class="card-body">
                        <p id="reportRoomchart"></p>
+                </div>
+			</div>
+			<div class="card mb-4 box-shadow">
+				<div class="card-header">
+					<h5>All-time Category</h5>
+				</div>
+				<div class="card-body">
+                       <p id="ReportCatChart"></p>
                 </div>
 			</div>
         </div>
@@ -537,7 +538,7 @@
 			
 			<div class="card mb-4 box-shadow">
 					<div class="card-header">
-						<h5>Booking frequency</h5>
+						<h5>All-time Booking Counts</h5>
 					</div>
 				<div class="card-body">
                        <p id="BookingFequencyChart"></p>

@@ -37,6 +37,7 @@ import iss.team5.vms.model.Room;
 import iss.team5.vms.model.Student;
 import iss.team5.vms.model.User;
 import iss.team5.vms.repositories.BookingRepo;
+import iss.team5.vms.repositories.ReportRepo;
 import iss.team5.vms.services.BookingService;
 import iss.team5.vms.services.FacilityService;
 import iss.team5.vms.services.ReportService;
@@ -71,6 +72,9 @@ public class AdminController {
 	
 	@Autowired
 	private BookingRepo br;
+	
+	@Autowired
+	private ReportRepo reRepo;
 
 	@RequestMapping(value = "/rooms/create", method = RequestMethod.GET)
 	public ModelAndView newRoom() {
@@ -441,48 +445,28 @@ public class AdminController {
                 List.of("MISUSE", ReService.getReportCatCounts(reports, ReportCategory.MISUSE))
         );
 		
-		Room beacon = rooms.stream()
-				.filter(rm->rm.getRoomName().equalsIgnoreCase("Beacon")).findAny().get();
-		Room frontier = rooms.stream()
-				.filter(rm->rm.getRoomName().equalsIgnoreCase("Frontier")).findAny().get();
-		Room jupiter = rooms.stream()
-				.filter(rm->rm.getRoomName().equalsIgnoreCase("Jupiter")).findAny().get();
-		Room mercury = rooms.stream()
-				.filter(rm->rm.getRoomName().equalsIgnoreCase("Mercury")).findAny().get();	
-		Room venus = rooms.stream()
-				.filter(rm->rm.getRoomName().equalsIgnoreCase("Venus")).findAny().get();
+		List<List<Object>> getBookingFequencyData = new ArrayList<List<Object>>();
+		for (Room r:rooms)
+		{
+			getBookingFequencyData.add(List.of(r.getRoomName(),bService.getBookingCountsForRoom(bService.findAllBookings(), r)));
+		}
 		
-//		List<String> roomNameList = rooms.stream()
-//				.map(Room::getRoomName)
-//				.collect(Collectors.toList());
-//		rooms.forEach(e->ReService.getReportRoomCounts(reports, e));
-//		
+		List<Report> reportsForWeek = ReService.findReportsInCurrentWeek(firstDayOfWeek);				
+		
 		List<List<Object>> getReportRoomData = 
 				List.of(
-                List.of("Beacon", ReService.getReportRoomCounts(reports, beacon)),
-                List.of("Frontier", ReService.getReportRoomCounts(reports,frontier)),
-                List.of("Jupiter", ReService.getReportRoomCounts(reports,jupiter)),
-                List.of("Mercury", ReService.getReportRoomCounts(reports,mercury)),
-                List.of("Venus", ReService.getReportRoomCounts(reports,venus))
+						List.of("CLEANLINESS", ReService.getReportCatCounts(reportsForWeek, ReportCategory.CLEANLINESS)),
+		                List.of("VANDALISE", ReService.getReportCatCounts(reportsForWeek, ReportCategory.VANDALISE)),
+		                List.of("HOGGING", ReService.getReportCatCounts(reportsForWeek, ReportCategory.HOGGING)),
+		                List.of("MISUSE", ReService.getReportCatCounts(reportsForWeek, ReportCategory.MISUSE))
         );
 		
-		List<List<Object>> getBookingFequencyData = 
-				List.of(
-                List.of("Beacon", bService.getBookingCountsForRoom(bService.findAllBookings(), beacon)),
-                List.of("Frontier", bService.getBookingCountsForRoom(bService.findAllBookings(),frontier)),
-                List.of("Jupiter", bService.getBookingCountsForRoom(bService.findAllBookings(),jupiter)),
-                List.of("Mercury", bService.getBookingCountsForRoom(bService.findAllBookings(),mercury)),
-                List.of("Venus", bService.getBookingCountsForRoom(bService.findAllBookings(),venus))
-        );
+		List<List<Object>> getTodayRoomUsageData = new ArrayList<List<Object>>();
+		for (Room r:rooms)
+		{
+			getTodayRoomUsageData.add(List.of(r.getRoomName(),bService.getBookingHoursForRoom(bookings, r)));
+		}
 		
-		List<List<Object>> getTodayRoomUsageData = 
-				List.of(
-                List.of("Beacon", bService.getBookingHoursForRoom(bookings, beacon)),
-                List.of("Frontier", bService.getBookingHoursForRoom(bookings,frontier)),
-                List.of("Jupiter", bService.getBookingHoursForRoom(bookings,jupiter)),
-                List.of("Mercury", bService.getBookingHoursForRoom(bookings,mercury)),
-                List.of("Venus", bService.getBookingHoursForRoom(bookings,venus))
-        );
 		
 		 long todayReport = ReService.findAllReports().stream()
 				 .filter(r->r.getBooking().getDate()==date)
@@ -501,6 +485,7 @@ public class AdminController {
 		String roomWeek = "Room Usage for " + monday +" to " + friday;
 		String strTodayReport = "Reports filed Today: " + (int)todayReport;
 		String strProcessReport = "Pending Reports to process: " + (int)processingReports;
+		String strReportWeek = "Report Counts From "+monday +" to " + friday;
 		
 		mav.addObject("getBookingData", getBookingData);
 		System.out.println(getBookingData);
@@ -519,6 +504,7 @@ public class AdminController {
 		mav.addObject("monthPeriod", monthPeriod);
 		mav.addObject("weekPeriod", weekPeriod);
 		mav.addObject("roomWeek", roomWeek);
+		mav.addObject("strReportWeek", strReportWeek);
 		return mav;
 	}
 }

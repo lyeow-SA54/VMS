@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import iss.team5.vms.helper.BookingStatus;
+import iss.team5.vms.helper.FirstDayOfCurrentWeek;
 import iss.team5.vms.helper.ReportCategory;
 import iss.team5.vms.helper.ReportStatus;
 import iss.team5.vms.model.Booking;
@@ -192,6 +193,20 @@ public class ReportServiceImpl implements ReportService {
 	public int getReportRoomCounts(List<Report> report, Room room) {
 		long count = report.stream().filter(b -> b.getBooking().getRoom().equals(room)).count();
 		return (int) count;
+	}
+	
+	@Override
+	public List<Report> findReportsInCurrentWeek(LocalDate date){
+		LocalDate firstDayOfWeek = FirstDayOfCurrentWeek.value(date);
+		List<Booking> booking = brepo.findByDateBetween(firstDayOfWeek, firstDayOfWeek.plusDays(6));
+		List<Report> foundReports = new ArrayList<>();
+		for (Booking b:booking) {
+			Report r = rprepo.findReportByBooking(b);
+			if (r != null) {
+			foundReports.add(r);}
+		}	
+
+		return foundReports;
 	}
 
 }
