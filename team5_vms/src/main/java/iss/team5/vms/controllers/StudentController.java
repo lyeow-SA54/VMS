@@ -462,11 +462,7 @@ public class StudentController {
 	}
 
 	@RequestMapping(value = "report/save", method = RequestMethod.POST)
-<<<<<<< HEAD
 	private String createReport(@RequestParam(value = "file", required = true) MultipartFile file,
-=======
-	private String uploadReport(@RequestParam(value = "file", required = true) MultipartFile file,
->>>>>>> branch 'master' of https://github.com/lyeow-SA54/VMS
 			@RequestParam(value = "details", required = true) String details, HttpServletRequest request)
 			throws IOException {
 		String path = "";
