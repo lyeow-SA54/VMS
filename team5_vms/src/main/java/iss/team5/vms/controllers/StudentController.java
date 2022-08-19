@@ -1,6 +1,5 @@
 package iss.team5.vms.controllers;
 
-
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -10,6 +9,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Stack;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -58,35 +58,35 @@ public class StudentController {
 
 	@Autowired
 	StudentService ss;
-	
+
 	@Autowired
 	RoomService rms;
-	
+
 	@Autowired
 	ReportService rs;
-	
+
 	@Autowired
 	FacilityService fs;
-	
+
 	@Autowired
 	UserService us;
-	
+
 	@Autowired
 	StudentRepo srepo;
-	
+
 	@Autowired
 	HttpSession session;
-	
+
 	@Autowired
 	private UserSessionService userSessionService;
-	
+
 	@Autowired
 	private AccountAuthenticateService accAuthService;
-	
+
 	@RequestMapping("/home")
 	public ModelAndView studentHome(HttpServletRequest request) {
 		User user = userSessionService.findUserBySession();
-		if(!user.getRole().equals("STUDENT")) {
+		if (!user.getRole().equals("STUDENT")) {
 			ModelAndView mav = new ModelAndView("unauthorized-admin");
 			return mav;
 		}
@@ -94,23 +94,27 @@ public class StudentController {
 		Booking bookingForTheDay = new Booking();
 		bookingForTheDay.setDate(LocalDate.now());
 		bookingForTheDay.setTime(LocalTime.now());
-		
-		//String username = SecurityContextHolder.getContext().getAuthentication().getName();
-		//Student s1 = ss.findStudentByUser(us.findUserByUsername(username));
-		
+
+		// String username =
+		// SecurityContextHolder.getContext().getAuthentication().getName();
+		// Student s1 = ss.findStudentByUser(us.findUserByUsername(username));
+
 		HttpSession session = request.getSession();
-		Student student = (Student)session.getAttribute("student");
+		Student student = (Student) session.getAttribute("student");
 		List<Booking> availableBookings = bs.findBookingsAvailableExact(bookingForTheDay, rooms, student);
-		List<Booking> studentBookingToday = bs.findStudentBookingsForDate(student, LocalDate.now()); 
-		
+		List<Booking> studentBookingToday = bs.findStudentBookingsForDate(student, LocalDate.now());
+		Stack<Booking> stackBookings = new Stack<Booking>();
+		stackBookings.addAll(availableBookings);
 //		List<Booking> findTodayBooking=sBooking.stream()
 //		.filter(b-> b.getDate()==LocalDate.now() && b.getStatus().toString().equalsIgnoreCase("SUCCESSFUL") )
 //		.collect(Collectors.toList());
-
-		if (studentBookingToday.size() == 3) { 
+		
+		ModelAndView mav = new ModelAndView("student-home-page");
+		try  { 
 			
-			Booking bookingOfTheDay = studentBookingToday.get(0);
+			Booking bookingOfTheDay = bs.findStudentCurrentBooking(student);
 			
+			mav.addObject("bookingOfTheDay", bookingOfTheDay);
 			String strRoomName = "Room Name :  " + bookingOfTheDay.getRoom().getRoomName();
 			
 			DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -119,38 +123,75 @@ public class StudentController {
 			String bookingTime = bookingOfTheDay.getTime().format(timeFormatter);	
 			String strDateTime = "Date/Time :  " + bookingDate +" "+bookingTime;
 			String strDuration = "Duration  :  " + bookingOfTheDay.getDuration() + " minutes";
-			if (bookingOfTheDay.isBookingInProgress())
-			{
-				String strBookingInProgress = "Checked-In:  In Progress";
-				ModelAndView mav = new ModelAndView("student-home-page");
-				mav.addObject("bookingOfTheDay",bookingOfTheDay);
-				mav.addObject("bookings",availableBookings);
-				mav.addObject("strRoomName",strRoomName);
-				mav.addObject("strDateTime",strDateTime);
-				mav.addObject("strDuration",strDuration);
-				mav.addObject("bookingInProgress",bookingOfTheDay.isBookingInProgress());
-				mav.addObject("strBookingInProgress",strBookingInProgress);
-				return mav;
-			}
-			else {
-			ModelAndView mav = new ModelAndView("student-home-page");
-			String strBookingInProgress = "Checked-In:  Under Waiting List";
-			mav.addObject("bookingOfTheDay",bookingOfTheDay);
-			mav.addObject("bookings",availableBookings);
+//			String strBookingInProgress = "Checked-In:  In Progress";
+			
 			mav.addObject("strRoomName",strRoomName);
 			mav.addObject("strDateTime",strDateTime);
 			mav.addObject("strDuration",strDuration);
-			mav.addObject("strBookingNotInProgress",strBookingInProgress);
-			return mav;
+			mav.addObject("BookingInProgress",bookingOfTheDay.isBookingInProgress());
+			mav.addObject("CheckIn",bookingOfTheDay.isCheckedIn());
+			System.out.println("print 1");
+			
+		} catch (Exception e) {
+			try {
+				
+				Booking nextBookingOfTheDay = bs.findStudentNextBooking(student);
+				
+				mav.addObject("bookingOfTheDay", nextBookingOfTheDay);
+				String strRoomName = "Room Name :  " + nextBookingOfTheDay.getRoom().getRoomName();
+				
+				DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+				String bookingDate = nextBookingOfTheDay.getDate().format(dateFormatter);
+				DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+				String bookingTime = nextBookingOfTheDay.getTime().format(timeFormatter);	
+				String strDateTime = "Date/Time :  " + bookingDate +" "+bookingTime;
+				String strDuration = "Duration  :  " + nextBookingOfTheDay.getDuration() + " minutes";
+//				String strBookingInProgress = "Checked-In:  In Progress";
+				
+				mav.addObject("strRoomName",strRoomName);
+				mav.addObject("strDateTime",strDateTime);
+				mav.addObject("strDuration",strDuration);
+				mav.addObject("BookingInProgress",nextBookingOfTheDay.isBookingInProgress());
+				
+//				String strBkInProgress = "Checked-In:  Under waiting list";
+				System.out.println(nextBookingOfTheDay.isBookingInProgress());
+				mav.addObject("CheckIn",nextBookingOfTheDay.isCheckedIn());
+				System.out.println("print 2");
+			}
+			catch (Exception e2) {
+				Booking noBooking = new Booking();
+				mav.addObject("noBooking",noBooking);
+				System.out.println("print 3");
 			}
 		} 
-		else {
-		
-		ModelAndView mav = new ModelAndView("student-home-page");
-		mav.addObject("bookings",availableBookings);
-		return mav;}	
+//		ModelAndView mav = new ModelAndView("student-home-page");
+//		if (studentBookingToday.size() > 0) {
+////			Booking bookingOfTheDay = studentBookingToday.get(0);
+////			ModelAndView mav = new ModelAndView("student-home-page");
+//			mav.addObject("bookingOfTheDay", studentBookingToday.get(0));
+//		}
+
+//		ModelAndView mav = new ModelAndView("student-home-page");
+		List<List<Booking>> bookingsForCarousel = new ArrayList<List<Booking>>();
+		for (int i = availableBookings.size(); i > 0; i = i - 3) {
+			List<Booking> bookings = new ArrayList<Booking>();
+			for (int k = 0; k < 3; k++) {
+				if (!stackBookings.isEmpty()) {
+					bookings.add(stackBookings.pop());
+				}
+			}
+			bookingsForCarousel.add(bookings);
+		}
+//		System.out.println(stackBookings.size());
+//		System.out.println(bookingsForCarousel.size());
+		mav.addObject("bookings", availableBookings);
+		if (bookingsForCarousel.size() > 0) {
+			mav.addObject("bookingsCarousel1", bookingsForCarousel.get(0));
+			bookingsForCarousel.remove(0);
+		}
+		mav.addObject("bookingsCarousel", bookingsForCarousel);
+		return mav;
 	}
-	
 
 //	@RequestMapping("/checkin/{bookingId}/{studentId}")
 //	public ModelAndView bookingCheckin(@PathVariable("bookingId") String bookingId, @PathVariable("studentId") String studentId) {
@@ -178,11 +219,11 @@ public class StudentController {
 //		mav.addObject("outcomeMsg", outcomeMsg);
 //		return mav;
 //	}
-	
+
 	@RequestMapping(value = "/booking/options", method = RequestMethod.GET)
 	public ModelAndView bookingOptionSelection() {
 		User user = userSessionService.findUserBySession();
-		if(!user.getRole().equals("STUDENT")) {
+		if (!user.getRole().equals("STUDENT")) {
 			ModelAndView mav = new ModelAndView("unauthorized-admin");
 			return mav;
 		}
@@ -196,11 +237,11 @@ public class StudentController {
 		mav.addObject("size", user.getGroupSize());
 		return mav;
 	}
-	
+
 	@RequestMapping(value = "/booking/options", method = RequestMethod.POST)
 	public ModelAndView bookingOptionSelected(Booking booking, Room room) {
 		User user = userSessionService.findUserBySession();
-		if(!user.getRole().equals("STUDENT")) {
+		if (!user.getRole().equals("STUDENT")) {
 			ModelAndView mav = new ModelAndView("unauthorized-admin");
 			return mav;
 		}
@@ -208,13 +249,11 @@ public class StudentController {
 		List<Room> roomsExact = rms.findRoomsByExactAttributes(room);
 		List<Booking> bookings = new ArrayList<Booking>();
 		bookings = bs.findBookingsAvailableExact(booking, roomsExact, student);
-		if (bookings.size()==0)
-		{
+		if (bookings.size() == 0) {
 //			System.out.println("Alternative list");
 			List<Room> roomsContaining = rms.findRoomsByContainingAttributes(room);
 			bookings.addAll(bs.findBookingsAvailableAlternative(booking, roomsExact, student));
 			bookings.addAll(bs.findBookingsAvailableExact(booking, roomsContaining, student));
-
 		}
 
 		ModelAndView mav = new ModelAndView("student-bookings-slot_selection");
@@ -222,37 +261,32 @@ public class StudentController {
 		mav.addObject("room", room);
 		return mav;
 	}
-	
+
 	@RequestMapping(value = "/booking/save", method = RequestMethod.POST)
 	public Object bookingNew(Booking booking, @RequestParam("roomid") String roomString, HttpServletRequest request) {
-		
+
 		Student student = (Student) session.getAttribute("student");
 		Room room = rms.findRoomById(roomString);
 
 		booking.setStudent(student);
 		booking.setRoom(room);
 
-		if (bs.checkBookingByDateTimeRoom(booking,room)) {
+		if (bs.checkBookingByDateTimeRoom(booking, room)) {
 			booking.setStatus(BookingStatus.REJECTED);
 			ModelAndView mav = new ModelAndView("booking-success");
 			mav.addObject("booking", booking);
 			return mav;
-		}
-		else
-		{
+		} else {
 //			booking.setRoom(rs.findRoomById(room.getId()));
-			if (booking.getStudent().getScore() >= 3)
-			{
-			booking.setStatus(BookingStatus.WAITINGLIST);
-			bs.scheduleWaitingList(booking, room);
-			bs.createBooking(booking);
-			return "forward:/student/booking/status/"+booking.getId();
-			}
-			else
-			{
-			booking.setStatus(BookingStatus.SUCCESSFUL);
-			bs.createBooking(booking);
-			return "forward:/student/booking/status/"+booking.getId();
+			if (booking.getStudent().getScore() >= 3) {
+				booking.setStatus(BookingStatus.WAITINGLIST);
+				bs.scheduleWaitingList(booking, room);
+				bs.createBooking(booking);
+				return "forward:/student/booking/status/" + booking.getId();
+			} else {
+				booking.setStatus(BookingStatus.SUCCESSFUL);
+				bs.createBooking(booking);
+				return "forward:/student/booking/status/" + booking.getId();
 			}
 //			return "error";	
 		}
@@ -261,7 +295,7 @@ public class StudentController {
 	@RequestMapping(value = "booking/status/{bookingId}")
 	public ModelAndView bookingStatus(@PathVariable("bookingId") String bookingId) {
 		User user = userSessionService.findUserBySession();
-		if(!user.getRole().equals("STUDENT")) {
+		if (!user.getRole().equals("STUDENT")) {
 			ModelAndView mav = new ModelAndView("unauthorized-admin");
 			return mav;
 		}
@@ -271,18 +305,17 @@ public class StudentController {
 		return mav;
 	}
 
-
 //	//this is for report form test
 //	@RequestMapping("/reportform")
 //	public String reportform(){
 //		System.out.println("0 success");
 //		return "misuse-report-form";
 //	}
-	
+
 	@RequestMapping("/booking/history")
 	public ModelAndView bookingHistory() {
 		User user = userSessionService.findUserBySession();
-		if(!user.getRole().equals("STUDENT")) {
+		if (!user.getRole().equals("STUDENT")) {
 			ModelAndView mav = new ModelAndView("unauthorized-admin");
 			return mav;
 		}
@@ -292,28 +325,27 @@ public class StudentController {
 		List<Booking> bookings = bs.findBookingsByStudent(student);
 		List<Booking> bookings2 = bs.updateBookingInProgress(bookings);
 		ModelAndView mav = new ModelAndView("student-bookings-list");
-		mav.addObject("bookings",bookings2);
+		mav.addObject("bookings", bookings2);
 		LocalDate datenow = LocalDate.now();
 		LocalTime timenow = LocalTime.now();
 		mav.addObject("datenow", datenow);
 		mav.addObject("timenow", timenow);
-		   
+
 		return mav;
 	}
-	
+
 	@RequestMapping(value = "/booking/report", method = RequestMethod.GET)
 	public ModelAndView bookingReport() {
 		User user = userSessionService.findUserBySession();
-		if(!user.getRole().equals("STUDENT")) {
+		if (!user.getRole().equals("STUDENT")) {
 			ModelAndView mav = new ModelAndView("unauthorized-admin");
 			return mav;
 		}
 		Student student = ss.findStudentByUser(user);
 		Booking booking = new Booking();
-		try{
+		try {
 			booking = bs.findStudentCurrentBooking(student);
-		}
-		catch (NoSuchElementException e){
+		} catch (NoSuchElementException e) {
 			ModelAndView mav = new ModelAndView("booking-not-inprogress");
 			return mav;
 		}
@@ -322,7 +354,7 @@ public class StudentController {
 		mav.addObject("booking", booking);
 		return mav;
 	}
-	
+
 	@RequestMapping(value = "/booking/cancel/{bookingId}", method = RequestMethod.GET)
 	public String cancelBooking(@PathVariable String bookingId) {
 		Booking booking = bs.findBookingById(bookingId);
@@ -333,11 +365,11 @@ public class StudentController {
 		room.setBlockedStartTime(null);
 		return "forward:/student/booking/history";
 	}
-	
+
 	@RequestMapping(value = "/booking/extend", method = RequestMethod.GET)
 	public ModelAndView extendBooking() {
 		User user = userSessionService.findUserBySession();
-		if(!user.getRole().equals("STUDENT")) {
+		if (!user.getRole().equals("STUDENT")) {
 			ModelAndView mav = new ModelAndView("unauthorized-admin");
 			return mav;
 		}
@@ -345,44 +377,36 @@ public class StudentController {
 		ModelAndView mav = new ModelAndView("booking-success");
 		Student student = ss.findStudentByUser(user);
 		Booking currentBooking = new Booking();
-		try{
+		try {
 			currentBooking = bs.findStudentCurrentBooking(student);
-		}
-		catch (NoSuchElementException e){
+		} catch (NoSuchElementException e) {
 			mav = new ModelAndView("booking-not-inprogress");
 			return mav;
 		}
 		String outcomeMsg = "";
-		Booking extendBooking = new Booking("placeholder", 
-				currentBooking.getDate(), 
-				currentBooking.getTime().plusMinutes(currentBooking.getDuration()), 
-				1, currentBooking.getRoom());
-		//check if current booking is less than 1 hour before end
-		if (LocalTime.now().isAfter(currentBooking.getTime().plusMinutes(currentBooking.getDuration()).minusMinutes(60)))
-		{
-			//check if extension request clashes with next booking
-			if (!bs.checkBookingByDateTimeRoom(extendBooking,currentBooking.getRoom())) {
+		Booking extendBooking = new Booking("placeholder", currentBooking.getDate(),
+				currentBooking.getTime().plusMinutes(currentBooking.getDuration()), 1, currentBooking.getRoom());
+		// check if current booking is less than 1 hour before end
+		if (LocalTime.now()
+				.isAfter(currentBooking.getTime().plusMinutes(currentBooking.getDuration()).minusMinutes(60))) {
+			// check if extension request clashes with next booking
+			if (!bs.checkBookingByDateTimeRoom(extendBooking, currentBooking.getRoom())) {
 				outcomeMsg = "APPROVED";
-				currentBooking.setDuration(currentBooking.getDuration()+60);
+				currentBooking.setDuration(currentBooking.getDuration() + 60);
 				bs.createBooking(currentBooking);
-			}
-			else
-			{
+			} else {
 				Booking overlapBooking = bs.findOverlapBookingByDateTimeRoom(extendBooking, currentBooking.getRoom());
-				int newDuration = Math.toIntExact(currentBooking.getTime().plusMinutes(currentBooking.getDuration()).until(overlapBooking.getTime(), ChronoUnit.MINUTES));
-				if (newDuration > 10)
-				{
-				outcomeMsg = "APPROVED - EXTENDED BY "+newDuration;
-				currentBooking.setDuration(currentBooking.getDuration()+newDuration);
-				bs.createBooking(currentBooking);
-				}
-				else
-				{
-				outcomeMsg = "DENIED - NEXT BOOKING < 10 MINUTES AFTER CURRENT";
+				int newDuration = Math.toIntExact(currentBooking.getTime().plusMinutes(currentBooking.getDuration())
+						.until(overlapBooking.getTime(), ChronoUnit.MINUTES));
+				if (newDuration > 10) {
+					outcomeMsg = "APPROVED - EXTENDED BY " + newDuration;
+					currentBooking.setDuration(currentBooking.getDuration() + newDuration);
+					bs.createBooking(currentBooking);
+				} else {
+					outcomeMsg = "DENIED - NEXT BOOKING < 10 MINUTES AFTER CURRENT";
 				}
 			}
-		}
-		else {
+		} else {
 			outcomeMsg = "DENIED - EXTENSION REQUEST TO BE MADE <1 HOUR BEFORE END OF CURRENT BOOKING";
 		}
 		mav.addObject("booking", currentBooking);
@@ -393,9 +417,9 @@ public class StudentController {
 //			
 //		}
 	}
-	
+
 	@RequestMapping(value = "report/save", method = RequestMethod.POST)
-    private String uploadReport(@RequestParam(value="file",required=false) MultipartFile file,
+    private String uploadReport(@RequestParam(value="file",required=true) MultipartFile file,
                                 @RequestParam(value = "details",required=true) String details,
                                 HttpServletRequest request) throws IOException {
         String path = "";
@@ -415,25 +439,29 @@ public class StudentController {
             file.transferTo(new File(path));
         }
 
-        //add path to report
-        //method to extract student from logged in session
-        Student student = (Student)session.getAttribute("student");	
-        Booking booking = bs.findStudentCurrentBooking(student);
-        Booking lastBooking = bs.findBookingBefore(booking);
-		Report report = rs.createReport(new Report(details, fileName, lastBooking,
-				ReportStatus.PROCESSING, ReportCategory.CLEANLINESS, student));
-		if (report.getCategory().equals(ReportCategory.HOGGING))
-		{
-			if(bs.predictHogging(path))
-			{
+
+
+
+		// add path to report
+		// method to extract student from logged in session
+		Student student = (Student) session.getAttribute("student");
+		Booking booking = bs.findStudentCurrentBooking(student);
+		Booking lastBooking = bs.findBookingBefore(booking);
+		Report report = rs.createReport(new Report(details, fileName, lastBooking, ReportStatus.PROCESSING,
+				ReportCategory.CLEANLINESS, student));
+		if (report.getCategory().equals(ReportCategory.HOGGING)) {
+			if (bs.predictHogging(path)) {
 				rs.approveReportScoring(report);
 			}
 		}
-        /*ms.sendSimpleMail("e0838388@u.nus.edu","report test","new report generated!");*/
-        return "report-success";
+		/*
+		 * ms.sendSimpleMail("e0838388@u.nus.edu","report test","new report generated!"
+		 * );
+		 */
+		return "report-success";
 
-    }
-	
+	}
+
 	@RequestMapping(value = "/profile", method = RequestMethod.GET)
 	public ModelAndView viewProfile() {
 		User user = userSessionService.findUserBySession();
@@ -446,7 +474,7 @@ public class StudentController {
 		mav.addObject("student", stu);
 		return mav;
 	}
-	
+
 	@RequestMapping(value = "/profile/edit/{id}", method = RequestMethod.GET)
 	public ModelAndView editProfile(@PathVariable String id) {
 		User user = userSessionService.findUserBySession();
@@ -474,7 +502,7 @@ public class StudentController {
 		mav.addObject("student", stu);
 		return mav;
 	}
-	
+
 	@RequestMapping(value = "/change-password/{id}", method = RequestMethod.GET)
 	public ModelAndView changePassword(@PathVariable String id) {
 		User user = userSessionService.findUserBySession();
@@ -489,7 +517,9 @@ public class StudentController {
 	}
 
 	@RequestMapping(value = "/change-password", method = RequestMethod.POST)
-	public ModelAndView changePassword(@ModelAttribute @Valid Student student, @RequestParam("oldPassword") String oldPassword, @RequestParam("password") String newPassword, @RequestParam("confirmPassword") String confirmPassword, BindingResult result) {
+	public ModelAndView changePassword(@ModelAttribute @Valid Student student,
+			@RequestParam("oldPassword") String oldPassword, @RequestParam("password") String newPassword,
+			@RequestParam("confirmPassword") String confirmPassword, BindingResult result) {
 		User user = userSessionService.findUserBySession();
 		if (!user.getRole().equals("STUDENT")) {
 			ModelAndView mav = new ModelAndView("unauthorized-admin");
@@ -498,21 +528,21 @@ public class StudentController {
 
 		Account acc = new Account(user.getGroupName(), oldPassword);
 		User authUser = accAuthService.authenticateAccount(acc);
-		
-		if(authUser == null) {
+
+		if (authUser == null) {
 			ModelAndView mav = new ModelAndView("student-reset-password");
 			mav.addObject("error", true);
 			return mav;
 		}
-		if(!(newPassword.equals(confirmPassword))) {
+		if (!(newPassword.equals(confirmPassword))) {
 			ModelAndView mav = new ModelAndView("student-reset-password");
 			mav.addObject("notMatch", true);
 			return mav;
 		}
-		
+
 		if (result.hasErrors())
 			return new ModelAndView("student-reset-password");
-		
+
 		Student stu = ss.changePassword(student, newPassword);
 		ModelAndView mav = new ModelAndView("student-profile");
 		mav.addObject("student", stu);

@@ -4,6 +4,7 @@
 <head th:replace="fragments/general.html :: headerfiles" />
 <title>VMS</title>
 <link rel="stylesheet" th:href="@{/css/simple.css}" />
+<link rel="stylesheet" th:href="@{/css/mycarousel.css}" />
 <style>
 	.card:hover {
 		transform: scale(1.1);
@@ -17,34 +18,120 @@
 
 <body>
 	<div th:replace="fragments/general.html :: menu-student"></div>
-	
+
+	<!--<div class="container">
+		<div class="row">
+			<div th:if="${bookingOfTheDay != null}" class="col-3">
+				<div class="row mt-5">
+					<div class="col mb-3">
+						<h5>Booking Detail</h5>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col text-center">
+						<div class="card mb-4 box-shadow">
+							<div class="card-header">
+								<h5>Booking In Progress</h5>
+							</div>
+							<div class="card-body">
+								<span class="card-text text-center font-weight-bold"
+									th:text="#{fieldLabel.roomName} + ' : '">
+								</span>
+								<span class="card-text text-center" th:text="${bookingOfTheDay.room.roomName}">
+								</span><br><br>
+								<span class="card-text text-center font-weight-bold" th:text="#{fieldLabel.dt} + ' : '">
+								</span>
+								<span class="card-text text-center" th:text="${bookingOfTheDay.date}">
+								</span><br><br>
+								<span class="card-text text-center font-weight-bold"
+									th:text="#{fieldLabel.time} + ' : '">
+								</span>
+								<span class="card-text text-center" th:text="${bookingOfTheDay.time}">
+								</span><br><br>
+								<span class="card-text text-center font-weight-bold"
+									th:text="#{fieldLabel.blockDuration} + ' : '">
+								</span>
+								<span class="card-text text-center" th:text="${bookingOfTheDay.duration} + ' minutes'">
+								</span><br><br>
+								<span class="card-text text-center font-weight-bold"
+									th:text="#{fieldLabel.checkedIn} + ' : '">
+								</span>
+								<input type="checkbox" name="mycheckbox" disabled
+									th:checked="${bookingOfTheDay.checkedIn}">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div th:unless="${bookingOfTheDay != null}" class="col-3">
+				<div class="row mt-5">
+					<div class="col mb-3">
+						<h5>Booking Detail</h5>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col text-center">
+						<div class="card mb-4 box-shadow">
+							<div class="card-header">
+								<h5>Booking In Progress</h5>
+							</div>
+							<div class="card-body">
+								<span class="card-text text-center font-weight-bold"
+									th:text="#{fieldLabel.roomName} + ' : '">
+								</span>
+								<span class="card-text text-center">-</span><br><br>
+								<span class="card-text text-center font-weight-bold" th:text="#{fieldLabel.dt} + ' : '">
+								</span>
+								<span class="card-text text-center font-weight-bold">-</span>
+								<span class="card-text text-center">-</span><br><br>
+								<span class="card-text text-center font-weight-bold"
+									th:text="#{fieldLabel.time} + ' : '">
+								</span>
+								<span class="card-text text-center">-</span><br><br>
+								<span class="card-text text-center font-weight-bold"
+									th:text="#{fieldLabel.blockDuration} + ' : '">
+								</span>
+								<span class="card-text text-center">-</span><br><br>
+								<span class="card-text text-center font-weight-bold"
+									th:text="#{fieldLabel.checkedIn} + ' : '">
+								</span>
+								<input type="checkbox" name="mycheckbox" disabled>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>-->
+
 	<div class="container">
 		<div class="row mt-5">
-			<div class="col-3 mb-3">
+			<div class="col-4 mb-3">
 				<h5>Check In</h5>
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-3 text-center">
+			<div class="col-4 text-center">
 				<div class="card mb-4 box-shadow">
 					<div class="card-header">
 						<h5>Room Check-In</h5>
 					</div>
 					<div class="card-body">
 						<!--<h5 class="card-title">Register Upon Arrival</h5>-->
-						<p class="card-text text-center font-weight-bold" th:if="${bookingOfTheDay == null}">No Upcoming Booking</p>
-						<p class="card-text" th:if="${bookingOfTheDay == null}">Room Name :  -</p>
-						<p class="card-text" th:if="${bookingOfTheDay == null}">Date/Time :  -</p>
-						<p class="card-text" th:if="${bookingOfTheDay == null}">Duration  :  -</p>
-						<p class="card-text" th:if="${bookingOfTheDay == null}">Checked-In:  -</p>
+						<p class="card-text text-center font-weight-bold" th:if="${noBooking}">No Upcoming Booking</p>
+						<p class="card-text text-left" th:if="${noBooking}">Room Name :  -</p>
+						<p class="card-text text-left" th:if="${noBooking}">Date/Time :  -</p>
+						<p class="card-text text-left" th:if="${noBooking}">Duration  :  -</p>
+						<p class="card-text text-left" th:if="${noBooking}">Checked-In:  -</p>
 						
-						<p class="card-text text-center font-weight-bold" th:if="${bookingOfTheDay != null}">Upcoming Booking</p>
-						<p class="card-text" th:if="${bookingOfTheDay != null}" th:text="${strRoomName}"></p>
-						<p class="card-text" th:if="${bookingOfTheDay != null}" th:text="${strDateTime}"></p>
-						<p class="card-text" th:if="${bookingOfTheDay != null}" th:text="${strDuration}"></p>
-						<p class="card-text" th:if="${bookingInProgress} and ${bookingOfTheDay != null}" th:text="${strBookingInProgress}"></p>
-						<p class="card-text" th:if="${!bookingInProgress} and ${bookingOfTheDay != null}" th:text="${strBookingNotInProgress}"></p>
-						<a th:if="${bookingInProgress} and ${bookingOfTheDay != null}" class="btn btn-block btn-block btnorange mt-5"
+						<p class="card-text text-center font-weight-bold" th:if="${bookingOfTheDay} and ${BookingInProgress} and ${CheckIn}">Booking In Progress</p>
+						<p class="card-text text-center font-weight-bold" th:if="${bookingOfTheDay} and ${not BookingInProgress} and ${not CheckIn}">Upcoming Booking</p>
+						<p class="card-text text-left" th:if="${bookingOfTheDay}" th:text="${strRoomName}"></p>
+						<p class="card-text text-left" th:if="${bookingOfTheDay}" th:text="${strDateTime}"></p>
+						<p class="card-text text-left" th:if="${bookingOfTheDay}" th:text="${strDuration}"></p>
+						<p class="card-text text-left" th:if="${bookingOfTheDay} and ${CheckIn}">Checked-In:   Checked In</p>
+						<p class="card-text text-left" th:if="${bookingOfTheDay} and ${not CheckIn}">Checked-In:  Please check in</p>						
+						<a th:if="${bookingOfTheDay} and ${not CheckIn}" class="btn btn-block btn-block btnorange mt-5"
 							th:href="@{/barcodes/{bookingId}(bookingId=${bookingOfTheDay.id})}">Check-In</a>
 					</div>
 				</div>
@@ -55,41 +142,105 @@
 	<div class="container" th:if="not ${#lists.isEmpty(bookings)}">
 		<div class="row mt-5">
 			<div class="col-3 mb-3">
+
 				<h5>Available Rooms</h5>
+				<p th:if="${#lists.isEmpty(bookings)}">No Rooms Available</p>
 			</div>
 		</div>
-		<div class="row">
-			<div class="col-3 text-center" th:each="booking:${bookings}">
-				<div class="card mb-4 shadow">
-					<div class="card-header">
-						<h5 th:text="${booking.room.roomName}"></h5>
-					</div>
-					<div class="card-body">
-						<span class="card-text text-center" th:if="${#lists.isEmpty(booking.room.facilities)}">
-							<span class="card-text text-center font-weight-bold">Facilities :
-							</span>
-							<span class="card-text text-center">&nbsp;NA
-							</span><br>
-						</span>
-						<span class="card-text text-center" th:if="${not #lists.isEmpty(booking.room.facilities)}">
-							<span class="card-text text-center font-weight-bold">Facilities : </span>
-							<span class="card-text text-center">
-								<ul class="list-unstyled mt-3 mb-4" th:each="fac:${booking.room.facilities}">
-									<li th:text="${fac.name}"></li>
-								</ul>
-							</span>
-						</span>
-						<span class="card-text text-center font-weight-bold" th:text="#{fieldLabel.rmcapacity}">
-						</span>
-						<span class="card-text text-center" th:text="${booking.room.capacity}">
-						</span>
+		<div class="row" th:if="not ${#lists.isEmpty(bookings)}">
+			<div class="container">
+				<div id="carouselExampleControls" class="carousel carousel-dark slide" data-ride="carousel"
+					data-interval="false">
+					<div class="carousel-inner">
+						<div class="carousel-item active" th:if="not ${#lists.isEmpty(bookingsCarousel1)}">
+							<div class="card-wrapper">
+								<div class="card mycarousel-card" style="width: 18rem;"
+									th:each="booking:${bookingsCarousel1}">
+									<div class="card-header">
+										<h5 th:text="${booking.room.roomName}"></h5>
+									</div>
+									<div class="card-body">
+										<span "card-text text-center"
+											th:if="${#lists.isEmpty(booking.room.facilities)}">
+											<span class="card-text text-center font-weight-bold">Facilities :
+											</span>
+											<span class="card-text text-center">&nbsp;NA
+											</span><br>
+										</span>
+										<span "card-text text-center"
+											th:if="${not #lists.isEmpty(booking.room.facilities)}">
+											<span class="card-text text-center font-weight-bold">Facilities : </span>
+											<span class="card-text text-center">
+												<ul class="list-unstyled mt-3 mb-4"
+													th:each="fac:${booking.room.facilities}">
+													<li th:text="${fac.name}"></li>
+												</ul>
+											</span>
+										</span>
+										<span class="card-text text-center font-weight-bold"
+											th:text="#{fieldLabel.rmcapacity}">
+										</span>
+										<span class="card-text text-center" th:text="${booking.room.capacity}">
+										</span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="carousel-item" th:each="bookingC:${bookingsCarousel}">
+							<div class="card-wrapper">
+								<div class="card mycarousel-card" style="width: 18rem;" th:each="booking:${bookingC}">
+									<div class="card-header">
+										<h5 th:text="${booking.room.roomName}"></h5>
+									</div>
+									<div class="card-body">
+										<span "card-text text-center"
+											th:if="${#lists.isEmpty(booking.room.facilities)}">
+											<span class="card-text text-center font-weight-bold">Facilities :
+											</span>
+											<span class="card-text text-center">&nbsp;NA
+											</span><br>
+										</span>
+										<span "card-text text-center"
+											th:if="${not #lists.isEmpty(booking.room.facilities)}">
+											<span class="card-text text-center font-weight-bold">Facilities : </span>
+											<span class="card-text text-center">
+												<ul class="list-unstyled mt-3 mb-4"
+													th:each="fac:${booking.room.facilities}">
+													<li th:text="${fac.name}"></li>
+												</ul>
+											</span>
+										</span>
+										<span class="card-text text-center font-weight-bold"
+											th:text="#{fieldLabel.rmcapacity}">
+										</span>
+										<span class="card-text text-center" th:text="${booking.room.capacity}">
+										</span>
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
+		<a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+			<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+			<span class="sr-only">Previous</span>
+		</a>
+		<a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+			<span class="carousel-control-next-icon" aria-hidden="true"></span>
+			<span class="sr-only">Next</span>
+		</a>
+	</div>
+	</div>
+	</div>
 	</div>
 
-
+	<footer class="page-footer">
+		<div class="footer-copyright text-center py-3" style="color:white; background-color: #003062">
+			VMS Copyright &copy; 2022
+		</div>
+	</footer>
 </body>
 
 </html>

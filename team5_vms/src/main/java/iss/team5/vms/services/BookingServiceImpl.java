@@ -208,8 +208,7 @@ public class BookingServiceImpl implements BookingService {
 	public boolean checkBookingsOverlap(Booking newBooking, Booking existingBooking) {
 		if (newBooking.getTime().isBefore(existingBooking.getTime().plusMinutes(existingBooking.getDuration()))
 				&& (newBooking.getTime().plusMinutes(newBooking.getDuration()).isAfter(existingBooking.getTime()))
-				&& (existingBooking.getStatus().equals(BookingStatus.SUCCESSFUL)
-						|| existingBooking.getStatus().equals(BookingStatus.WAITINGLIST))) {
+				&& (existingBooking.getStatus().equals(BookingStatus.SUCCESSFUL))) {
 			return true;
 		}
 		return false;
@@ -247,14 +246,18 @@ public class BookingServiceImpl implements BookingService {
 	public void scheduleWaitingList(Booking booking, Room room) {
 		ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 		Runnable setStatus = () -> {
-			if (checkBookingByDateTimeRoom(booking, room)) {
+			if (!checkBookingByDateTimeRoom(booking, room)) {
 				booking.setStatus(BookingStatus.SUCCESSFUL);
 				createBooking(booking);
-			} else
+			} else{
 				booking.setStatus(BookingStatus.REJECTED);
+				createBooking(booking);
+			}
+
+
 		};
 
-		executorService.schedule(setStatus, 1, TimeUnit.HOURS);
+		executorService.schedule(setStatus, 1, TimeUnit.MINUTES);
 	}
 
 	@Override
@@ -361,9 +364,9 @@ public class BookingServiceImpl implements BookingService {
 //				.plusDays(8);
 ////		System.out.println(lastDayOfWeek);
 //
-		List<Booking> bookings = findBookingsInCurrentWeek(booking.getDate());
+		List<Booking> pastWeekBookings = findBookingsInCurrentWeek(booking.getDate().minusDays(6));
 
-		int volume = (int) bookings.stream().count();
+		int volume = (int) pastWeekBookings.stream().count();
 //		System.out.println(volume);
 
 		String uri = "http://127.0.0.1:5000/peakpredict?week=" + week + "&volume=" + volume;
