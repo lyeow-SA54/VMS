@@ -105,7 +105,6 @@ public class React_AdminController {
 			ModelAndView mav = new ModelAndView("unauthorized-student");
 			return mav;
 		}
-		rs.resetWeeklyScoring();
 		ModelAndView mav = new ModelAndView("admin-index");
 		return mav;
 

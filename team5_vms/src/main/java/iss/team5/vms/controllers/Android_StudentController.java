@@ -308,8 +308,11 @@ public class Android_StudentController {
 			try {
 			Booking booking = bs.findStudentCurrentBooking(student);
 			Booking lastBooking = bs.findBookingBefore(booking);
-			Report report = rs.createReport(new Report((String) payload.get("details"), name + imageType, lastBooking,
-					ReportStatus.PROCESSING, ReportCategory.valueOf((String) payload.get("category")), student));
+			Report report = new Report((String) payload.get("details"), name + imageType, lastBooking,
+					ReportStatus.PROCESSING, ReportCategory.valueOf((String) payload.get("category")), student);
+			if (!rs.checkMultipleReports(report))
+			{	
+			rs.createReport(report);
 			if (report.getCategory().equals(ReportCategory.HOGGING)) {
 				if (bs.predictHogging(name + imageType)) {
 					rs.approveReportScoring(report);
@@ -323,6 +326,9 @@ public class Android_StudentController {
 			/*ms.sendSimpleMail("e0838388@u.nus.edu","report test","new report generated!");*/
 
 			mapResponse.put("response", "REPORT CREATED");
+			}
+			else
+			mapResponse.put("response", "REPORT ALREADY MADE FOR BOOKING");
 			jsonArrayResponse.add(mapResponse);
 			return jsonArrayResponse;
 			}
@@ -333,6 +339,7 @@ public class Android_StudentController {
 				jsonArrayResponse.add(mapResponse);
 				return jsonArrayResponse;
 			}
+			
 
 		} else
 			return null;

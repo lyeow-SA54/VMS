@@ -104,7 +104,7 @@ public class StudentController {
 		HttpSession session = request.getSession();
 		Student student = (Student) session.getAttribute("student");
 		List<Booking> availableBookings = bs.findBookingsAvailableExact(bookingForTheDay, rooms, student);
-		List<Booking> studentBookingToday = bs.findStudentBookingsForDate(student, LocalDate.now());
+//		List<Booking> studentBookingToday = bs.findStudentBookingsForDate(student, LocalDate.now());
 		Stack<Booking> stackBookings = new Stack<Booking>();
 		stackBookings.addAll(availableBookings);
 		System.out.println(stackBookings.size());
@@ -496,21 +496,26 @@ public class StudentController {
 		Student student = (Student) session.getAttribute("student");
 		Booking booking = bs.findStudentCurrentBooking(student);
 		Booking lastBooking = bs.findBookingBefore(booking);
-		Report report = rs.createReport(new Report(details, fileName, lastBooking, ReportStatus.PROCESSING,
-				ReportCategory.CLEANLINESS, student));
-		if (report.getCategory().equals(ReportCategory.HOGGING)) {
+		Report newReport = new Report(details, fileName, lastBooking, ReportStatus.PROCESSING,
+				ReportCategory.CLEANLINESS, student);
+		if (!rs.checkMultipleReports(newReport))
+		{
+		rs.createReport(newReport);
+		if (newReport.getCategory().equals(ReportCategory.HOGGING)) {
 			if (bs.predictHogging(path)) {
-				rs.approveReportScoring(report);
+				rs.approveReportScoring(newReport);
 			}
 			else
 			{
-				report.setReportStatus(ReportStatus.REJECTED);
-				rs.createReport(report);
+				newReport.setReportStatus(ReportStatus.REJECTED);
+				rs.createReport(newReport);
 			}
-		}
-
+		}		
 		return "report-success";
-
+		}
+		else {
+			return "report-failed";
+		}
 	}
 
 	@RequestMapping(value = "/profile", method = RequestMethod.GET)

@@ -39,6 +39,9 @@ public class ReportServiceImpl implements ReportService {
 
 	@Autowired
 	StudentService ss;
+	
+	@Autowired
+	BookingService bs;
 
 	@Autowired
 	MailService ms;
@@ -77,13 +80,21 @@ public class ReportServiceImpl implements ReportService {
 //		r.setImg(report.getImg());
 		return rprepo.saveAndFlush(r);
 	}
-
+	
 	@Override
-	@Transactional
-	public void removeReport(Report report) {
-		rprepo.delete(report);
-		rprepo.flush();
+	public boolean checkMultipleReports(Report report) {
+		if (rprepo.findReportByBooking(report.getBooking())!=null)
+		return true;
+		else
+		return false;
 	}
+
+//	@Override
+//	@Transactional
+//	public void removeReport(Report report) {
+//		rprepo.delete(report);
+//		rprepo.flush();
+//	}
 
 	@Override
 	public ArrayList<Report> findAllReportByStudent(Student student) {
@@ -143,7 +154,7 @@ public class ReportServiceImpl implements ReportService {
 	}
 	
 	@Override
-	public void resetWeeklyScoring() {
+	public void weeklyScoringUpdate() {
 		// scheduled to run at every Sunday 11pm
 		LocalDateTime now = LocalDateTime.now();
 		WeekFields weekFields = WeekFields.of(Locale.getDefault());
