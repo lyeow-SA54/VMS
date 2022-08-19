@@ -7,6 +7,6 @@ password:admin
  <br />  <br /> 
 student
  <br /> 
-username:user1
+username:Group1/Group2/Group3
  <br /> 
 password:password
