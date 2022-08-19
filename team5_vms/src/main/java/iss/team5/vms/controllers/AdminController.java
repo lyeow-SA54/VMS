@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import iss.team5.vms.email.service.EmailService;
 import iss.team5.vms.helper.BookingStatus;
 import iss.team5.vms.helper.FirstDayOfCurrentWeek;
 import iss.team5.vms.helper.ReportCategory;
@@ -61,16 +62,13 @@ public class AdminController {
 	private UserSessionService userSessionService;
 
 	@Autowired
-	private MailService mService;
-	
-	@Autowired
 	private ReportService ReService;
-	
+
 	@Autowired
 	private BookingRepo br;
-	
+
 	@Autowired
-	private ReportRepo reRepo;
+	private EmailService eService;
 
 	@RequestMapping(value = "/rooms/create", method = RequestMethod.GET)
 	public ModelAndView newRoom() {
@@ -87,7 +85,8 @@ public class AdminController {
 	}
 
 	@RequestMapping(value = "/rooms/create", method = RequestMethod.POST)
-	public ModelAndView createRoom(@ModelAttribute @Valid Room room, BindingResult result, @RequestParam("roomName") String roomName) {
+	public ModelAndView createRoom(@ModelAttribute @Valid Room room, BindingResult result,
+			@RequestParam("roomName") String roomName) {
 		User user = userSessionService.findUserBySession();
 		List<Room> rooms = rService.findAllRooms();
 		HashSet<String> names = new HashSet<>();
@@ -100,8 +99,8 @@ public class AdminController {
 		}
 		if (result.hasErrors())
 			return new ModelAndView("room-form");
-		for(String name : names) {
-			if(name.equalsIgnoreCase(roomName)) {
+		for (String name : names) {
+			if (name.equalsIgnoreCase(roomName)) {
 				ModelAndView mav = new ModelAndView("room-form");
 				mav.addObject("taken", true);
 				return mav;
@@ -191,6 +190,11 @@ public class AdminController {
 	@RequestMapping(value = "/rooms/edit", method = RequestMethod.POST)
 	public ModelAndView editRoom(@ModelAttribute @Valid Room room, BindingResult result) {
 		User user = userSessionService.findUserBySession();
+		List<Booking> bookings = bService.findAllBookings();
+		HashSet<String> roomIds = new HashSet<>();
+		for (Booking b : bookings) {
+			roomIds.add(b.getRoom().getId());
+		}
 		if (!user.getRole().equals("ADMIN")) {
 			ModelAndView mav = new ModelAndView("unauthorized-student");
 			return mav;
@@ -203,6 +207,7 @@ public class AdminController {
 		List<Facility> facilities = (List<Facility>) fService.findAllFacilities();
 		mav.addObject("checkBoxFacilities", facilities);
 		mav.addObject("rooms", rooms);
+		mav.addObject("roomids", roomIds);
 		return mav;
 	}
 
@@ -232,7 +237,8 @@ public class AdminController {
 	}
 
 	@RequestMapping(value = "/students/create", method = RequestMethod.POST)
-	public ModelAndView createStudent(@ModelAttribute @Valid Student student, BindingResult result, @RequestParam("groupName") String groupName, @RequestParam("email") String email) {
+	public ModelAndView createStudent(@ModelAttribute @Valid Student student, BindingResult result,
+			@RequestParam("groupName") String groupName, @RequestParam("email") String email) {
 		User user = userSessionService.findUserBySession();
 		List<Student> students = sService.findAllStudents();
 		HashSet<String> names = new HashSet<>();
@@ -249,31 +255,40 @@ public class AdminController {
 		}
 		if (result.hasErrors())
 			return new ModelAndView("student-form");
-		for(String name : names) {
-			if(name.equalsIgnoreCase(groupName)) {
+
+		for (String name : names) {
+			if (name.equalsIgnoreCase(groupName)) {
 				ModelAndView mav = new ModelAndView("student-form");
 				mav.addObject("duplicate", true);
 				return mav;
 			}
 		}
-		for(String e : emails) {
-			if(e.equals(email)) {
+
+		for (String e : emails) {
+			if (e.equals(email)) {
 				ModelAndView mav = new ModelAndView("student-form");
 				mav.addObject("email", true);
 				return mav;
 			}
 		}
+
 		ModelAndView mav = new ModelAndView("forward:/admin/students/list");
 		student.getUser().setGroupName(groupName);
 		student.getUser().setEmail(email);
 		sService.createStudent(student);
 		User stu = student.getUser();
 		try {
-			mService.sendSimpleMail(stu.getEmail(), "Account Created For "+stu.getGroupName(), "Username: "+stu.getGroupName()+ "\nPassword: password. \nPlease reset your password immediately after first login.");
+			eService.sendMail(stu);
 			System.out.println("Success");
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
+//		try {
+//			mService.sendSimpleMail(stu.getEmail(), "Account Created For "+stu.getGroupName(), "Username: "+stu.getGroupName()+ "\nPassword: password. \nPlease reset your password immediately after first login.");
+//			System.out.println("Success");
+//		} catch (Exception e) {
+//			System.out.println(e.getMessage());
+//		}
 		return mav;
 	}
 
@@ -315,6 +330,11 @@ public class AdminController {
 	@RequestMapping(value = "/students/edit", method = RequestMethod.POST)
 	public ModelAndView saveProfile(@ModelAttribute @Valid Student student, BindingResult result) {
 		User user = userSessionService.findUserBySession();
+		List<Booking> bookings = bService.findAllBookings();
+		HashSet<String> studentIds = new HashSet<>();
+		for (Booking b : bookings) {
+			studentIds.add(b.getStudent().getId());
+		}
 		if (!user.getRole().equals("ADMIN")) {
 			ModelAndView mav = new ModelAndView("unauthorized-student");
 			return mav;
@@ -325,6 +345,7 @@ public class AdminController {
 		ModelAndView mav = new ModelAndView("students");
 		List<Student> students = sService.findAllStudents();
 		mav.addObject("students", students);
+		mav.addObject("studentids", studentIds);
 		return mav;
 	}
 
@@ -340,7 +361,7 @@ public class AdminController {
 		sService.removeStudent(student);
 		return mav;
 	}
-	
+
 	@RequestMapping(value = "/dashboard")
 	@ResponseBody
 	public ModelAndView dashboard() {
@@ -352,27 +373,26 @@ public class AdminController {
 			}
 		}
 		ModelAndView mav = new ModelAndView("dashboard");
-		
+
 		List<Room> rooms = rService.findAllRooms();
 		List<Booking> bookings = br.findAllByDate(LocalDate.now());
-		List<List<Object>> getBookingData = 
-				List.of(
-                List.of("SUCCESSFUL", bService.getBookingStatusCounts(bookings, BookingStatus.SUCCESSFUL)),
-                List.of("REJECTED", bService.getBookingStatusCounts(bookings, BookingStatus.REJECTED)),
-                List.of("CANCELLED", bService.getBookingStatusCounts(bookings, BookingStatus.CANCELLED)),
-                List.of("WAITINGLIST", bService.getBookingStatusCounts(bookings, BookingStatus.WAITINGLIST))
-        );
-		
+		List<List<Object>> getBookingData = List.of(
+				List.of("SUCCESSFUL", bService.getBookingStatusCounts(bookings, BookingStatus.SUCCESSFUL)),
+				List.of("REJECTED", bService.getBookingStatusCounts(bookings, BookingStatus.REJECTED)),
+				List.of("CANCELLED", bService.getBookingStatusCounts(bookings, BookingStatus.CANCELLED)),
+				List.of("WAITINGLIST", bService.getBookingStatusCounts(bookings, BookingStatus.WAITINGLIST)));
+
 		boolean todayBooking = true;
-		if (bService.getBookingStatusCounts(bookings, BookingStatus.SUCCESSFUL)==0 
-				&&bService.getBookingStatusCounts(bookings, BookingStatus.REJECTED)==0
-				&&bService.getBookingStatusCounts(bookings, BookingStatus.CANCELLED)==0
-				&&bService.getBookingStatusCounts(bookings, BookingStatus.WAITINGLIST)==0){
+		if (bService.getBookingStatusCounts(bookings, BookingStatus.SUCCESSFUL) == 0
+				&& bService.getBookingStatusCounts(bookings, BookingStatus.REJECTED) == 0
+				&& bService.getBookingStatusCounts(bookings, BookingStatus.CANCELLED) == 0
+				&& bService.getBookingStatusCounts(bookings, BookingStatus.WAITINGLIST) == 0) {
 			todayBooking = false;
-		};
+		}
+		;
 
 		LocalDate date = LocalDate.now();
-		int week  = date.get(WeekFields.ISO.weekOfWeekBasedYear());
+		int week = date.get(WeekFields.ISO.weekOfWeekBasedYear());
 		int year = date.getYear();
 
 //		LocalDate date = LocalDate.now();
@@ -384,105 +404,89 @@ public class AdminController {
 //		calendar.clear();
 //		calendar.set(Calendar.WEEK_OF_YEAR, week);
 //		calendar.set(Calendar.YEAR, year);
-		
+
 		LocalDate firstDayOfWeek = FirstDayOfCurrentWeek.value(LocalDate.now());
 		System.out.println(firstDayOfWeek);
-		
-		List<Booking> weekBookings = bService.findBookingsInCurrentWeek(LocalDate.now());
-		
-		List<List<Object>> getWeekBookingData = 
-				List.of(
-                List.of("SUCCESSFUL", bService.getBookingStatusCounts(weekBookings, BookingStatus.SUCCESSFUL)),
-                List.of("REJECTED", bService.getBookingStatusCounts(weekBookings, BookingStatus.REJECTED)),
-                List.of("CANCELLED", bService.getBookingStatusCounts(weekBookings, BookingStatus.CANCELLED)),
-                List.of("WAITINGLIST", bService.getBookingStatusCounts(weekBookings, BookingStatus.WAITINGLIST))
-        );
 
-		
-		List<List<Object>> getOverallRoomForWeekData = 
-				List.of(
-                List.of("MONDAY", bService.getSuccessBookingsDurationForDate(weekBookings, firstDayOfWeek)),
-                List.of("TUESDAY", bService.getSuccessBookingsDurationForDate(weekBookings, firstDayOfWeek.plusDays(1))),
-                List.of("WEDNESDAY", bService.getSuccessBookingsDurationForDate(weekBookings, firstDayOfWeek.plusDays(2))),
-                List.of("THURSDAY", bService.getSuccessBookingsDurationForDate(weekBookings, firstDayOfWeek.plusDays(3))),
-                List.of("FRIDAY",
-                	bService.getSuccessBookingsDurationForDate(weekBookings, firstDayOfWeek.plusDays(4)))
-        );
-		
-		
-		
+		List<Booking> weekBookings = bService.findBookingsInCurrentWeek(LocalDate.now());
+
+		List<List<Object>> getWeekBookingData = List.of(
+				List.of("SUCCESSFUL", bService.getBookingStatusCounts(weekBookings, BookingStatus.SUCCESSFUL)),
+				List.of("REJECTED", bService.getBookingStatusCounts(weekBookings, BookingStatus.REJECTED)),
+				List.of("CANCELLED", bService.getBookingStatusCounts(weekBookings, BookingStatus.CANCELLED)),
+				List.of("WAITINGLIST", bService.getBookingStatusCounts(weekBookings, BookingStatus.WAITINGLIST)));
+
+		List<List<Object>> getOverallRoomForWeekData = List.of(
+				List.of("MONDAY", bService.getSuccessBookingsDurationForDate(weekBookings, firstDayOfWeek)),
+				List.of("TUESDAY",
+						bService.getSuccessBookingsDurationForDate(weekBookings, firstDayOfWeek.plusDays(1))),
+				List.of("WEDNESDAY",
+						bService.getSuccessBookingsDurationForDate(weekBookings, firstDayOfWeek.plusDays(2))),
+				List.of("THURSDAY",
+						bService.getSuccessBookingsDurationForDate(weekBookings, firstDayOfWeek.plusDays(3))),
+				List.of("FRIDAY",
+						bService.getSuccessBookingsDurationForDate(weekBookings, firstDayOfWeek.plusDays(4))));
+
 		LocalDate firstDayOfMonth = firstDayOfWeek.withDayOfMonth(1);
-		LocalDate lastDayOfMonth = firstDayOfWeek.withDayOfMonth(firstDayOfWeek.getMonth().length(firstDayOfWeek.isLeapYear()));
-		
+		LocalDate lastDayOfMonth = firstDayOfWeek
+				.withDayOfMonth(firstDayOfWeek.getMonth().length(firstDayOfWeek.isLeapYear()));
+
 		List<Booking> monthBookings = br.findByDateBetween(firstDayOfMonth, lastDayOfMonth);
-		
-		List<List<Object>> getMonthBookingData = 
-				List.of(
-                List.of("SUCCESSFUL", bService.getBookingStatusCounts(monthBookings, BookingStatus.SUCCESSFUL)),
-                List.of("REJECTED", bService.getBookingStatusCounts(monthBookings, BookingStatus.REJECTED)),
-                List.of("CANCELLED", bService.getBookingStatusCounts(monthBookings, BookingStatus.CANCELLED)),
-                List.of("WAITINGLIST", bService.getBookingStatusCounts(monthBookings, BookingStatus.WAITINGLIST))
-        );
-		
+
+		List<List<Object>> getMonthBookingData = List.of(
+				List.of("SUCCESSFUL", bService.getBookingStatusCounts(monthBookings, BookingStatus.SUCCESSFUL)),
+				List.of("REJECTED", bService.getBookingStatusCounts(monthBookings, BookingStatus.REJECTED)),
+				List.of("CANCELLED", bService.getBookingStatusCounts(monthBookings, BookingStatus.CANCELLED)),
+				List.of("WAITINGLIST", bService.getBookingStatusCounts(monthBookings, BookingStatus.WAITINGLIST)));
+
 		List<Report> reports = ReService.findAllReports();
-		
-		List<List<Object>> getReportStatusData = 
-				List.of(
-                List.of("PROCESSING", ReService.getReportStatusCounts(reports, ReportStatus.PROCESSING)),
-                List.of("REJECTED", ReService.getReportStatusCounts(reports, ReportStatus.REJECTED)),
-                List.of("APPROVED", ReService.getReportStatusCounts(reports, ReportStatus.APPROVED))
-        );
-		
-		List<List<Object>> getReportCatData = 
-				List.of(
-                List.of("CLEANLINESS", ReService.getReportCatCounts(reports, ReportCategory.CLEANLINESS)),
-                List.of("VANDALISE", ReService.getReportCatCounts(reports, ReportCategory.VANDALISE)),
-                List.of("HOGGING", ReService.getReportCatCounts(reports, ReportCategory.HOGGING)),
-                List.of("MISUSE", ReService.getReportCatCounts(reports, ReportCategory.MISUSE))
-        );
-		
+
+		List<List<Object>> getReportStatusData = List.of(
+				List.of("PROCESSING", ReService.getReportStatusCounts(reports, ReportStatus.PROCESSING)),
+				List.of("REJECTED", ReService.getReportStatusCounts(reports, ReportStatus.REJECTED)),
+				List.of("APPROVED", ReService.getReportStatusCounts(reports, ReportStatus.APPROVED)));
+
+		List<List<Object>> getReportCatData = List.of(
+				List.of("CLEANLINESS", ReService.getReportCatCounts(reports, ReportCategory.CLEANLINESS)),
+				List.of("VANDALISE", ReService.getReportCatCounts(reports, ReportCategory.VANDALISE)),
+				List.of("HOGGING", ReService.getReportCatCounts(reports, ReportCategory.HOGGING)),
+				List.of("MISUSE", ReService.getReportCatCounts(reports, ReportCategory.MISUSE)));
+
 		List<List<Object>> getBookingFequencyData = new ArrayList<List<Object>>();
-		for (Room r:rooms)
-		{
-			getBookingFequencyData.add(List.of(r.getRoomName(),bService.getBookingCountsForRoom(bService.findAllBookings(), r)));
+		for (Room r : rooms) {
+			getBookingFequencyData
+					.add(List.of(r.getRoomName(), bService.getBookingCountsForRoom(bService.findAllBookings(), r)));
 		}
-		
-		List<Report> reportsForWeek = ReService.findReportsInCurrentWeek(firstDayOfWeek);				
-		
-		List<List<Object>> getReportRoomData = 
-				List.of(
-						List.of("CLEANLINESS", ReService.getReportCatCounts(reportsForWeek, ReportCategory.CLEANLINESS)),
-		                List.of("VANDALISE", ReService.getReportCatCounts(reportsForWeek, ReportCategory.VANDALISE)),
-		                List.of("HOGGING", ReService.getReportCatCounts(reportsForWeek, ReportCategory.HOGGING)),
-		                List.of("MISUSE", ReService.getReportCatCounts(reportsForWeek, ReportCategory.MISUSE))
-        );
-		
+
+		List<Report> reportsForWeek = ReService.findReportsInCurrentWeek(firstDayOfWeek);
+
+		List<List<Object>> getReportRoomData = List.of(
+				List.of("CLEANLINESS", ReService.getReportCatCounts(reportsForWeek, ReportCategory.CLEANLINESS)),
+				List.of("VANDALISE", ReService.getReportCatCounts(reportsForWeek, ReportCategory.VANDALISE)),
+				List.of("HOGGING", ReService.getReportCatCounts(reportsForWeek, ReportCategory.HOGGING)),
+				List.of("MISUSE", ReService.getReportCatCounts(reportsForWeek, ReportCategory.MISUSE)));
+
 		List<List<Object>> getTodayRoomUsageData = new ArrayList<List<Object>>();
-		for (Room r:rooms)
-		{
-			getTodayRoomUsageData.add(List.of(r.getRoomName(),bService.getBookingHoursForRoom(bookings, r)));
+		for (Room r : rooms) {
+			getTodayRoomUsageData.add(List.of(r.getRoomName(), bService.getBookingHoursForRoom(bookings, r)));
 		}
-		
-		
-		 long todayReport = ReService.findAllReports().stream()
-				 .filter(r->r.getBooking().getDate()==date)
-				 .count();
-		
+
+		long todayReport = ReService.findAllReports().stream().filter(r -> r.getBooking().getDate() == date).count();
+
 		long processingReports = ReService.findAllReports().stream()
-				.filter(r->r.getReportStatus().equals(ReportStatus.PROCESSING))
-				.count();	
+				.filter(r -> r.getReportStatus().equals(ReportStatus.PROCESSING)).count();
 		String monthPeriod = "Bookings For " + date.getMonth();
-		
+
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM");
-		  String monday = firstDayOfWeek.format(formatter);
-		  String friday = firstDayOfWeek.plusDays(4).format(formatter);
-		String weekPeriod = "Bookings From " + monday +" to " + friday;
-		
-		String roomWeek = "Room Usage for " + monday +" to " + friday;
-		String strTodayReport = "Reports filed Today: " + (int)todayReport;
-		String strProcessReport = "Pending Reports to process: " + (int)processingReports;
-		String strReportWeek = "Report Counts From "+monday +" to " + friday;
-		
+		String monday = firstDayOfWeek.format(formatter);
+		String friday = firstDayOfWeek.plusDays(4).format(formatter);
+		String weekPeriod = "Bookings From " + monday + " to " + friday;
+
+		String roomWeek = "Room Usage for " + monday + " to " + friday;
+		String strTodayReport = "Reports filed Today: " + (int) todayReport;
+		String strProcessReport = "Pending Reports to process: " + (int) processingReports;
+		String strReportWeek = "Report Counts From " + monday + " to " + friday;
+
 		mav.addObject("getBookingData", getBookingData);
 		System.out.println(getBookingData);
 		mav.addObject("reports", reports);

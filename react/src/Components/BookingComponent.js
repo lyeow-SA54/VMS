@@ -99,6 +99,9 @@ class Booking extends Component {
                         <Nav.Link href="http://localhost:8080/admin/index">Home</Nav.Link>
                     </Nav>
                     <Nav>
+                        <Nav.Link href="http://localhost:8080/admin/dashboard">Dashboard</Nav.Link>
+                    </Nav>
+                    <Nav>
                         <NavDropdown title="Manage Rooms">
                             <NavDropdown.Item href="http://localhost:8080/admin/rooms/create">Create Room</NavDropdown.Item>
                             <NavDropdown.Item href="http://localhost:8080/admin/rooms/list">Room List</NavDropdown.Item>
