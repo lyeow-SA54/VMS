@@ -45,7 +45,8 @@ public class React_AdminController {
 
 	@GetMapping("/bookings")
     public List<Booking> getBookings() {
-        return bs.findAllBookings();
+        List <Booking> bookings = bs.findAllBookings();
+        return bs.updateBookingInProgress(bookings);
 	}
 
 	@GetMapping("/reports")

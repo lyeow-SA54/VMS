@@ -111,9 +111,9 @@ public class BookingServiceImpl implements BookingService {
 		int duration = booking.getDuration();
 		if (duration > 180) {
 			duration = 180;
-//			if (predictPeak(booking)) {
-//				duration = 60;
-//			}
+		}
+		if (predictPeak(booking)&&duration>60) {
+			duration = 60;
 		}
 		List<Room> frooms = rms.findAllRoomsOpenForBooking(booking, rooms);
 
@@ -145,9 +145,9 @@ public class BookingServiceImpl implements BookingService {
 		int duration = booking.getDuration();
 		if (duration > 180) {
 			duration = 180;
-//			if (predictPeak(booking)) {
-//				duration = 60;
-//			}
+		}
+		if (predictPeak(booking)&&duration>60) {
+			duration = 60;
 		}
 		List<Room> frooms = rms.findAllRoomsOpenForBooking(booking, rooms);
 		Booking bookingBefore1 = new Booking("placeholder", booking.getDate(), booking.getTime(), duration);
@@ -271,6 +271,11 @@ public class BookingServiceImpl implements BookingService {
 				.filter(b -> !b.getDate().equals(LocalDate.now()) || b.getTime().isAfter(LocalTime.now())
 						|| b.getTime().plusMinutes(b.getDuration()).isBefore(LocalTime.now()))
 				.forEach(b -> b.setBookingInProgress(false));
+		
+		bookings.stream().forEach(b->b.setValidCancel(false));
+		
+		bookings.stream().filter(b->b.getStatus().equals(BookingStatus.SUCCESSFUL) && ((b.getDate().isAfter(LocalDate.now())
+				|| (b.getDate().equals(LocalDate.now()) && b.getTime().isAfter(LocalTime.now()))))).forEach(b->b.setValidCancel(true));
 
 		return bookings;
 	}

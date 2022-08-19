@@ -285,7 +285,7 @@ public class StudentController {
 			mav.addObject("weekend", true);
 			mav.addObject("past", false);
 			return mav;
-		} else if (booking.getTime().isBefore(hr_min)) {
+		} else if (date.isEqual(now) && booking.getTime().isBefore(hr_min.minusMinutes(1))) {
 			mav.addObject("past", true);
 			return mav;
 		}
@@ -399,8 +399,9 @@ public class StudentController {
 			ModelAndView mav = new ModelAndView("booking-not-inprogress");
 			return mav;
 		}
-
+		Report report = new Report();
 		ModelAndView mav = new ModelAndView("misuse-report-form");
+		mav.addObject("report", report);
 		mav.addObject("booking", booking);
 		return mav;
 	}
@@ -413,6 +414,7 @@ public class StudentController {
 		Room room = booking.getRoom();
 		room.setBlockDuration(0);
 		room.setBlockedStartTime(null);
+
 		return "forward:/student/booking/history";
 	}
 
@@ -499,6 +501,11 @@ public class StudentController {
 		if (report.getCategory().equals(ReportCategory.HOGGING)) {
 			if (bs.predictHogging(path)) {
 				rs.approveReportScoring(report);
+			}
+			else
+			{
+				report.setReportStatus(ReportStatus.REJECTED);
+				rs.createReport(report);
 			}
 		}
 

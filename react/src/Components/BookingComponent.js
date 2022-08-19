@@ -83,7 +83,7 @@ class Booking extends Component {
                         <td>{searchedBookings.duration} minutes</td>
                         <td>
                             <ButtonGroup>
-                                <Button size="sm" color='danger' onClick={() => this.cancelBooking(searchedBookings.id, searchedBookings.status)} style={{ display: (searchedBookings.status !== "REJECTED") && (searchedBookings.status !== "CANCELLED") ? 'block' : 'none' }}>Cancel Booking<span className="fa fa-times"></span></Button>
+                                <Button size="sm" color='danger' onClick={() => this.cancelBooking(searchedBookings.id, searchedBookings.status)} style={{ display: (searchedBookings.validCancel) ? 'block' : 'none' }}>Cancel Booking<span className="fa fa-times"></span></Button>
                             </ButtonGroup></td>
                     </tr>
                 );

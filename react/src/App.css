@@ -4,6 +4,7 @@ max-width: 150px;
 
 .dialogImage {
   max-width: 75vw;
+  max-height: 75vh;
   }
 
 .App {

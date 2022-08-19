@@ -45,6 +45,7 @@ public class Booking {
 	private Room room;
 	private boolean checkedIn;
 	private boolean bookingInProgress;
+	private boolean validCancel;
 	
 	public Booking (String id, LocalDate date, LocalTime time, int duration, BookingStatus status, Student student)
 	{
