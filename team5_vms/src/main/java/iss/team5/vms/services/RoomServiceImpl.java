@@ -85,8 +85,8 @@ public class RoomServiceImpl implements RoomService {
 	{
 		LocalTime bstart = booking.getTime();
 		int duration = booking.getDuration();
-		if (duration > 2)
-			duration = 2;
+		if (duration > 180)
+			duration = 180;
 		LocalTime bend = bstart.plusMinutes(duration);
 		// rooms with no blocked timings
 				List<Room> nullBlockTimeRooms = rooms.stream().filter(room -> room.getBlockedStartTime() == null)
@@ -95,7 +95,7 @@ public class RoomServiceImpl implements RoomService {
 				// check booking against room blocked timings if there are
 				List<Room> frooms = rooms.stream().filter(room -> room.getBlockedStartTime() != null)
 						.filter(room -> (room.getBlockedStartTime().isAfter(bend))
-								&& (room.getBlockedStartTime().plusHours(room.getBlockDuration()).isBefore(bstart)))
+								|| (room.getBlockedStartTime().plusHours(room.getBlockDuration()).isBefore(bstart)))
 						.collect(Collectors.toList());
 
 				// all rooms that are open in requested timing

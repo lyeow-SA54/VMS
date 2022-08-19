@@ -51,6 +51,13 @@ public class Report {
 		this.status=status;
 		this.reportStatus=reportStatus;
 	}
+	public Report(String details, String imgPath,ReportCategory category, StudentStatus status, ReportStatus reportStatus) {
+		this.details=details;
+		this.imgPath=imgPath;
+		this.category=category;
+		this.status=status;
+		this.reportStatus=reportStatus;
+	}
 	
 	public Report(String details, String imgPath) {
 		this.details=details;
