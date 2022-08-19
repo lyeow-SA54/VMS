@@ -246,7 +246,7 @@ public class BookingServiceImpl implements BookingService {
 	public void scheduleWaitingList(Booking booking, Room room) {
 		ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 		Runnable setStatus = () -> {
-			if (checkBookingByDateTimeRoom(booking, room)) {
+			if (!checkBookingByDateTimeRoom(booking, room)) {
 				booking.setStatus(BookingStatus.SUCCESSFUL);
 				createBooking(booking);
 			} else
