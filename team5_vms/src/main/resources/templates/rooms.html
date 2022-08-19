@@ -38,8 +38,8 @@
 				<div class="col-3" style="margin-top: 15px; margin-bottom: 15px;">
 					<h4>Room List</h4>
 				</div>
-				<div class="col-3"></div>
-				<div class="col-6 mt-3">
+				<div class="col-1"></div>
+				<div class="col-8 mt-3">
 					<form class="form-inline" role="search" action="#" th:action="@{/admin/rooms/search}" method="get">
 						<input class="form-control mr-sm-2" type="text" placeholder="Search..."
 							th:value="${searchStr != null} ? ${searchStr} : ''" name="searchRoom" />
@@ -53,6 +53,7 @@
 							<option class="dropdown-item" value="1">Full</option>
 						</select>
 						<button class="btn btnorange" type="submit">Search</button>
+						<a th:href="@{/admin/rooms/create}" class="btn btnblue" style="margin-left: 20px;">Add New Room</a>
 					</form>
 				</div>
 			</div>

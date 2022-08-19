@@ -79,8 +79,9 @@ public class Android_StudentController {
 //			JWTGenerator.verifyJWT(accessToken);
 			Student s = ss.findStudentByUser(user);
 			mapResponse.put("studentId", s.getId());
-			mapResponse.put("studentName", s.getUser().getFirstName() + " " + s.getUser().getLastName());
+			mapResponse.put("studentName", user.getGroupName());
 			mapResponse.put("studentScore", s.getScore());
+			mapResponse.put("groupSize", user.getGroupSize());
 			mapResponse.put("response", accessToken);
 			return mapResponse;
 		}

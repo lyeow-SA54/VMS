@@ -42,6 +42,7 @@ import iss.team5.vms.repositories.StudentRepo;
 import iss.team5.vms.services.AccountAuthenticateService;
 import iss.team5.vms.services.BookingService;
 import iss.team5.vms.services.FacilityService;
+import iss.team5.vms.services.MailService;
 import iss.team5.vms.services.ReportService;
 import iss.team5.vms.services.RoomService;
 import iss.team5.vms.services.StudentService;
@@ -69,9 +70,9 @@ public class StudentController {
 
 	@Autowired
 	UserService us;
-
+	
 	@Autowired
-	StudentRepo srepo;
+	MailService ms;
 
 	@Autowired
 	HttpSession session;
@@ -104,6 +105,7 @@ public class StudentController {
 		List<Booking> studentBookingToday = bs.findStudentBookingsForDate(student, LocalDate.now());
 		Stack<Booking> stackBookings = new Stack<Booking>();
 		stackBookings.addAll(availableBookings);
+		System.out.println(stackBookings.size());
 //		List<Booking> findTodayBooking=sBooking.stream()
 //		.filter(b-> b.getDate()==LocalDate.now() && b.getStatus().toString().equalsIgnoreCase("SUCCESSFUL") )
 //		.collect(Collectors.toList());
@@ -125,13 +127,14 @@ public class StudentController {
 			}
 			bookingsForCarousel.add(bookings);
 		}
-//		System.out.println(stackBookings.size());
+
 //		System.out.println(bookingsForCarousel.size());
 		mav.addObject("bookings", availableBookings);
 		if (bookingsForCarousel.size() > 0) {
 			mav.addObject("bookingsCarousel1", bookingsForCarousel.get(0));
 			bookingsForCarousel.remove(0);
 		}
+		System.out.println(bookingsForCarousel.size());
 		mav.addObject("bookingsCarousel", bookingsForCarousel);
 		return mav;
 	}
@@ -362,28 +365,25 @@ public class StudentController {
 	}
 
 	@RequestMapping(value = "report/save", method = RequestMethod.POST)
-    private String uploadReport(@RequestParam(value="file",required=true) MultipartFile file,
-                                @RequestParam(value = "details",required=true) String details,
-                                HttpServletRequest request) throws IOException {
-        String path = "";
-        String fileName = "";
-        if (!file.isEmpty()) {
-            String name = UUID.randomUUID().toString().replaceAll("-", "");
-            String imageType=file.getContentType();
-            String suffix=imageType.substring(imageType.indexOf("/")+1);
-            File file1 = new File("");
-            String filePath = file1.getCanonicalPath();//get app real path in local
-            fileName = name+"."+suffix;
-            File file2 = new File("C:/VMS/img");
-            if(!file2.exists()){
-                file2.mkdirs();
-            }
-            path = "C:/VMS/img/"+fileName;
-            file.transferTo(new File(path));
-        }
-
-
-
+	private String createReport(@RequestParam(value = "file", required = true) MultipartFile file,
+			@RequestParam(value = "details", required = true) String details, HttpServletRequest request)
+			throws IOException {
+		String path = "";
+		String fileName = "";
+		if (!file.isEmpty()) {
+			String name = UUID.randomUUID().toString().replaceAll("-", "");
+			String imageType = file.getContentType();
+			String suffix = imageType.substring(imageType.indexOf("/") + 1);
+			File file1 = new File("");
+			String filePath = file1.getCanonicalPath();// get app real path in local
+			fileName = name + "." + suffix;
+			File file2 = new File("C:/VMS/img");
+			if (!file2.exists()) {
+				file2.mkdirs();
+			}
+			path = "C:/VMS/img/" + fileName;
+			file.transferTo(new File(path));
+		}
 
 		// add path to report
 		// method to extract student from logged in session
@@ -397,10 +397,8 @@ public class StudentController {
 				rs.approveReportScoring(report);
 			}
 		}
-		/*
-		 * ms.sendSimpleMail("e0838388@u.nus.edu","report test","new report generated!"
-		 * );
-		 */
+
+
 		return "report-success";
 
 	}

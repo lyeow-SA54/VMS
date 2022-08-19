@@ -1,5 +1,5 @@
 import { MDBFooter } from 'mdb-react-ui-kit';
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Button, ButtonGroup, Container } from 'reactstrap';
 import "../App.css";
 import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
@@ -14,18 +14,17 @@ class Report extends Component {
         super(props);
         this.state = {
             reports: [],
-            // roomNameFilter: '',
-            // studentFilter: '',
             dateFilter: '',
             isLoaded: false,
             isOpen: false,
-            imageOpen: ''
+            imageOpen: '',
+            statusFilter: 'PROCESSING'
         };
 
         this.onChange = {
-            // roomNameFilter: this.handleChange.bind(this, 'roomNameFilter'),
-            studentFilter: this.handleChange.bind(this, 'studentFilter'),
-            dateFilter: this.handleChange.bind(this, 'dateFilter')
+            dateFilter: this.handleChange.bind(this, 'dateFilter'),
+            statusFilter: this.handleChange.bind(this, 'statusFilter')
+            
         }
     };
 
@@ -90,11 +89,7 @@ class Report extends Component {
         // const ReportListProcessed = reports.forEach(x => x.imgPath = "/img/"+x.imgPath);
         const ReportList = reports
             .filter(report =>
-                // (
-                //     report.student.user.firstName.toLowerCase().includes(this.state.studentFilter)
-                //     || report.student.user.lastName.toLowerCase().includes(this.state.studentFilter)
-                // )
-                report.booking.date.includes(this.state.dateFilter))
+                report.booking.date.includes(this.state.dateFilter)&&report.reportStatus.includes(this.state.statusFilter))
             .map(searchedReports => {
                 return (
                     <tr>
@@ -124,8 +119,8 @@ class Report extends Component {
                         {/* <td>{searchedReports.room.roomName}</td> */}
                         <td>
                             <ButtonGroup>
-                                <Button size="sm" color='primary' onClick={() => this.updateReport(searchedReports.id, "APPROVE")} style={{ display: (searchedReports.reportStatus === "PROCESSING") || (searchedReports.reportStatus === "REJECTED") ? 'block' : 'none' }}>Approve<span className="fa fa-thumbs-up"></span></Button>
-                                <Button size="sm" color='danger' onClick={() => this.updateReport(searchedReports.id, "REJECT")} style={{ display: (searchedReports.reportStatus === "PROCESSING") || (searchedReports.reportStatus === "APPROVED") ? 'block' : 'none' }}>Reject<span className="fa fa-times"></span></Button>
+                                <Button size="sm" color='primary' onClick={() => this.updateReport(searchedReports.id, "APPROVE")} style={{ display: (searchedReports.reportStatus === "PROCESSING")? 'block' : 'none'}}>Approve<span className="fa fa-thumbs-up"></span></Button>
+                                <Button size="sm" color='danger' onClick={() => this.updateReport(searchedReports.id, "REJECT")} style={{ display: (searchedReports.reportStatus === "PROCESSING")? 'block' : 'none' }}>Reject<span className="fa fa-times"></span></Button>
                             </ButtonGroup></td>
                     </tr>
                 );
@@ -166,6 +161,12 @@ class Report extends Component {
                     <input type="text" onChange={this.onChange.studentFilter} id="studentname" /> */}
                         <label for="date">Date:&nbsp;&nbsp;</label>
                         <input type="date" onChange={this.onChange.dateFilter} id="date" min="2022-01-01" max="2023-12-31"></input>
+                        <label for="status">Status:&nbsp;&nbsp;</label>
+                        <select id="status" onChange={this.onChange.statusFilter} >
+                            <option value="PROCESSING">Processing</option>
+                            <option value="APPROVED">Approved</option>
+                            <option value="REJECTED">Rejected</option>
+                        </select>
                     </div>
                     <div>
                         <h2>Report List</h2>
@@ -188,8 +189,8 @@ class Report extends Component {
                     </table>
                 </Container>
                 <MDBFooter bgColor='light' className='text-center text-lg-start text-muted'>
-                    <div className='text-center p-4 myfooter' style={{ backgroundColor: '#003062', color:'white'}}>
-                    VMS Copyright © 2022
+                    <div className='text-center p-4 myfooter' style={{ backgroundColor: '#003062', color: 'white' }}>
+                        VMS Copyright © 2022
                     </div>
                 </MDBFooter>
             </div>

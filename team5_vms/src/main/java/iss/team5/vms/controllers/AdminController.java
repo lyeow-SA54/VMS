@@ -1,14 +1,11 @@
 package iss.team5.vms.controllers;
 
 import java.time.LocalDate;
-import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.WeekFields;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -18,14 +15,12 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import iss.team5.vms.email.service.EmailService;
 import iss.team5.vms.helper.BookingStatus;
 import iss.team5.vms.helper.FirstDayOfCurrentWeek;
 import iss.team5.vms.helper.ReportCategory;
@@ -39,6 +34,7 @@ import iss.team5.vms.model.User;
 import iss.team5.vms.repositories.BookingRepo;
 import iss.team5.vms.services.BookingService;
 import iss.team5.vms.services.FacilityService;
+import iss.team5.vms.services.MailService;
 import iss.team5.vms.services.ReportService;
 import iss.team5.vms.services.RoomService;
 import iss.team5.vms.services.StudentService;
@@ -64,7 +60,7 @@ public class AdminController {
 	private UserSessionService userSessionService;
 
 	@Autowired
-	private EmailService eService;
+	private MailService mService;
 	
 	@Autowired
 	private ReportService ReService;
@@ -269,7 +265,7 @@ public class AdminController {
 		sService.createStudent(student);
 		User stu = student.getUser();
 		try {
-			eService.sendMail(stu);
+			mService.sendSimpleMail(stu.getEmail(), "Account Created For "+stu.getGroupName(), "Username: "+stu.getGroupName()+ "\nPassword: password. \nPlease reset your password immediately after first login.");
 			System.out.println("Success");
 		} catch (Exception e) {
 			System.out.println(e.getMessage());

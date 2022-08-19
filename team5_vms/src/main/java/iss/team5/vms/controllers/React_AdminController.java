@@ -2,9 +2,6 @@ package iss.team5.vms.controllers;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -21,6 +18,7 @@ import iss.team5.vms.model.Report;
 import iss.team5.vms.model.Student;
 import iss.team5.vms.model.User;
 import iss.team5.vms.services.BookingService;
+import iss.team5.vms.services.MailService;
 import iss.team5.vms.services.ReportService;
 import iss.team5.vms.services.StudentService;
 import iss.team5.vms.services.UserSessionService;
@@ -38,6 +36,9 @@ public class React_AdminController {
 	
 	@Autowired
 	StudentService ss;
+	
+	@Autowired
+	MailService ms;
 
 	@Autowired
 	private UserSessionService userSessionService;
@@ -63,6 +64,8 @@ public class React_AdminController {
 	public ResponseEntity cancelBooking(@PathVariable String id) {
 		try {
 			bs.cancelCourseById(id);
+			Booking booking = bs.findBookingById(id);
+			ms.sendSimpleMail(booking.getStudent().getUser().getEmail(), "BOOKING CANCELLED BY ADMIN", "Booking Date: "+booking.getDate()+ "Booking Time: "+booking.getTime());
 			return ResponseEntity.ok().build();
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().body("Item couldnt be deleted");

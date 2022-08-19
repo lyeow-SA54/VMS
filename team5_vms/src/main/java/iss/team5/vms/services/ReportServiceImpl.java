@@ -138,7 +138,7 @@ public class ReportServiceImpl implements ReportService {
 				"REPORT AGAINST YOUR BOOKING ON:" + report.getBooking().getDate() + "FOR: "
 						+ report.getBooking().getRoom().getRoomName() + "WAS APPROVED",
 				"Your current score is now: " + student.getScore()
-						+ ". Please note your future booking application requests will be a lower priority once above 3.");
+						+ ". \nPlease note your future booking application requests will be a lower priority once above 3.");
 	}
 	
 	@Override
