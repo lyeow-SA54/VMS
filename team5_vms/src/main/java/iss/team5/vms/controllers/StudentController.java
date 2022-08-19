@@ -108,62 +108,62 @@ public class StudentController {
 //		List<Booking> findTodayBooking=sBooking.stream()
 //		.filter(b-> b.getDate()==LocalDate.now() && b.getStatus().toString().equalsIgnoreCase("SUCCESSFUL") )
 //		.collect(Collectors.toList());
-		
-		ModelAndView mav = new ModelAndView("student-home-page");
-		try  { 
-			
-			Booking bookingOfTheDay = bs.findStudentCurrentBooking(student);
-			
-			mav.addObject("bookingOfTheDay", bookingOfTheDay);
-			String strRoomName = "Room Name :  " + bookingOfTheDay.getRoom().getRoomName();
-			
-			DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-			String bookingDate = bookingOfTheDay.getDate().format(dateFormatter);
-			DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-			String bookingTime = bookingOfTheDay.getTime().format(timeFormatter);	
-			String strDateTime = "Date/Time :  " + bookingDate +" "+bookingTime;
-			String strDuration = "Duration  :  " + bookingOfTheDay.getDuration() + " minutes";
-//			String strBookingInProgress = "Checked-In:  In Progress";
-			
-			mav.addObject("strRoomName",strRoomName);
-			mav.addObject("strDateTime",strDateTime);
-			mav.addObject("strDuration",strDuration);
-			mav.addObject("BookingInProgress",bookingOfTheDay.isBookingInProgress());
-			mav.addObject("CheckIn",bookingOfTheDay.isCheckedIn());
-			System.out.println("print 1");
-			
-		} catch (Exception e) {
-			try {
-				
-				Booking nextBookingOfTheDay = bs.findStudentNextBooking(student);
-				
-				mav.addObject("bookingOfTheDay", nextBookingOfTheDay);
-				String strRoomName = "Room Name :  " + nextBookingOfTheDay.getRoom().getRoomName();
-				
-				DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-				String bookingDate = nextBookingOfTheDay.getDate().format(dateFormatter);
-				DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-				String bookingTime = nextBookingOfTheDay.getTime().format(timeFormatter);	
-				String strDateTime = "Date/Time :  " + bookingDate +" "+bookingTime;
-				String strDuration = "Duration  :  " + nextBookingOfTheDay.getDuration() + " minutes";
-//				String strBookingInProgress = "Checked-In:  In Progress";
-				
-				mav.addObject("strRoomName",strRoomName);
-				mav.addObject("strDateTime",strDateTime);
-				mav.addObject("strDuration",strDuration);
-				mav.addObject("BookingInProgress",nextBookingOfTheDay.isBookingInProgress());
-				
-//				String strBkInProgress = "Checked-In:  Under waiting list";
-				System.out.println(nextBookingOfTheDay.isBookingInProgress());
-				mav.addObject("CheckIn",nextBookingOfTheDay.isCheckedIn());
-				System.out.println("print 2");
-			}
-			catch (Exception e2) {
-				Booking noBooking = new Booking();
-				mav.addObject("noBooking",noBooking);
-				System.out.println("print 3");
-			}
-		} 
+
+//		ModelAndView mav = new ModelAndView("student-home-page");
+//		try  { 
+//			
+//			Booking bookingOfTheDay = bs.findStudentCurrentBooking(student);
+//			
+//			mav.addObject("bookingOfTheDay", bookingOfTheDay);
+//			String strRoomName = "Room Name :  " + bookingOfTheDay.getRoom().getRoomName();
+//			
+//			DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+//			String bookingDate = bookingOfTheDay.getDate().format(dateFormatter);
+//			DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+//			String bookingTime = bookingOfTheDay.getTime().format(timeFormatter);	
+//			String strDateTime = "Date/Time :  " + bookingDate +" "+bookingTime;
+//			String strDuration = "Duration  :  " + bookingOfTheDay.getDuration() + " minutes";
+////			String strBookingInProgress = "Checked-In:  In Progress";
+//			
+//			mav.addObject("strRoomName",strRoomName);
+//			mav.addObject("strDateTime",strDateTime);
+//			mav.addObject("strDuration",strDuration);
+//			mav.addObject("BookingInProgress",bookingOfTheDay.isBookingInProgress());
+//			mav.addObject("CheckIn",bookingOfTheDay.isCheckedIn());
+//			System.out.println("print 1");
+//			
+//		} catch (Exception e) {
+//			try {
+//				
+//				Booking nextBookingOfTheDay = bs.findStudentNextBooking(student);
+//				
+//				mav.addObject("bookingOfTheDay", nextBookingOfTheDay);
+//				String strRoomName = "Room Name :  " + nextBookingOfTheDay.getRoom().getRoomName();
+//				
+//				DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+//				String bookingDate = nextBookingOfTheDay.getDate().format(dateFormatter);
+//				DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+//				String bookingTime = nextBookingOfTheDay.getTime().format(timeFormatter);	
+//				String strDateTime = "Date/Time :  " + bookingDate +" "+bookingTime;
+//				String strDuration = "Duration  :  " + nextBookingOfTheDay.getDuration() + " minutes";
+////				String strBookingInProgress = "Checked-In:  In Progress";
+//				
+//				mav.addObject("strRoomName",strRoomName);
+//				mav.addObject("strDateTime",strDateTime);
+//				mav.addObject("strDuration",strDuration);
+//				mav.addObject("BookingInProgress",nextBookingOfTheDay.isBookingInProgress());
+//				
+////				String strBkInProgress = "Checked-In:  Under waiting list";
+//				System.out.println(nextBookingOfTheDay.isBookingInProgress());
+//				mav.addObject("CheckIn",nextBookingOfTheDay.isCheckedIn());
+//				System.out.println("print 2");
+//			}
+//			catch (Exception e2) {
+//				Booking noBooking = new Booking();
+//				mav.addObject("noBooking",noBooking);
+//				System.out.println("print 3");
+//			}
+//		} 
 //		ModelAndView mav = new ModelAndView("student-home-page");
 //		if (studentBookingToday.size() > 0) {
 ////			Booking bookingOfTheDay = studentBookingToday.get(0);
@@ -171,7 +171,19 @@ public class StudentController {
 //			mav.addObject("bookingOfTheDay", studentBookingToday.get(0));
 //		}
 
-//		ModelAndView mav = new ModelAndView("student-home-page");
+		ModelAndView mav = new ModelAndView("student-home-page");
+		try {
+			Booking booking = bs.findStudentCurrentBooking(student);
+			mav.addObject("booking", booking);
+			mav.addObject("current", true);
+		} catch (Exception e) {
+			try {
+				Booking booking = bs.findStudentNextBooking(student);
+				mav.addObject("booking", booking);
+				mav.addObject("current", false);
+			} catch (Exception e2) {
+			}
+		}
 		List<List<Booking>> bookingsForCarousel = new ArrayList<List<Booking>>();
 		for (int i = availableBookings.size(); i > 0; i = i - 3) {
 			List<Booking> bookings = new ArrayList<Booking>();
@@ -419,28 +431,25 @@ public class StudentController {
 	}
 
 	@RequestMapping(value = "report/save", method = RequestMethod.POST)
-    private String uploadReport(@RequestParam(value="file",required=true) MultipartFile file,
-                                @RequestParam(value = "details",required=true) String details,
-                                HttpServletRequest request) throws IOException {
-        String path = "";
-        String fileName = "";
-        if (!file.isEmpty()) {
-            String name = UUID.randomUUID().toString().replaceAll("-", "");
-            String imageType=file.getContentType();
-            String suffix=imageType.substring(imageType.indexOf("/")+1);
-            File file1 = new File("");
-            String filePath = file1.getCanonicalPath();//get app real path in local
-            fileName = name+"."+suffix;
-            File file2 = new File("C:/VMS/img");
-            if(!file2.exists()){
-                file2.mkdirs();
-            }
-            path = "C:/VMS/img/"+fileName;
-            file.transferTo(new File(path));
-        }
-
-
-
+	private String uploadReport(@RequestParam(value = "file", required = true) MultipartFile file,
+			@RequestParam(value = "details", required = true) String details, HttpServletRequest request)
+			throws IOException {
+		String path = "";
+		String fileName = "";
+		if (!file.isEmpty()) {
+			String name = UUID.randomUUID().toString().replaceAll("-", "");
+			String imageType = file.getContentType();
+			String suffix = imageType.substring(imageType.indexOf("/") + 1);
+			File file1 = new File("");
+			String filePath = file1.getCanonicalPath();// get app real path in local
+			fileName = name + "." + suffix;
+			File file2 = new File("C:/VMS/img");
+			if (!file2.exists()) {
+				file2.mkdirs();
+			}
+			path = "C:/VMS/img/" + fileName;
+			file.transferTo(new File(path));
+		}
 
 		// add path to report
 		// method to extract student from logged in session
