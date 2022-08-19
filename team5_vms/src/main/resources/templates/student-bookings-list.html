@@ -65,13 +65,13 @@
 									<span>-</span>
 								</td>-->
 								<td
-									th:if="${booking.status != T(iss.team5.vms.helper.BookingStatus).REJECTED and booking.status != T(iss.team5.vms.helper.BookingStatus).CANCELLED}">
+									th:if="${booking.validCancel}">
 									<a th:href="@{/student/booking/cancel/}+${booking.id}">
 										<span th:text="CANCEL"></span>
 									</a>
 								</td>
 								<td
-									th:unless="${booking.status != T(iss.team5.vms.helper.BookingStatus).REJECTED and booking.status != T(iss.team5.vms.helper.BookingStatus).CANCELLED}">
+									th:if="${!booking.validCancel}">
 									<span>-</span>
 								</td>
 							</tr>

@@ -308,8 +308,17 @@ public class Android_StudentController {
 			try {
 			Booking booking = bs.findStudentCurrentBooking(student);
 			Booking lastBooking = bs.findBookingBefore(booking);
-			rs.createReport(new Report((String) payload.get("details"), name + imageType, lastBooking,
+			Report report = rs.createReport(new Report((String) payload.get("details"), name + imageType, lastBooking,
 					ReportStatus.PROCESSING, ReportCategory.valueOf((String) payload.get("category")), student));
+			if (report.getCategory().equals(ReportCategory.HOGGING)) {
+				if (bs.predictHogging(name + imageType)) {
+					rs.approveReportScoring(report);
+				}
+				else {
+					report.setReportStatus(ReportStatus.REJECTED);
+					rs.createReport(report);
+				}
+			}
 
 			/*ms.sendSimpleMail("e0838388@u.nus.edu","report test","new report generated!");*/
 
