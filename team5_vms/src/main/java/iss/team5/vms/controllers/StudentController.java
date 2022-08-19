@@ -72,7 +72,7 @@ public class StudentController {
 
 	@Autowired
 	UserService us;
-	
+
 	@Autowired
 	MailService ms;
 
@@ -261,28 +261,35 @@ public class StudentController {
 			ModelAndView mav = new ModelAndView("unauthorized-admin");
 			return mav;
 		}
-		
+
+		LocalTime currentTime = LocalTime.now();
+		LocalTime hr_min = LocalTime.of(currentTime.getHour(), currentTime.getMinute());
+
 		ModelAndView mav = new ModelAndView("student-bookings-filter_selection");
 		List<Facility> facilities = fs.findAllFacilities();
 		mav.addObject("fList", facilities);
 		mav.addObject("booking", booking);
 		mav.addObject("room", room);
 		mav.addObject("size", user.getGroupSize());
-		
+
 		LocalDate now = LocalDate.now();
-		if(date.isBefore(now)) {
+		if (date.isBefore(now)) {
 			mav.addObject("yesterday", true);
+			mav.addObject("past", false);
 			return mav;
-		}
-		else if(date.isAfter(now.plusDays(14))) {
+		} else if (date.isAfter(now.plusDays(14))) {
 			mav.addObject("max", true);
+			mav.addObject("past", false);
 			return mav;
-		}
-		else if(isWeekend(date)) {
+		} else if (isWeekend(date)) {
 			mav.addObject("weekend", true);
+			mav.addObject("past", false);
+			return mav;
+		} else if (booking.getTime().isBefore(hr_min)) {
+			mav.addObject("past", true);
 			return mav;
 		}
-		
+
 		Student student = ss.findStudentByUser(user);
 		List<Room> roomsExact = rms.findRoomsByExactAttributes(room);
 		List<Booking> bookings = new ArrayList<Booking>();
@@ -494,7 +501,6 @@ public class StudentController {
 				rs.approveReportScoring(report);
 			}
 		}
-
 
 		return "report-success";
 

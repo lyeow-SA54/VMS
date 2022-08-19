@@ -4,6 +4,8 @@
 <head th:replace="fragments/general.html :: headerfiles" />
 <title>VMS</title>
 <link rel="stylesheet" th:href="@{/css/simple.css}" />
+<!--<script src="https://cdn.jsdelivr.net/timepicker.js/latest/timepicker.min.js"></script>
+<link href="https://cdn.jsdelivr.net/timepicker.js/latest/timepicker.min.css" rel="stylesheet" />-->
 <style>
 	p {
 		color: red;
@@ -21,6 +23,7 @@
 					<h5>Choose your Booking Preferences</h5>
 					<p th:if="${weekend}">*You can only book for weekdays!</p>
 					<p th:if="${yesterday}">*You can't book for the past date!</p>
+					<p th:if="${past}">*You can't book for the past time!</p>
 					<p th:if="${max}">*You can only book for 2 weeks ahead!</p>
 					<table class="table table-borderless" align="center">
 						<tbody>
@@ -32,7 +35,6 @@
 											th:field="${booking.date}" />
 									</fieldset>
 								</td>
-								<!-- <td th:if="${#fields.hasErrors('user.firstName')}" th:errors="*{user.firstName}"></td> -->
 							</tr>
 							<tr>
 								<td><span th:text="#{fieldLabel.blockedStartTime}"></span></td>
@@ -40,9 +42,10 @@
 									<fieldset>
 										<input id="Time" type="time" name="Time" class="form-control" required=""
 											th:field="${booking.time}" />
+										<!--<input type="text" id="time" placeholder="Time" name="Time" class="form-control"
+											required="" th:field="${booking.time}">-->
 									</fieldset>
 								</td>
-								<!-- <td th:if="${#fields.hasErrors('user.lastName')}" th:errors="*{user.lastName}"></td> -->
 							</tr>
 							<tr>
 								<td><span th:text="#{fieldLabel.pax}"></span></td>
@@ -52,7 +55,6 @@
 											required="" th:min="1" th:max="${size}" th:field="${room.capacity}" />
 									</fieldset>
 								</td>
-								<!-- <td th:if="${#fields.hasErrors('user.groupName')}" th:errors="*{user.groupName}"></td> -->
 							</tr>
 							<tr>
 								<td><span th:text="#{fieldLabel.blockDuration}"></span></td>
@@ -62,7 +64,6 @@
 											required="" min="30" max="180" th:field="${booking.duration}" />
 									</fieldset>
 								</td>
-								<!-- <td th:if="${#fields.hasErrors('user.email')}" th:errors="*{user.email}"></td> -->
 							</tr>
 							<tr>
 								<td><span th:text="#{fieldLabel.facilities}"></span></td>
@@ -101,5 +102,17 @@
 		</div>
 	</footer>
 </body>
+<!--<script>
+	var timepicker = new TimePicker('time', {
+		lang: 'en',
+		theme: 'dark'
+	});
+	timepicker.on('change', function (evt) {
+
+		var value = (evt.hour || '00') + ':' + (evt.minute || '00');
+		evt.element.value = value;
+
+	});
+</script>-->
 
 </html>
