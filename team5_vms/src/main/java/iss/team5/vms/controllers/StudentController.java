@@ -362,25 +362,28 @@ public class StudentController {
 	}
 
 	@RequestMapping(value = "report/save", method = RequestMethod.POST)
-	private String uploadReport(@RequestParam(value = "file", required = true) MultipartFile file,
-			@RequestParam(value = "details", required = true) String details, HttpServletRequest request)
-			throws IOException {
-		String path = "";
-		String fileName = "";
-		if (!file.isEmpty()) {
-			String name = UUID.randomUUID().toString().replaceAll("-", "");
-			String imageType = file.getContentType();
-			String suffix = imageType.substring(imageType.indexOf("/") + 1);
-			File file1 = new File("");
-			String filePath = file1.getCanonicalPath();// get app real path in local
-			fileName = name + "." + suffix;
-			File file2 = new File("C:/VMS/img");
-			if (!file2.exists()) {
-				file2.mkdirs();
-			}
-			path = "C:/VMS/img/" + fileName;
-			file.transferTo(new File(path));
-		}
+    private String uploadReport(@RequestParam(value="file",required=true) MultipartFile file,
+                                @RequestParam(value = "details",required=true) String details,
+                                HttpServletRequest request) throws IOException {
+        String path = "";
+        String fileName = "";
+        if (!file.isEmpty()) {
+            String name = UUID.randomUUID().toString().replaceAll("-", "");
+            String imageType=file.getContentType();
+            String suffix=imageType.substring(imageType.indexOf("/")+1);
+            File file1 = new File("");
+            String filePath = file1.getCanonicalPath();//get app real path in local
+            fileName = name+"."+suffix;
+            File file2 = new File("C:/VMS/img");
+            if(!file2.exists()){
+                file2.mkdirs();
+            }
+            path = "C:/VMS/img/"+fileName;
+            file.transferTo(new File(path));
+        }
+
+
+
 
 		// add path to report
 		// method to extract student from logged in session

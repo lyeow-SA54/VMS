@@ -249,11 +249,15 @@ public class BookingServiceImpl implements BookingService {
 			if (!checkBookingByDateTimeRoom(booking, room)) {
 				booking.setStatus(BookingStatus.SUCCESSFUL);
 				createBooking(booking);
-			} else
+			} else{
 				booking.setStatus(BookingStatus.REJECTED);
+				createBooking(booking);
+			}
+
+
 		};
 
-		executorService.schedule(setStatus, 1, TimeUnit.HOURS);
+		executorService.schedule(setStatus, 1, TimeUnit.MINUTES);
 	}
 
 	@Override
