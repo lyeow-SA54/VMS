@@ -29,7 +29,7 @@ public class EmailService {
 		String process = templateEngine.process("welcome", context);
 		javax.mail.internet.MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(mimeMessage);
-		helper.setSubject("Welcome " + user.getGroupName());
+		helper.setSubject("Welcome " + user.getFirstName() + " " + user.getLastName());
 		helper.setText(process, true);
 		helper.setTo(user.getEmail());
 		javaMailSender.send(mimeMessage);
