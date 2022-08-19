@@ -2,8 +2,10 @@ package iss.team5.vms.controllers;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -109,14 +111,82 @@ public class StudentController {
 //		List<Booking> findTodayBooking=sBooking.stream()
 //		.filter(b-> b.getDate()==LocalDate.now() && b.getStatus().toString().equalsIgnoreCase("SUCCESSFUL") )
 //		.collect(Collectors.toList());
-		ModelAndView mav = new ModelAndView("student-home-page");
-		if (studentBookingToday.size() > 0) {
-//			Booking bookingOfTheDay = studentBookingToday.get(0);
-//			ModelAndView mav = new ModelAndView("student-home-page");
-			mav.addObject("bookingOfTheDay", studentBookingToday.get(0));
-		}
 
 //		ModelAndView mav = new ModelAndView("student-home-page");
+//		try  { 
+//			
+//			Booking bookingOfTheDay = bs.findStudentCurrentBooking(student);
+//			
+//			mav.addObject("bookingOfTheDay", bookingOfTheDay);
+//			String strRoomName = "Room Name :  " + bookingOfTheDay.getRoom().getRoomName();
+//			
+//			DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+//			String bookingDate = bookingOfTheDay.getDate().format(dateFormatter);
+//			DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+//			String bookingTime = bookingOfTheDay.getTime().format(timeFormatter);	
+//			String strDateTime = "Date/Time :  " + bookingDate +" "+bookingTime;
+//			String strDuration = "Duration  :  " + bookingOfTheDay.getDuration() + " minutes";
+////			String strBookingInProgress = "Checked-In:  In Progress";
+//			
+//			mav.addObject("strRoomName",strRoomName);
+//			mav.addObject("strDateTime",strDateTime);
+//			mav.addObject("strDuration",strDuration);
+//			mav.addObject("BookingInProgress",bookingOfTheDay.isBookingInProgress());
+//			mav.addObject("CheckIn",bookingOfTheDay.isCheckedIn());
+//			System.out.println("print 1");
+//			
+//		} catch (Exception e) {
+//			try {
+//				
+//				Booking nextBookingOfTheDay = bs.findStudentNextBooking(student);
+//				
+//				mav.addObject("bookingOfTheDay", nextBookingOfTheDay);
+//				String strRoomName = "Room Name :  " + nextBookingOfTheDay.getRoom().getRoomName();
+//				
+//				DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+//				String bookingDate = nextBookingOfTheDay.getDate().format(dateFormatter);
+//				DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+//				String bookingTime = nextBookingOfTheDay.getTime().format(timeFormatter);	
+//				String strDateTime = "Date/Time :  " + bookingDate +" "+bookingTime;
+//				String strDuration = "Duration  :  " + nextBookingOfTheDay.getDuration() + " minutes";
+////				String strBookingInProgress = "Checked-In:  In Progress";
+//				
+//				mav.addObject("strRoomName",strRoomName);
+//				mav.addObject("strDateTime",strDateTime);
+//				mav.addObject("strDuration",strDuration);
+//				mav.addObject("BookingInProgress",nextBookingOfTheDay.isBookingInProgress());
+//				
+////				String strBkInProgress = "Checked-In:  Under waiting list";
+//				System.out.println(nextBookingOfTheDay.isBookingInProgress());
+//				mav.addObject("CheckIn",nextBookingOfTheDay.isCheckedIn());
+//				System.out.println("print 2");
+//			}
+//			catch (Exception e2) {
+//				Booking noBooking = new Booking();
+//				mav.addObject("noBooking",noBooking);
+//				System.out.println("print 3");
+//			}
+//		} 
+//		ModelAndView mav = new ModelAndView("student-home-page");
+//		if (studentBookingToday.size() > 0) {
+////			Booking bookingOfTheDay = studentBookingToday.get(0);
+////			ModelAndView mav = new ModelAndView("student-home-page");
+//			mav.addObject("bookingOfTheDay", studentBookingToday.get(0));
+//		}
+
+		ModelAndView mav = new ModelAndView("student-home-page");
+		try {
+			Booking booking = bs.findStudentCurrentBooking(student);
+			mav.addObject("booking", booking);
+			mav.addObject("current", true);
+		} catch (Exception e) {
+			try {
+				Booking booking = bs.findStudentNextBooking(student);
+				mav.addObject("booking", booking);
+				mav.addObject("current", false);
+			} catch (Exception e2) {
+			}
+		}
 		List<List<Booking>> bookingsForCarousel = new ArrayList<List<Booking>>();
 		for (int i = availableBookings.size(); i > 0; i = i - 3) {
 			List<Booking> bookings = new ArrayList<Booking>();
@@ -185,12 +255,34 @@ public class StudentController {
 	}
 
 	@RequestMapping(value = "/booking/options", method = RequestMethod.POST)
-	public ModelAndView bookingOptionSelected(Booking booking, Room room) {
+	public ModelAndView bookingOptionSelected(Booking booking, Room room, @RequestParam("date") LocalDate date) {
 		User user = userSessionService.findUserBySession();
 		if (!user.getRole().equals("STUDENT")) {
 			ModelAndView mav = new ModelAndView("unauthorized-admin");
 			return mav;
 		}
+		
+		ModelAndView mav = new ModelAndView("student-bookings-filter_selection");
+		List<Facility> facilities = fs.findAllFacilities();
+		mav.addObject("fList", facilities);
+		mav.addObject("booking", booking);
+		mav.addObject("room", room);
+		mav.addObject("size", user.getGroupSize());
+		
+		LocalDate now = LocalDate.now();
+		if(date.isBefore(now)) {
+			mav.addObject("yesterday", true);
+			return mav;
+		}
+		else if(date.isAfter(now.plusDays(14))) {
+			mav.addObject("max", true);
+			return mav;
+		}
+		else if(isWeekend(date)) {
+			mav.addObject("weekend", true);
+			return mav;
+		}
+		
 		Student student = ss.findStudentByUser(user);
 		List<Room> roomsExact = rms.findRoomsByExactAttributes(room);
 		List<Booking> bookings = new ArrayList<Booking>();
@@ -202,10 +294,15 @@ public class StudentController {
 			bookings.addAll(bs.findBookingsAvailableExact(booking, roomsContaining, student));
 		}
 
-		ModelAndView mav = new ModelAndView("student-bookings-slot_selection");
-		mav.addObject("bookings", bookings);
-		mav.addObject("room", room);
-		return mav;
+		ModelAndView mav1 = new ModelAndView("student-bookings-slot_selection");
+		mav1.addObject("bookings", bookings);
+		mav1.addObject("room", room);
+		return mav1;
+	}
+
+	public static boolean isWeekend(final LocalDate ld) {
+		DayOfWeek day = DayOfWeek.of(ld.get(ChronoField.DAY_OF_WEEK));
+		return day == DayOfWeek.SUNDAY || day == DayOfWeek.SATURDAY;
 	}
 
 	@RequestMapping(value = "/booking/save", method = RequestMethod.POST)
@@ -365,7 +462,11 @@ public class StudentController {
 	}
 
 	@RequestMapping(value = "report/save", method = RequestMethod.POST)
+<<<<<<< HEAD
 	private String createReport(@RequestParam(value = "file", required = true) MultipartFile file,
+=======
+	private String uploadReport(@RequestParam(value = "file", required = true) MultipartFile file,
+>>>>>>> branch 'master' of https://github.com/lyeow-SA54/VMS
 			@RequestParam(value = "details", required = true) String details, HttpServletRequest request)
 			throws IOException {
 		String path = "";

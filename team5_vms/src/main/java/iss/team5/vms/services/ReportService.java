@@ -1,5 +1,6 @@
 package iss.team5.vms.services;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +40,8 @@ public interface ReportService {
 	int getReportCatCounts(List<Report> report, ReportCategory category);
 
 	int getReportRoomCounts(List<Report> report, Room room);
+
+	List<Report> findReportsInCurrentWeek(LocalDate date);
 
 
     

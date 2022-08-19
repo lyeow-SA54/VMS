@@ -439,7 +439,7 @@
 
 <body>
 	<div th:replace="fragments/general.html :: menu-admin"></div>
-<div class="main-content container-fluid">
+<div class="main-content container-fluid mt-5">
     <div class="page-title text-center">
         <h2>Dashboard</h2>
       	<p class="text-subtitle text-muted text-center" th:text="${#dates.format(#dates.createNow(), 'dd MMM yyyy HH:mm')}"></p>
@@ -468,20 +468,21 @@
                        <p id="ReportDayChart" style="width:100%; height:200px"></p>
                 </div>
 			</div>
+
 			<div class="card mb-4 box-shadow">
 					<div class="card-header">
-						<h5>Category</h5>
-					</div>
-				<div class="card-body">
-                       <p id="ReportCatChart"></p>
-                </div>
-			</div>
-			<div class="card mb-4 box-shadow">
-					<div class="card-header">
-						<h5>Report Counts for Rooms</h5>
+						<h5 th:text="${strReportWeek}"></h5>
 					</div>
 				<div class="card-body">
                        <p id="reportRoomchart"></p>
+                </div>
+			</div>
+			<div class="card mb-4 box-shadow">
+				<div class="card-header">
+					<h5>All-time Category</h5>
+				</div>
+				<div class="card-body">
+                       <p id="ReportCatChart"></p>
                 </div>
 			</div>
         </div>
@@ -537,7 +538,7 @@
 			
 			<div class="card mb-4 box-shadow">
 					<div class="card-header">
-						<h5>Booking frequency</h5>
+						<h5>All-time Booking Counts</h5>
 					</div>
 				<div class="card-body">
                        <p id="BookingFequencyChart"></p>
@@ -558,4 +559,8 @@
 		</div>
 	</footer>
 </body>
+<<<<<<< HEAD
 </html>
+=======
+</html>
+>>>>>>> branch 'master' of https://github.com/lyeow-SA54/VMS.git

@@ -379,6 +379,12 @@ public class BookingServiceImpl implements BookingService {
 		}
 		return false;
 	}
+	
+//	@Override
+//	public boolean predictPeakForIndicatedWeek(int week) {
+//		LocalDate firstBookingDate = br.findAll().stream()
+//				.
+//	}
 
 	@Override
 	public List<Booking> findBookingsInCurrentWeek(LocalDate date) {
