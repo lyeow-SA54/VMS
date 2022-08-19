@@ -165,7 +165,7 @@ public class ReportServiceImpl implements ReportService {
 		                            .withMinute(59)
 		                            .withSecond(0);
 		
-		System.out.println(nextRun);
+//		System.out.println(nextRun);
 		
 		if (now.compareTo(nextRun) > 0)
 			nextRun = nextRun.plusDays(6);

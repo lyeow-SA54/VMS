@@ -174,7 +174,7 @@ class Report extends Component {
                     <div>
                         <h2>Report List</h2>
                     </div>
-                    <table className='table table-hover text-center mt-3'>
+                    <table className='table table-hover text-center mt-3' style={{marginBottom: '100px'}}>
                         <thead className='table-light'>
                             <tr>
                                 <th>Report ID</th>
@@ -192,7 +192,7 @@ class Report extends Component {
                     </table>
                 </Container>
                 <MDBFooter bgColor='light' className='text-center text-lg-start text-muted'>
-                    <div className='text-center p-4 myfooter' style={{ backgroundColor: '#003062', color: 'white' }}>
+                    <div className='text-center p-4 myfooter' style={{ backgroundColor: '#003062', color: 'white', position: 'fixed' }}>
                         VMS Copyright © 2022
                     </div>
                 </MDBFooter>
