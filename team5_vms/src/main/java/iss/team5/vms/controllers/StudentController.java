@@ -97,82 +97,12 @@ public class StudentController {
 		bookingForTheDay.setDate(LocalDate.now());
 		bookingForTheDay.setTime(LocalTime.now());
 
-		// String username =
-		// SecurityContextHolder.getContext().getAuthentication().getName();
-		// Student s1 = ss.findStudentByUser(us.findUserByUsername(username));
-
 		HttpSession session = request.getSession();
 		Student student = (Student) session.getAttribute("student");
 		List<Booking> availableBookings = bs.findBookingsAvailableExact(bookingForTheDay, rooms, student);
-		List<Booking> studentBookingToday = bs.findStudentBookingsForDate(student, LocalDate.now());
 		Stack<Booking> stackBookings = new Stack<Booking>();
 		stackBookings.addAll(availableBookings);
 		System.out.println(stackBookings.size());
-//		List<Booking> findTodayBooking=sBooking.stream()
-//		.filter(b-> b.getDate()==LocalDate.now() && b.getStatus().toString().equalsIgnoreCase("SUCCESSFUL") )
-//		.collect(Collectors.toList());
-
-//		ModelAndView mav = new ModelAndView("student-home-page");
-//		try  { 
-//			
-//			Booking bookingOfTheDay = bs.findStudentCurrentBooking(student);
-//			
-//			mav.addObject("bookingOfTheDay", bookingOfTheDay);
-//			String strRoomName = "Room Name :  " + bookingOfTheDay.getRoom().getRoomName();
-//			
-//			DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-//			String bookingDate = bookingOfTheDay.getDate().format(dateFormatter);
-//			DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-//			String bookingTime = bookingOfTheDay.getTime().format(timeFormatter);	
-//			String strDateTime = "Date/Time :  " + bookingDate +" "+bookingTime;
-//			String strDuration = "Duration  :  " + bookingOfTheDay.getDuration() + " minutes";
-////			String strBookingInProgress = "Checked-In:  In Progress";
-//			
-//			mav.addObject("strRoomName",strRoomName);
-//			mav.addObject("strDateTime",strDateTime);
-//			mav.addObject("strDuration",strDuration);
-//			mav.addObject("BookingInProgress",bookingOfTheDay.isBookingInProgress());
-//			mav.addObject("CheckIn",bookingOfTheDay.isCheckedIn());
-//			System.out.println("print 1");
-//			
-//		} catch (Exception e) {
-//			try {
-//				
-//				Booking nextBookingOfTheDay = bs.findStudentNextBooking(student);
-//				
-//				mav.addObject("bookingOfTheDay", nextBookingOfTheDay);
-//				String strRoomName = "Room Name :  " + nextBookingOfTheDay.getRoom().getRoomName();
-//				
-//				DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-//				String bookingDate = nextBookingOfTheDay.getDate().format(dateFormatter);
-//				DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-//				String bookingTime = nextBookingOfTheDay.getTime().format(timeFormatter);	
-//				String strDateTime = "Date/Time :  " + bookingDate +" "+bookingTime;
-//				String strDuration = "Duration  :  " + nextBookingOfTheDay.getDuration() + " minutes";
-////				String strBookingInProgress = "Checked-In:  In Progress";
-//				
-//				mav.addObject("strRoomName",strRoomName);
-//				mav.addObject("strDateTime",strDateTime);
-//				mav.addObject("strDuration",strDuration);
-//				mav.addObject("BookingInProgress",nextBookingOfTheDay.isBookingInProgress());
-//				
-////				String strBkInProgress = "Checked-In:  Under waiting list";
-//				System.out.println(nextBookingOfTheDay.isBookingInProgress());
-//				mav.addObject("CheckIn",nextBookingOfTheDay.isCheckedIn());
-//				System.out.println("print 2");
-//			}
-//			catch (Exception e2) {
-//				Booking noBooking = new Booking();
-//				mav.addObject("noBooking",noBooking);
-//				System.out.println("print 3");
-//			}
-//		} 
-//		ModelAndView mav = new ModelAndView("student-home-page");
-//		if (studentBookingToday.size() > 0) {
-////			Booking bookingOfTheDay = studentBookingToday.get(0);
-////			ModelAndView mav = new ModelAndView("student-home-page");
-//			mav.addObject("bookingOfTheDay", studentBookingToday.get(0));
-//		}
 
 		ModelAndView mav = new ModelAndView("student-home-page");
 		try {
@@ -208,33 +138,6 @@ public class StudentController {
 		mav.addObject("bookingsCarousel", bookingsForCarousel);
 		return mav;
 	}
-
-//	@RequestMapping("/checkin/{bookingId}/{studentId}")
-//	public ModelAndView bookingCheckin(@PathVariable("bookingId") String bookingId, @PathVariable("studentId") String studentId) {
-//		User user = userSessionService.findUserBySession();
-//		if(!user.getRole().equals("STUDENT")) {
-//			ModelAndView mav = new ModelAndView("unauthorized-admin");
-//			return mav;
-//		}
-//		// pending login implementation
-//		// hardcoded student object for now, final implementation should retrieve from
-//		// logged in context
-//		//String username = SecurityContextHolder.getContext().getAuthentication().getName();
-//		//Student student = ss.findStudentByUser(us.findUserByUsername(username));
-//		//Student student = ss.findStudentById("S00001");
-//		Student student = ss.findStudentById(studentId);	
-//		// pending proper url to be forwarded to on check-in completion
-//		ModelAndView mav = new ModelAndView("student-bookings-list");
-//		Booking booking = bs.findBookingById(bookingId);
-//		String outcomeMsg = "";
-//		if (booking == null) {
-//			outcomeMsg = "Error: booking not found";
-//		} else {
-//			outcomeMsg = bs.checkIn(student, booking);
-//		}
-//		mav.addObject("outcomeMsg", outcomeMsg);
-//		return mav;
-//	}
 
 	@RequestMapping(value = "/booking/options", method = RequestMethod.GET)
 	public ModelAndView bookingOptionSelection() {
@@ -480,8 +383,6 @@ public class StudentController {
 			String name = UUID.randomUUID().toString().replaceAll("-", "");
 			String imageType = file.getContentType();
 			String suffix = imageType.substring(imageType.indexOf("/") + 1);
-			File file1 = new File("");
-			String filePath = file1.getCanonicalPath();// get app real path in local
 			fileName = name + "." + suffix;
 			File file2 = new File("C:/VMS/img");
 			if (!file2.exists()) {
@@ -501,9 +402,7 @@ public class StudentController {
 		if (report.getCategory().equals(ReportCategory.HOGGING)) {
 			if (bs.predictHogging(path)) {
 				rs.approveReportScoring(report);
-			}
-			else
-			{
+			} else {
 				report.setReportStatus(ReportStatus.REJECTED);
 				rs.createReport(report);
 			}
