@@ -1,7 +1,10 @@
 package iss.team5.vms.controllers;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoField;
 import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -84,7 +87,8 @@ public class AdminController {
 
 	@RequestMapping(value = "/rooms/create", method = RequestMethod.POST)
 	public ModelAndView createRoom(@ModelAttribute @Valid Room room, BindingResult result,
-			@RequestParam("roomName") String roomName) {
+			@RequestParam("roomName") String roomName, @RequestParam("myTime") String time,
+			@RequestParam("myDuration") int myDuration) {
 		User user = userSessionService.findUserBySession();
 		List<Room> rooms = rService.findAllRooms();
 		HashSet<String> names = new HashSet<>();
@@ -97,17 +101,42 @@ public class AdminController {
 		}
 		if (result.hasErrors())
 			return new ModelAndView("room-form");
+		LocalTime myTime = LocalTime.parse(time);
+		boolean valid = validate(myTime, myDuration);
 		for (String name : names) {
 			if (name.equalsIgnoreCase(roomName)) {
 				ModelAndView mav = new ModelAndView("room-form");
 				mav.addObject("taken", true);
+				List<Facility> facilities = (List<Facility>) fService.findAllFacilities();
+				mav.addObject("fList", facilities);
 				return mav;
 			}
 		}
+		if (valid == false) {
+			ModelAndView mav = new ModelAndView("room-form");
+			mav.addObject("invalid", true);
+			List<Facility> facilities = (List<Facility>) fService.findAllFacilities();
+			mav.addObject("fList", facilities);
+			return mav;
+		}
+
 		ModelAndView mav = new ModelAndView("forward:/admin/rooms/list");
+		room.setBlockedStartTime(myTime);
+		room.setBlockDuration(myDuration);
 		room.setRoomName(roomName);
 		rService.createRoom(room);
 		return mav;
+	}
+
+	public static boolean validate(LocalTime myTime, int myDuration) {
+		LocalTime maxTime = LocalTime.parse("17:00");
+		LocalTime endTime = myTime.plusHours(myDuration);
+		if(endTime.equals(maxTime))
+			return true;
+		else if (endTime.isBefore(maxTime))
+			return true;
+		else
+			return false;
 	}
 
 	@RequestMapping(value = "/rooms/search", method = RequestMethod.GET)
@@ -186,12 +215,58 @@ public class AdminController {
 	}
 
 	@RequestMapping(value = "/rooms/edit", method = RequestMethod.POST)
-	public ModelAndView editRoom(@ModelAttribute @Valid Room room, BindingResult result) {
+	public ModelAndView editRoom(@ModelAttribute @Valid Room room, BindingResult result,
+			@RequestParam("roomName") String roomName) {
 		User user = userSessionService.findUserBySession();
 		List<Booking> bookings = bService.findAllBookings();
 		HashSet<String> roomIds = new HashSet<>();
 		for (Booking b : bookings) {
 			roomIds.add(b.getRoom().getId());
+		}
+		
+		LocalTime myTime = room.getBlockedStartTime();
+		System.out.println("MY TIME" + myTime);
+
+		int myDuration = room.getBlockDuration();
+		System.out.println("MY DURATION" + myDuration);
+		
+		boolean valid = validate(myTime, myDuration);
+		List<Room> rooms = rService.findAllRooms();
+		Room currentRoom = rService.findRoomById(room.getId());
+		String currentName = currentRoom.getRoomName();
+		System.out.println("Current Name" + currentName);
+		System.out.println("RequestParam Name" + roomName);
+		HashSet<String> names = new HashSet<>();
+		for (Room r : rooms) {
+			names.add(r.getRoomName());
+		}
+		for (String name : names) {
+			if (name.equalsIgnoreCase(roomName)) {
+				if (roomName.equalsIgnoreCase(currentName)) {
+
+				} else {
+					ModelAndView mav = new ModelAndView("room-edit");
+					mav.addObject("taken", true);
+					List<Facility> facilities = (List<Facility>) fService.findAllFacilities();
+					mav.addObject("fList", facilities);
+					List<Boolean> availabilities = new ArrayList<>();
+					availabilities.add(Boolean.TRUE);
+					availabilities.add(Boolean.FALSE);
+					mav.addObject("availabilities", availabilities);
+					return mav;
+				}
+			}
+		}
+		if (valid == false) {
+			ModelAndView mav = new ModelAndView("room-edit");
+			mav.addObject("invalid", true);
+			List<Facility> facilities = (List<Facility>) fService.findAllFacilities();
+			mav.addObject("fList", facilities);
+			List<Boolean> availabilities = new ArrayList<>();
+			availabilities.add(Boolean.TRUE);
+			availabilities.add(Boolean.FALSE);
+			mav.addObject("availabilities", availabilities);
+			return mav;
 		}
 		if (!user.getRole().equals("ADMIN")) {
 			ModelAndView mav = new ModelAndView("unauthorized-student");
@@ -201,11 +276,14 @@ public class AdminController {
 			return new ModelAndView("room-edit");
 		ModelAndView mav = new ModelAndView("rooms");
 		rService.changeRoom(room);
-		List<Room> rooms = rService.findAllRooms();
 		List<Facility> facilities = (List<Facility>) fService.findAllFacilities();
 		mav.addObject("checkBoxFacilities", facilities);
 		mav.addObject("rooms", rooms);
 		mav.addObject("roomids", roomIds);
+		List<Boolean> availabilities = new ArrayList<>();
+		availabilities.add(Boolean.TRUE);
+		availabilities.add(Boolean.FALSE);
+		mav.addObject("availabilities", availabilities);
 		return mav;
 	}
 

@@ -21,6 +21,7 @@
 					<h5>New Room Page</h5>
 					<input type="hidden" th:field="*{id}">
 					<p th:if="${taken}">*Room name already taken!</p>
+					<p th:if="${invalid}">*Please select Block Start Time and Duration properly!</p>
 					<table class="table table-borderless" align="center">
 						<tbody>
 							<tr>
@@ -63,13 +64,14 @@
 							<tr>
 								<td><span th:text="#{fieldLabel.blockedStartTime}"></span></td>
 								<td>
-									<fieldset><input type="time" th:field="*{blockedStartTime}"/></fieldset>
+									<fieldset><input type="time" name="myTime" min='09:00' max='16:00' required />
+									</fieldset>
 								</td>
 							</tr>
 							<tr>
-								<td><span th:text="#{fieldLabel.blockDuration}"></span></td>
+								<td><span th:text="#{fieldLabel.blockDuration} + #{fieldLabel.hr}"></span></td>
 								<td>
-									<fieldset><input type="number" th:field="*{blockDuration}" max="10" />
+									<fieldset><input type="number" name="myDuration" min="0" max="8" />
 									</fieldset>
 								</td>
 							</tr>
