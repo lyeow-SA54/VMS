@@ -1,16 +1,16 @@
 ### Local Environment Setup
 
  1. Spring Backend
-	 a. Update application.properties with MySQL credentials
+	 <br>a. Update application.properties with MySQL credentials
  
  2.  Flask Server
-	 a. Install necessary dependencies in environment 
+	 <br>a. Install necessary dependencies in environment 
 	 (pip install flask / cv2 / pickle)
 	 
 	 b. Run all code blocks in app.IPYNB file under updatedML folder
 	 
  3. React Server (assume node.js already installed)
-	 a. In terminal run "npm install" when running for the first time
+	<br>a. In terminal run "npm install" when running for the first time
 	 
 	 b. In terminal run only "npm start" subsequently after doing 3a. once
 
