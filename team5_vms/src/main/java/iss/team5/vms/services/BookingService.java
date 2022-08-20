@@ -65,5 +65,7 @@ public interface BookingService {
 	int getBookingCountsForRoom(List<Booking> bookings, Room room);
 	
 	Integer getBookingHoursForRoom(List<Booking> bookings, Room room);
+	
+	List<Booking> findTodayAndUpcomingBookings();
 
 }
