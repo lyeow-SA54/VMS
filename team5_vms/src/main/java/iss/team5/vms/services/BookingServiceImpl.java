@@ -2,11 +2,9 @@ package iss.team5.vms.services;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.WeekFields;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -22,7 +20,7 @@ import org.springframework.web.client.RestTemplate;
 
 import iss.team5.vms.DTO.ResponsePojo;
 import iss.team5.vms.helper.BookingStatus;
-import iss.team5.vms.helper.FirstDayOfCurrentWeek;
+import iss.team5.vms.helper.DateHelper;
 import iss.team5.vms.model.Booking;
 import iss.team5.vms.model.Room;
 import iss.team5.vms.model.Student;
@@ -65,7 +63,9 @@ public class BookingServiceImpl implements BookingService {
 
 	@Override
 	public List<Booking> findBookingsByStudent(Student student) {
-		return br.findAllBookingByStudent(student);
+		List<Booking> bookings = br.findAllBookingByStudent(student);
+		Collections.reverse(bookings);
+		return bookings;
 	}
 
 	@Override
@@ -411,7 +411,7 @@ public class BookingServiceImpl implements BookingService {
 //				.plusDays(8);
 ////		System.out.println(lastDayOfWeek);
 
-		LocalDate firstDayOfWeek = FirstDayOfCurrentWeek.value(date);
+		LocalDate firstDayOfWeek = DateHelper.FirstDayOfDateWeek(date);
 		return br.findByDateBetween(firstDayOfWeek, firstDayOfWeek.plusDays(6));
 
 //		return (int) bookings.stream().count();

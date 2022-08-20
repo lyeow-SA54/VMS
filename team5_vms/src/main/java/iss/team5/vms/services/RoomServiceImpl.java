@@ -93,7 +93,7 @@ public class RoomServiceImpl implements RoomService {
 						.collect(Collectors.toList());
 
 				// check booking against room blocked timings if there are
-				List<Room> frooms = rooms.stream().filter(room -> room.getBlockedStartTime() != null)
+				List<Room> frooms = rooms.stream().filter(room -> room.getBlockedStartTime() != null && room.isAvailability())
 						.filter(room -> (room.getBlockedStartTime().isAfter(bend))
 								|| (room.getBlockedStartTime().plusHours(room.getBlockDuration()).isBefore(bstart)))
 						.collect(Collectors.toList());

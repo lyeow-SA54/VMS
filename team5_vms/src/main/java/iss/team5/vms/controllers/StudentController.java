@@ -2,10 +2,8 @@ package iss.team5.vms.controllers;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +30,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import iss.team5.vms.DTO.Account;
 import iss.team5.vms.helper.BookingStatus;
+import iss.team5.vms.helper.DateHelper;
 import iss.team5.vms.helper.ReportCategory;
 import iss.team5.vms.helper.ReportStatus;
 import iss.team5.vms.model.Booking;
@@ -40,7 +39,6 @@ import iss.team5.vms.model.Report;
 import iss.team5.vms.model.Room;
 import iss.team5.vms.model.Student;
 import iss.team5.vms.model.User;
-import iss.team5.vms.repositories.StudentRepo;
 import iss.team5.vms.services.AccountAuthenticateService;
 import iss.team5.vms.services.BookingService;
 import iss.team5.vms.services.FacilityService;
@@ -281,7 +279,7 @@ public class StudentController {
 			mav.addObject("max", true);
 			mav.addObject("past", false);
 			return mav;
-		} else if (isWeekend(date)) {
+		} else if (DateHelper.isWeekend(date)) {
 			mav.addObject("weekend", true);
 			mav.addObject("past", false);
 			return mav;
@@ -305,11 +303,6 @@ public class StudentController {
 		mav1.addObject("bookings", bookings);
 		mav1.addObject("room", room);
 		return mav1;
-	}
-
-	public static boolean isWeekend(final LocalDate ld) {
-		DayOfWeek day = DayOfWeek.of(ld.get(ChronoField.DAY_OF_WEEK));
-		return day == DayOfWeek.SUNDAY || day == DayOfWeek.SATURDAY;
 	}
 
 	@RequestMapping(value = "/booking/save", method = RequestMethod.POST)

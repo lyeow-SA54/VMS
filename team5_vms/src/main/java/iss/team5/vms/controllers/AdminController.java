@@ -23,7 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import iss.team5.vms.email.service.EmailService;
 import iss.team5.vms.helper.BookingStatus;
-import iss.team5.vms.helper.FirstDayOfCurrentWeek;
+import iss.team5.vms.helper.DateHelper;
 import iss.team5.vms.helper.ReportCategory;
 import iss.team5.vms.helper.ReportStatus;
 import iss.team5.vms.model.Booking;
@@ -33,10 +33,8 @@ import iss.team5.vms.model.Room;
 import iss.team5.vms.model.Student;
 import iss.team5.vms.model.User;
 import iss.team5.vms.repositories.BookingRepo;
-import iss.team5.vms.repositories.ReportRepo;
 import iss.team5.vms.services.BookingService;
 import iss.team5.vms.services.FacilityService;
-import iss.team5.vms.services.MailService;
 import iss.team5.vms.services.ReportService;
 import iss.team5.vms.services.RoomService;
 import iss.team5.vms.services.StudentService;
@@ -405,7 +403,7 @@ public class AdminController {
 //		calendar.set(Calendar.WEEK_OF_YEAR, week);
 //		calendar.set(Calendar.YEAR, year);
 
-		LocalDate firstDayOfWeek = FirstDayOfCurrentWeek.value(LocalDate.now());
+		LocalDate firstDayOfWeek = DateHelper.FirstDayOfDateWeek(LocalDate.now());
 		System.out.println(firstDayOfWeek);
 
 		List<Booking> weekBookings = bService.findBookingsInCurrentWeek(LocalDate.now());
