@@ -1,14 +1,14 @@
 package iss.team5.vms.controllers;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoField;
 import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -128,18 +128,19 @@ public class AdminController {
 	}
 
 	public static boolean validate(LocalTime myTime, int myDuration) {
-		if (myTime!=null) {
-		LocalTime maxTime = LocalTime.parse("17:00");
-		LocalTime endTime = myTime.plusHours(myDuration);
-		System.out.println("After adding" + endTime);
-		if (endTime.equals(maxTime))
-			return true;
-		else if (endTime.equals(LocalTime.parse("00:00")))
-			return false;
-		else if (endTime.isBefore(maxTime))
-			return true;
-		else
-			return false;}
+		if (myTime != null) {
+			LocalTime maxTime = LocalTime.parse("17:00");
+			LocalTime endTime = myTime.plusHours(myDuration);
+			System.out.println("After adding" + endTime);
+			if (endTime.equals(maxTime))
+				return true;
+			else if (endTime.equals(LocalTime.parse("00:00")))
+				return false;
+			else if (endTime.isBefore(maxTime))
+				return true;
+			else
+				return false;
+		}
 		return true;
 	}
 
@@ -189,6 +190,7 @@ public class AdminController {
 				return mav;
 			}
 		}
+		System.out.println(bookings + "Bookings");
 		ModelAndView mav = new ModelAndView("rooms");
 		List<Room> rooms = rService.findAllRooms();
 		mav.addObject("rooms", rooms);
@@ -221,7 +223,7 @@ public class AdminController {
 	public ModelAndView editRoom(@ModelAttribute @Valid Room room, BindingResult result,
 			@RequestParam("roomName") String roomName) {
 		User user = userSessionService.findUserBySession();
-		List<Booking> bookings = bService.findAllBookings();
+		List<Booking> bookings = bService.findTodayAndUpcomingBookings();
 		HashSet<String> roomIds = new HashSet<>();
 		for (Booking b : bookings) {
 			roomIds.add(b.getRoom().getId());
@@ -293,9 +295,21 @@ public class AdminController {
 			ModelAndView mav = new ModelAndView("unauthorized-student");
 			return mav;
 		}
+		List<Booking> allBookings = bService.findAllBookings();
+		List<Booking> tdyAndUpcomingBookings = bService.findTodayAndUpcomingBookings();
+		List<Booking> result = allBookings.stream().filter(item -> !tdyAndUpcomingBookings.contains(item))
+				.collect(Collectors.toList());
+		for (Booking booking : result) {
+			if (booking.getRoom().getId() == id) {
+				bService.removeBooking(booking);
+				Room room = rService.findRoomById(id);
+				rService.removeRoom(room);
+			} else {
+				Room room = rService.findRoomById(id);
+				rService.removeRoom(room);
+			}
+		}
 		ModelAndView mav = new ModelAndView("forward:/admin/rooms/list");
-		Room room = rService.findRoomById(id);
-		rService.removeRoom(room);
 		return mav;
 	}
 
@@ -460,8 +474,6 @@ public class AdminController {
 		;
 
 		LocalDate date = LocalDate.now();
-		int week = date.get(WeekFields.ISO.weekOfWeekBasedYear());
-		int year = date.getYear();
 
 		LocalDate firstDayOfWeek = DateHelper.FirstDayOfDateWeek(LocalDate.now());
 

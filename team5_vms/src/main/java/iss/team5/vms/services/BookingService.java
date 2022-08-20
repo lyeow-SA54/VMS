@@ -68,4 +68,6 @@ public interface BookingService {
 	
 	List<Booking> findTodayAndUpcomingBookings();
 
+	void removeBooking(Booking booking);
+
 }

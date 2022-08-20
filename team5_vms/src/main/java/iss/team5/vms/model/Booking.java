@@ -1,9 +1,9 @@
 package iss.team5.vms.model;
 
 import java.time.LocalDate;
-
 import java.time.LocalTime;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -14,7 +14,10 @@ import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.format.annotation.DateTimeFormat;
+
 import iss.team5.vms.helper.BookingStatus;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -41,6 +44,7 @@ public class Booking {
 	@Enumerated(EnumType.STRING)
 	private BookingStatus status;
 //	@OnDelete(action = OnDeleteAction.CASCADE)
+//	@OneToOne(cascade = { CascadeType.REMOVE }, orphanRemoval = true)
 	@OneToOne
 	private Room room;
 	private boolean checkedIn;

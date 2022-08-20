@@ -401,4 +401,10 @@ public class BookingServiceImpl implements BookingService {
 		return br.findAllBookingsAfterDateTime(date, time);
 	}
 
+	@Override
+	public void removeBooking(Booking booking) {
+		br.delete(booking);
+		br.flush();
+	}
+
 }
