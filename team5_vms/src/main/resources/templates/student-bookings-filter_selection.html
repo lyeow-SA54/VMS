@@ -37,18 +37,11 @@
 								</td>
 							</tr>
 							<tr>
-								<td><span th:text="#{fieldLabel.blockedStartTime}"></span></td>
+								<td><span>Start Time</span></td>
 								<td>
 									<fieldset>
-<<<<<<< HEAD
 										<input id="Time" type="time" name="Time" class="form-control" required=""
 											th:field="${booking.time}" min="09:00" max="18:00"/>
-=======
-										<input id="Time" type="time" name="time" class="form-control" required=""
-											th:field="${booking.time}" />
->>>>>>> branch 'master' of https://github.com/lyeow-SA54/VMS
-										<!--<input type="text" id="time" placeholder="Time" name="Time" class="form-control"
-											required="" th:field="${booking.time}">-->
 									</fieldset>
 								</td>
 							</tr>
@@ -107,17 +100,5 @@
 		</div>
 	</footer>
 </body>
-<!--<script>
-	var timepicker = new TimePicker('time', {
-		lang: 'en',
-		theme: 'dark'
-	});
-	timepicker.on('change', function (evt) {
-
-		var value = (evt.hour || '00') + ':' + (evt.minute || '00');
-		evt.element.value = value;
-
-	});
-</script>-->
 
 </html>
