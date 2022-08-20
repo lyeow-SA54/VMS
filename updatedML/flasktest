@@ -1,0 +1,96 @@
+from inspect import Traceback
+import pickle
+from flask import Flask, request, jsonify
+import cv2
+import imutils 
+import os
+import pandas as pd
+
+app = Flask(__name__)
+
+def detectUsingHog(img0):
+    hog = cv2.HOGDescriptor() 
+    hog.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector()) 
+    img = cv2.imread(img0)
+    img = imutils.resize(img, 
+                    width=min(500, img.shape[1]))
+    # Detecting all humans 
+    (humans, _) = hog.detectMultiScale(img,  
+                                    winStride=(5, 5), 
+                                    padding=(3, 3), 
+                                    scale=1.21)
+    if len(humans) > 0:
+        return True
+    else:
+        return False
+
+def detector(img,xml_path):
+    detect = cv2.CascadeClassifier(xml_path)
+    found = detect.detectMultiScale(
+        img,
+        scaleFactor=1.1,
+        minNeighbors=5,
+        minSize=(0, 0),
+        maxSize=(500,500),
+        flags = cv2.CASCADE_SCALE_IMAGE
+    )
+    if len(found) != 0:
+        return True
+    else:
+        return False
+
+def detectUsingHaarcascade (img0):
+    img = cv2.imread(img0)
+    assert not isinstance(img,type(None)), 'image not found'
+    img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    if detector(img_gray,'haarcascade_frontalface_default.xml') or detector(img_gray,'haarcascade_profileface.xml') or detector(img_gray,'haarcascade_fullbody.xml') or detector(img_gray,'haarcascade_upperbody.xml') or detector(img_gray,'haarcascade_lowerbody.xml'):
+        return True
+    else:
+        return False       
+
+@app.route('/peakpredict', methods=['GET'])
+def peakpredict():
+
+    args = request.args
+    week = args.get('week')
+    volume = args.get('volume')
+
+    peak = {'week_number': week,'previous_week_booking':volume}
+    df =  pd.DataFrame([peak])
+
+    prediction = (model.predict(df)) 
+
+    if (prediction==1):
+        return {"result": "TRUE"}
+    else:
+        return {"result": "FALSE"}
+
+@app.route('/hogpredict', methods=['GET'])
+def predict():
+    
+    filename = request.args.get("filename")
+    filepath = "C:\\VMS\\img\\" + filename
+    print (filepath)
+
+    if detectUsingHaarcascade (filepath) or detectUsingHog(filepath):
+        return {"result": "TRUE"}
+    else:
+        return {"result": "FALSE"}
+
+    
+
+    #final_features = [np.array(int_features)]
+    #prediction = model.predict(final_features)
+
+
+    # output = round(prediction[0],2)
+    #return "OK", 200
+
+if __name__ == "__main__":
+
+    model=pickle.load(open("peak_model.pkl", "rb"))
+    print ('Model loaded')
+    # model_column = ['week_number', 'previous_week_booking']
+    print ('Model column loaded')
+
+    app.run(port=5000,debug=True, use_reloader=False)
