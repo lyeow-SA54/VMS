@@ -87,8 +87,7 @@ public class AdminController {
 
 	@RequestMapping(value = "/rooms/create", method = RequestMethod.POST)
 	public ModelAndView createRoom(@ModelAttribute @Valid Room room, BindingResult result,
-			@RequestParam("roomName") String roomName, @RequestParam("myTime") String time,
-			@RequestParam("myDuration") int myDuration) {
+			@RequestParam("roomName") String roomName) {
 		User user = userSessionService.findUserBySession();
 		List<Room> rooms = rService.findAllRooms();
 		HashSet<String> names = new HashSet<>();
@@ -101,7 +100,8 @@ public class AdminController {
 		}
 		if (result.hasErrors())
 			return new ModelAndView("room-form");
-		LocalTime myTime = LocalTime.parse(time);
+		LocalTime myTime = room.getBlockedStartTime();
+		int myDuration = room.getBlockDuration();
 		boolean valid = validate(myTime, myDuration);
 		for (String name : names) {
 			if (name.equalsIgnoreCase(roomName)) {
@@ -121,9 +121,6 @@ public class AdminController {
 		}
 
 		ModelAndView mav = new ModelAndView("forward:/admin/rooms/list");
-		room.setBlockedStartTime(myTime);
-		room.setBlockDuration(myDuration);
-		room.setRoomName(roomName);
 		rService.createRoom(room);
 		return mav;
 	}
@@ -225,10 +222,8 @@ public class AdminController {
 		}
 		
 		LocalTime myTime = room.getBlockedStartTime();
-		System.out.println("MY TIME" + myTime);
 
 		int myDuration = room.getBlockDuration();
-		System.out.println("MY DURATION" + myDuration);
 		
 		boolean valid = validate(myTime, myDuration);
 		List<Room> rooms = rService.findAllRooms();
