@@ -4,7 +4,6 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 
 import Booking from './BookingComponent';
 import Report from './ReportComponent';
-import Student from './StudentComponent';
 class Main extends Component {
 
   constructor(props) {
@@ -21,7 +20,6 @@ class Main extends Component {
         <Switch>
           <Route path="/admin/reports" exact={true} component={Report} />
           <Route path="/admin/bookings" exact={true} component={Booking} />
-          <Route path="/admin/students" exact={true} component={Student} />
           <Redirect to="http:localhost:8080/admin/index" />
         </Switch>
       </div>

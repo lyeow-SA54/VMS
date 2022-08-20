@@ -24,7 +24,7 @@
 								<td><span th:text="Details"></span></td>
 								<td>
 									<fieldset>
-										<input type="text" name="details" required="required"/>
+										<input type="text" name="details" required="required" />
 									</fieldset>
 								</td>
 							</tr>
@@ -33,6 +33,19 @@
 								<td>
 									<fieldset>
 										<input type="file" name="file" required="required" />
+									</fieldset>
+								</td>
+							</tr>
+							<tr>
+								<td><span th:text="Category"></span></td>
+								<td>
+									<fieldset>
+										<select name="category" required="required" style="padding-top: 3px;">
+											<option value="CLEANLINESS">Cleanliness</option>
+											<option value="VANDALISE">Vandalism</option>
+											<option value="HOGGING">Hogging</option>
+											<option value="MISUSE">Misuse</option>
+										</select>
 									</fieldset>
 								</td>
 							</tr>

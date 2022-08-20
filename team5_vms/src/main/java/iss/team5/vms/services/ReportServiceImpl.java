@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import iss.team5.vms.helper.BookingStatus;
-import iss.team5.vms.helper.FirstDayOfCurrentWeek;
+import iss.team5.vms.helper.DateHelper;
 import iss.team5.vms.helper.ReportCategory;
 import iss.team5.vms.helper.ReportStatus;
 import iss.team5.vms.model.Booking;
@@ -39,6 +39,9 @@ public class ReportServiceImpl implements ReportService {
 
 	@Autowired
 	StudentService ss;
+	
+	@Autowired
+	BookingService bs;
 
 	@Autowired
 	MailService ms;
@@ -77,13 +80,21 @@ public class ReportServiceImpl implements ReportService {
 //		r.setImg(report.getImg());
 		return rprepo.saveAndFlush(r);
 	}
-
+	
 	@Override
-	@Transactional
-	public void removeReport(Report report) {
-		rprepo.delete(report);
-		rprepo.flush();
+	public boolean checkMultipleReports(Report report) {
+		if (rprepo.findReportByBooking(report.getBooking())!=null)
+		return true;
+		else
+		return false;
 	}
+
+//	@Override
+//	@Transactional
+//	public void removeReport(Report report) {
+//		rprepo.delete(report);
+//		rprepo.flush();
+//	}
 
 	@Override
 	public ArrayList<Report> findAllReportByStudent(Student student) {
@@ -143,7 +154,7 @@ public class ReportServiceImpl implements ReportService {
 	}
 	
 	@Override
-	public void resetWeeklyScoring() {
+	public void weeklyScoringUpdate() {
 		// scheduled to run at every Sunday 11pm
 		LocalDateTime now = LocalDateTime.now();
 		WeekFields weekFields = WeekFields.of(Locale.getDefault());
@@ -154,7 +165,7 @@ public class ReportServiceImpl implements ReportService {
 		                            .withMinute(59)
 		                            .withSecond(0);
 		
-		System.out.println(nextRun);
+//		System.out.println(nextRun);
 		
 		if (now.compareTo(nextRun) > 0)
 			nextRun = nextRun.plusDays(6);
@@ -197,7 +208,7 @@ public class ReportServiceImpl implements ReportService {
 	
 	@Override
 	public List<Report> findReportsInCurrentWeek(LocalDate date){
-		LocalDate firstDayOfWeek = FirstDayOfCurrentWeek.value(date);
+		LocalDate firstDayOfWeek = DateHelper.FirstDayOfDateWeek(date);
 		List<Booking> booking = brepo.findByDateBetween(firstDayOfWeek, firstDayOfWeek.plusDays(6));
 		List<Report> foundReports = new ArrayList<>();
 		for (Booking b:booking) {

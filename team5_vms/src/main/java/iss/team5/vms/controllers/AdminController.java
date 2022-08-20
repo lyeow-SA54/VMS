@@ -26,7 +26,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import iss.team5.vms.email.service.EmailService;
 import iss.team5.vms.helper.BookingStatus;
-import iss.team5.vms.helper.FirstDayOfCurrentWeek;
+import iss.team5.vms.helper.DateHelper;
 import iss.team5.vms.helper.ReportCategory;
 import iss.team5.vms.helper.ReportStatus;
 import iss.team5.vms.model.Booking;
@@ -481,7 +481,7 @@ public class AdminController {
 //		calendar.set(Calendar.WEEK_OF_YEAR, week);
 //		calendar.set(Calendar.YEAR, year);
 
-		LocalDate firstDayOfWeek = FirstDayOfCurrentWeek.value(LocalDate.now());
+		LocalDate firstDayOfWeek = DateHelper.FirstDayOfDateWeek(LocalDate.now());
 		System.out.println(firstDayOfWeek);
 
 		List<Booking> weekBookings = bService.findBookingsInCurrentWeek(LocalDate.now());
@@ -547,7 +547,7 @@ public class AdminController {
 			getTodayRoomUsageData.add(List.of(r.getRoomName(), bService.getBookingHoursForRoom(bookings, r)));
 		}
 
-		long todayReport = ReService.findAllReports().stream().filter(r -> r.getBooking().getDate() == date).count();
+		long todayReport = ReService.findAllReports().stream().filter(r -> r.getBooking().getDate().equals(date)).count();
 
 		long processingReports = ReService.findAllReports().stream()
 				.filter(r -> r.getReportStatus().equals(ReportStatus.PROCESSING)).count();

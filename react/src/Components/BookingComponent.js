@@ -125,16 +125,16 @@ class Booking extends Component {
                 <Container className='mt-5'>
                     <div className="float-end">
                         <label for="room">Room name:&nbsp;&nbsp;</label>
-                        <input type="text" onChange={this.onChange.roomNameFilter} id="room" />
+                        <input type="text" onChange={this.onChange.roomNameFilter} id="room" style={{marginRight: '25px'}}/>
                         <label for="studentname">Student search:&nbsp;&nbsp;</label>
-                        <input type="text" onChange={this.onChange.studentFilter} id="studentname" />
+                        <input type="text" onChange={this.onChange.studentFilter} id="studentname" style={{marginRight: '25px'}}/>
                         <label for="date">Date:&nbsp;&nbsp;</label>
                         <input type="date" onChange={this.onChange.dateFilter} id="date" min="2022-01-01" max="2023-12-31"></input>
                     </div>
                     <div>
                         <h2>Booking List</h2>
                     </div>
-                    <table className='table table-hover text-center mt-3'>
+                    <table className='table table-hover text-center mt-3' style={{marginBottom: '100px'}}>
                         <thead className='table-light'>
                             <tr>
                                 <th>Booking ID</th>
@@ -151,7 +151,7 @@ class Booking extends Component {
                     </table>
                 </Container>
                 <MDBFooter bgColor='light' className='text-center text-lg-start text-muted'>
-                    <div className='text-center p-4 myfooter' style={{ backgroundColor: '#003062', color:'white'}}>
+                    <div className='text-center p-4 myfooter' style={{ backgroundColor: '#003062', color:'white', position: 'fixed'}}>
                     VMS Copyright © 2022
                     </div>
                 </MDBFooter>

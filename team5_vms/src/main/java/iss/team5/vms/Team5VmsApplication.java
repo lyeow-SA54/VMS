@@ -38,6 +38,7 @@ public class Team5VmsApplication {
 		public void run(String...args) throws Exception {
 			seedDBService.databaseInit();
 			reportService.dailyBookingCheckinScoring();
+			reportService.weeklyScoringUpdate();
 		}
 	}
 	

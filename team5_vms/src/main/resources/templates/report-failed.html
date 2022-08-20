@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/general.html :: headerfiles" />
+<title>VMS</title>
+<link rel="stylesheet" th:href="@{/css/simple.css}" />
+</head>
+
+<body>
+	<div th:replace="fragments/general.html :: menu-student"></div>
+	<div class="container mt-5">
+		<div class="row mt-5">
+			<div class="col" style="text-align:center;">
+				<h3 align="center">Report has already been made for this booking. Only one per booking allowed.</h3>
+			</div>
+		</div>
+	</div>
+	<footer class="page-footer">
+		<div class="footer-copyright text-center py-3" style="color:white; background-color: #003062">
+			VMS Copyright &copy; 2022
+		</div>
+	</footer>
+</body>
+
+</html>

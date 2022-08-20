@@ -15,7 +15,7 @@ public interface ReportService {
 	
 	boolean tableExist();
 	
-	List<Report> findAllReports();
+	boolean checkMultipleReports(Report report);
 	
 	Report findReportById(String id);
 
@@ -25,24 +25,24 @@ public interface ReportService {
 
 	void addBooking(Report report,Booking booking);
 
-	void removeReport(Report report);
+//	void removeReport(Report report);
 	
 	void dailyBookingCheckinScoring();
 	
 	void approveReportScoring(Report report);
 	
-	ArrayList<Report> findAllReportByStudent(Student student);
-	
-	void resetWeeklyScoring();
+	void weeklyScoringUpdate();
 
 	int getReportStatusCounts(List<Report> report, ReportStatus status);
 
 	int getReportCatCounts(List<Report> report, ReportCategory category);
 
 	int getReportRoomCounts(List<Report> report, Room room);
+	
+	ArrayList<Report> findAllReportByStudent(Student student);
 
 	List<Report> findReportsInCurrentWeek(LocalDate date);
-
-
+	
+	List<Report> findAllReports();
     
 }

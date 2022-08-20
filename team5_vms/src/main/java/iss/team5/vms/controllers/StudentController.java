@@ -2,10 +2,8 @@ package iss.team5.vms.controllers;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +30,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import iss.team5.vms.DTO.Account;
 import iss.team5.vms.helper.BookingStatus;
+import iss.team5.vms.helper.DateHelper;
 import iss.team5.vms.helper.ReportCategory;
 import iss.team5.vms.helper.ReportStatus;
 import iss.team5.vms.model.Booking;
@@ -40,7 +39,6 @@ import iss.team5.vms.model.Report;
 import iss.team5.vms.model.Room;
 import iss.team5.vms.model.Student;
 import iss.team5.vms.model.User;
-import iss.team5.vms.repositories.StudentRepo;
 import iss.team5.vms.services.AccountAuthenticateService;
 import iss.team5.vms.services.BookingService;
 import iss.team5.vms.services.FacilityService;
@@ -184,7 +182,7 @@ public class StudentController {
 			mav.addObject("max", true);
 			mav.addObject("past", false);
 			return mav;
-		} else if (isWeekend(date)) {
+		} else if (DateHelper.isWeekend(date)) {
 			mav.addObject("weekend", true);
 			mav.addObject("past", false);
 			return mav;
@@ -208,11 +206,6 @@ public class StudentController {
 		mav1.addObject("bookings", bookings);
 		mav1.addObject("room", room);
 		return mav1;
-	}
-
-	public static boolean isWeekend(final LocalDate ld) {
-		DayOfWeek day = DayOfWeek.of(ld.get(ChronoField.DAY_OF_WEEK));
-		return day == DayOfWeek.SUNDAY || day == DayOfWeek.SATURDAY;
 	}
 
 	@RequestMapping(value = "/booking/save", method = RequestMethod.POST)
@@ -375,7 +368,7 @@ public class StudentController {
 
 	@RequestMapping(value = "report/save", method = RequestMethod.POST)
 	private String createReport(@RequestParam(value = "file", required = true) MultipartFile file,
-			@RequestParam(value = "details", required = true) String details, HttpServletRequest request)
+			@RequestParam(value = "details", required = true) String details, @RequestParam(value = "category", required = true) String category, HttpServletRequest request)
 			throws IOException {
 		String path = "";
 		String fileName = "";
@@ -397,19 +390,26 @@ public class StudentController {
 		Student student = (Student) session.getAttribute("student");
 		Booking booking = bs.findStudentCurrentBooking(student);
 		Booking lastBooking = bs.findBookingBefore(booking);
-		Report report = rs.createReport(new Report(details, fileName, lastBooking, ReportStatus.PROCESSING,
-				ReportCategory.CLEANLINESS, student));
-		if (report.getCategory().equals(ReportCategory.HOGGING)) {
-			if (bs.predictHogging(path)) {
-				rs.approveReportScoring(report);
-			} else {
-				report.setReportStatus(ReportStatus.REJECTED);
-				rs.createReport(report);
+		Report newReport = new Report(details, fileName, lastBooking, ReportStatus.PROCESSING,
+				ReportCategory.valueOf(category), student);
+		if (!rs.checkMultipleReports(newReport))
+		{
+		rs.createReport(newReport);
+		if (newReport.getCategory().equals(ReportCategory.HOGGING)) {
+			if (bs.predictHogging(fileName)) {
+				rs.approveReportScoring(newReport);
 			}
-		}
-
+			else
+			{
+				newReport.setReportStatus(ReportStatus.REJECTED);
+				rs.createReport(newReport);
+			}
+		}		
 		return "report-success";
-
+		}
+		else {
+			return "report-failed";
+		}
 	}
 
 	@RequestMapping(value = "/profile", method = RequestMethod.GET)
