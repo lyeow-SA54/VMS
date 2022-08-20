@@ -89,7 +89,7 @@ public class RoomServiceImpl implements RoomService {
 			duration = 180;
 		LocalTime bend = bstart.plusMinutes(duration);
 		// rooms with no blocked timings
-				List<Room> nullBlockTimeRooms = rooms.stream().filter(room -> room.getBlockedStartTime() == null)
+				List<Room> nullBlockTimeRooms = rooms.stream().filter(room -> room.getBlockedStartTime() == null && room.isAvailability())
 						.collect(Collectors.toList());
 
 				// check booking against room blocked timings if there are
