@@ -154,7 +154,7 @@ public class AdminController {
 		}
 		ModelAndView mav = new ModelAndView("rooms");
 
-		List<Booking> bookings = bService.findTodayAndUpcomingBookings();
+		List<Booking> bookings = bService.findAllBookings();
 		HashSet<String> roomIds = new HashSet<>();
 		for (Booking b : bookings) {
 			roomIds.add(b.getRoom().getId());
@@ -179,7 +179,7 @@ public class AdminController {
 	@ResponseBody
 	public ModelAndView roomList() {
 		User user = userSessionService.findUserBySession();
-		List<Booking> bookings = bService.findTodayAndUpcomingBookings();
+		List<Booking> bookings = bService.findAllBookings();
 		HashSet<String> roomIds = new HashSet<>();
 		for (Booking b : bookings) {
 			roomIds.add(b.getRoom().getId());
@@ -223,7 +223,7 @@ public class AdminController {
 	public ModelAndView editRoom(@ModelAttribute @Valid Room room, BindingResult result,
 			@RequestParam("roomName") String roomName) {
 		User user = userSessionService.findUserBySession();
-		List<Booking> bookings = bService.findTodayAndUpcomingBookings();
+		List<Booking> bookings = bService.findAllBookings();
 		HashSet<String> roomIds = new HashSet<>();
 		for (Booking b : bookings) {
 			roomIds.add(b.getRoom().getId());
@@ -295,20 +295,8 @@ public class AdminController {
 			ModelAndView mav = new ModelAndView("unauthorized-student");
 			return mav;
 		}
-		List<Booking> allBookings = bService.findAllBookings();
-		List<Booking> tdyAndUpcomingBookings = bService.findTodayAndUpcomingBookings();
-		List<Booking> result = allBookings.stream().filter(item -> !tdyAndUpcomingBookings.contains(item))
-				.collect(Collectors.toList());
-		for (Booking booking : result) {
-			if (booking.getRoom().getId() == id) {
-				bService.removeBooking(booking);
-				Room room = rService.findRoomById(id);
-				rService.removeRoom(room);
-			} else {
-				Room room = rService.findRoomById(id);
-				rService.removeRoom(room);
-			}
-		}
+		Room room = rService.findRoomById(id);
+		rService.removeRoom(room);
 		ModelAndView mav = new ModelAndView("forward:/admin/rooms/list");
 		return mav;
 	}
