@@ -438,25 +438,81 @@
 </head>
 
 <body>
-	<div th:replace="fragments/general.html :: menu-admin"></div>
+	<!--<div th:replace="fragments/general.html :: menu-admin"></div>-->
+	<div>
+		<nav class="navbar navbar-expand-md navbar-light bg-light">
+			<div class="container-fluid">
+				<img src="/image/logo.png" height="60px" style="vertical-align:middle;">
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+					aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarCollapse">
+					<ul class="navbar-nav me-auto mb-2 mb-md-0">
+						<li class="nav-item">
+							<a class="nav-link" th:href="@{/admin/index}">&nbsp;&nbsp;Home</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" th:href="@{/admin/dashboard}">&nbsp;&nbsp;Dashboard</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" th:href="@{/admin/rooms/list}">Manage Rooms</a>
+						</li>
+						<!--<li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+								Manage Rooms
+							</a>
+							<div class="dropdown-menu">
+								<a class="dropdown-item" th:href="@{/admin/rooms/create}">Create Room</a>
+								<a class="dropdown-item" th:href="@{/admin/rooms/list}">Room List</a>
+							</div>
+						</li>
+						<li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+								Manage Students
+							</a>
+							<div class="dropdown-menu">
+								<a class="dropdown-item" th:href="@{/admin/students/create}">Create Student</a>
+								<a class="dropdown-item" th:href="@{/admin/students/list}">Student List</a>
+							</div>
+						</li>-->
+						<li class="nav-item">
+							<a class="nav-link" th:href="@{/admin/students/list}">Manage Students</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="http://localhost:3000/admin/bookings">Manage Bookings</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="http://localhost:3000/admin/reports">Manage Reports</a>
+						</li>
+					</ul>
+					<ul class="navbar-nav ml-auto">
+						<li class="nav-item">
+							<a class="nav-link">
+								Welcome,&nbsp;<em th:text="${session.loginUser.groupName} + #{fieldLabel.space}"></em>
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="btn btnorange" th:href="@{/logout}">Logout</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+	</div>
 <div class="main-content container-fluid mt-5">
     <div class="page-title text-center">
         <h2>Dashboard</h2>
       	<p class="text-subtitle text-muted text-center" th:text="${#dates.format(#dates.createNow(), 'dd MMM yyyy HH:mm')}"></p>
     </div>
-    <div class="container-fluid">
-   <div class="row mt-5">
-    	<div class="col-4 mb-3">
-    		<h4>Report Statistics</h4>
-		</div>
-		<div class="col-4 mb-3">
-    		<h4>Booking Statistics</h5>
-		</div>
-		<div class="col-4 mb-3">
-    		<h4>Room Statistics</h5>
-		</div>
-   </div>
    <div class="row">
+   		<div class="container-fluid">
+   			<div class="row mt-5">
+    			<div class="col mb-3">
+    				<h4 class="text-center">Report Statistics</h4>
+				</div>
+   			</div>
+   		</div>
 			<div class="col-xl-4 text-center">
 				<div class="card mb-4 box-shadow" style="height: 400px;">
 					<div class="card-header">
@@ -487,6 +543,13 @@
 			</div>
         </div>
         
+        <div class="container-fluid">
+   			<div class="row mt-5">
+    			<div class="col mb-3">
+    				<h4 class="text-center">Booking Statistics</h4>
+				</div>
+   			</div>
+   		</div>        
         <div class="col-xl-4 text-center">
 				<div class="card mb-4 box-shadow" style="height: 400px;">
 					<div class="card-header">
@@ -516,6 +579,14 @@
                 </div>
 			</div>
         </div>
+        
+        <div class="container-fluid">
+   			<div class="row mt-5">
+    			<div class="col mb-3">
+    				<h4 class="text-center">Room Statistics</h4>
+				</div>
+   			</div>
+   		</div>
         <div class="col-xl-4 text-center">
 			<div class="card mb-4 box-shadow" style="height: 400px;">
 				<div class="card-header">
