@@ -1,7 +1,5 @@
 package iss.team5.vms.services;
 
-import java.util.ArrayList;
-
 import iss.team5.vms.model.User;
 
 public interface UserService {

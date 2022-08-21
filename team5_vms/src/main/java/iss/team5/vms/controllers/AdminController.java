@@ -1,15 +1,12 @@
 package iss.team5.vms.controllers;
 
 import java.time.LocalDate;
+
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,8 +99,6 @@ public class AdminController {
 			return new ModelAndView("room-form");
 		LocalTime myTime = room.getBlockedStartTime();
 		int myDuration = room.getBlockDuration();
-		System.out.println("Time" + myTime);
-		System.out.println("Duration" + myDuration);
 		boolean valid = validate(myTime, myDuration);
 		for (String name : names) {
 			if (name.equalsIgnoreCase(roomName)) {
@@ -131,7 +126,6 @@ public class AdminController {
 		if (myTime != null) {
 			LocalTime maxTime = LocalTime.parse("17:00");
 			LocalTime endTime = myTime.plusHours(myDuration);
-			System.out.println("After adding" + endTime);
 			if (endTime.equals(maxTime))
 				return true;
 			else if (endTime.equals(LocalTime.parse("00:00")))
@@ -190,7 +184,6 @@ public class AdminController {
 				return mav;
 			}
 		}
-		System.out.println(bookings + "Bookings");
 		ModelAndView mav = new ModelAndView("rooms");
 		List<Room> rooms = rService.findAllRooms();
 		mav.addObject("rooms", rooms);

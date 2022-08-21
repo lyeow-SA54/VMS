@@ -1,13 +1,9 @@
 package iss.team5.vms.repositories;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import iss.team5.vms.model.Booking;
 import iss.team5.vms.model.Room;

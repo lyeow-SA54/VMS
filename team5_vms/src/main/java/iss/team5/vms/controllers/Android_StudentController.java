@@ -10,12 +10,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import iss.team5.vms.services.*;
 import org.apache.commons.io.FileUtils;
@@ -26,9 +23,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
 import iss.team5.vms.DTO.Account;
 import iss.team5.vms.generators.JWTGenerator;
@@ -130,7 +125,6 @@ public class Android_StudentController {
 
 		if (JWTGenerator.verifyJWT(token)) {
 			Student student = ss.findStudentById((String) payload.get("studentId"));
-			System.out.println(payload.get("studentId"));
 			try {
 				Booking booking = bs.findStudentCurrentBooking(student);
 				Map<String, Object> mapResponse = new HashMap<String, Object>();
@@ -142,7 +136,6 @@ public class Android_StudentController {
 				mapResponse.put("inprogress", booking.isBookingInProgress());
 				mapResponse.put("checkin", booking.isCheckedIn());
 				mapResponse.put("response", response);
-				System.out.println(booking.getDate());
 				return mapResponse;
 			} catch (Exception e) {
 				try {

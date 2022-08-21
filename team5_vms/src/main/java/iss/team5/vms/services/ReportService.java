@@ -1,7 +1,6 @@
 package iss.team5.vms.services;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import iss.team5.vms.helper.ReportCategory;
@@ -9,7 +8,6 @@ import iss.team5.vms.helper.ReportStatus;
 import iss.team5.vms.model.Booking;
 import iss.team5.vms.model.Report;
 import iss.team5.vms.model.Room;
-import iss.team5.vms.model.Student;
 
 public interface ReportService {
 	

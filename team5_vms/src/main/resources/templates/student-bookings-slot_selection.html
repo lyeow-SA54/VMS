@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<!--<head th:replace="fragments/general.html :: headerfiles"/>-->
 
 <head th:replace="fragments/general.html :: headerfiles" />
 <style>
@@ -42,53 +41,15 @@
 					<h5>Please select the room to book.</h5>
 				</div>
 			</div>
-			<!--<div class="row">
-				<div class="col">
-					<table class="table table-striped" align="center">
-						<thead>
-							<tr class="listHeading">
-								<th>Room Name</th>
-								<th>Start Time</th>
-								<th>Duration</th>
-								<th>Selection</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr th:each="booking:${bookings}">
-								<td th:text=${booking.room.roomName}></td>
-								<td th:text=${booking.time}></td>
-								<td th:text=${booking.duration}></td>
-								<td>
-									<form action="#" th:action="@{/student/booking/save}" method="post">
-										<input type="hidden" name="roomid" th:value="${booking.room.id}" />
-										<input type="hidden" th:value="${booking.room.roomName}"
-											th:field="${booking.room.roomName}" />
-										<input type="hidden" th:value="${booking.date}" th:field="${booking.date}" />
-										<input type="hidden" th:value="${booking.time}" th:field="${booking.time}" />
-										<input type="hidden" th:value="${booking.duration}"
-											th:field="${booking.duration}" />
-										<input type="submit" value="Book" class="btn btnblue" />
-									</form>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>-->
 			<div class="row">
 				<div class="col-3 text-center" th:each="booking:${bookings}">
-					<!--<div class="card mb-4 box-shadow" style="height:320px;">
-					<div class="card-header">-->
-
-
 					<div class="card-deck mb-3 text-center">
 						<div class="card mb-4 shadow" style="height:320px;">
 							<div class="card-header">
 								<h5 th:text="${booking.room.roomName}"></h5>
 							</div>
 							<div class="card-body">
-								<span class="card-text text-center font-weight-bold"
-									th:text="#{fieldLabel.dt}">
+								<span class="card-text text-center font-weight-bold" th:text="#{fieldLabel.dt}">
 								</span><br>
 								<span class="card-text text-center" th:text="${booking.date}">
 								</span><br>

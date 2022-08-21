@@ -6,14 +6,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import iss.team5.vms.generators.HashStringGenerator;
 import iss.team5.vms.helper.BookingStatus;
 import iss.team5.vms.helper.ReportCategory;
 import iss.team5.vms.helper.ReportStatus;
-import iss.team5.vms.helper.StudentStatus;
 import iss.team5.vms.helper.dateTimeInput;
 import iss.team5.vms.model.Booking;
 import iss.team5.vms.model.Facility;
