@@ -2,6 +2,10 @@
 
  1. Spring Backend
 	 <br>a. Update application.properties with MySQL credentials
+	 
+	 b. In command prompt "cd <parent folder>\VMS\team5_vms" where <parent folder> is location where source code has been downloaded to
+	
+	c. In command prompt "mvn spring-boot:run"
  
  2.  Flask Server
 	 <br>a. Install necessary dependencies in environment 
