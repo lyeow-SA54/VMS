@@ -38,24 +38,19 @@ public class Report {
 	@Column(name = "category", columnDefinition = "ENUM('CLEANLINESS','VANDALISE','HOGGING','MISUSE')")
 	@Enumerated(EnumType.STRING)
 	private ReportCategory category;
-	@Column(name = "Student_status", columnDefinition = "ENUM('PROBATION','NORMAL')")
-	@Enumerated(EnumType.STRING)
-	private StudentStatus status;
 	@Column(name = "Report_status", columnDefinition = "ENUM('PROCESSING','REJECTED','APPROVED')")
 	@Enumerated(EnumType.STRING)
 	private ReportStatus reportStatus;
 	
-	public Report(String details, ReportCategory category, StudentStatus status, ReportStatus reportStatus) {
+	public Report(String details, ReportCategory category, ReportStatus reportStatus) {
 		this.details=details;
 		this.category=category;
-		this.status=status;
 		this.reportStatus=reportStatus;
 	}
-	public Report(String details, String imgPath,ReportCategory category, StudentStatus status, ReportStatus reportStatus) {
+	public Report(String details, String imgPath,ReportCategory category, ReportStatus reportStatus) {
 		this.details=details;
 		this.imgPath=imgPath;
 		this.category=category;
-		this.status=status;
 		this.reportStatus=reportStatus;
 	}
 	

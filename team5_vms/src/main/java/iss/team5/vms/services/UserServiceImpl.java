@@ -18,12 +18,6 @@ public class UserServiceImpl implements UserService {
 	public boolean tableExist() {
 		return ur.existsBy();
 	}
-	
-	@Override
-	public ArrayList<User> findAllUsers() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public User findUserByUsername(String username) {

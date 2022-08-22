@@ -158,7 +158,6 @@ public class AdminController {
 		List<Facility> facilities = (List<Facility>) fService.findAllFacilities();
 		mav.addObject("checkBoxFacilities", facilities);
 		mav.addObject("searchStr", roomName);
-		System.out.println("Facilities" + facStr);
 		if (roomName != "") {
 			mav.addObject("rooms",
 					rService.searchRoomByNameFacilityAvailability(roomName, facStr, Boolean.parseBoolean(ava)));
@@ -229,8 +228,6 @@ public class AdminController {
 		List<Room> rooms = rService.findAllRooms();
 		Room currentRoom = rService.findRoomById(room.getId());
 		String currentName = currentRoom.getRoomName();
-		System.out.println("Current Name" + currentName);
-		System.out.println("RequestParam Name" + roomName);
 		HashSet<String> names = new HashSet<>();
 		for (Room r : rooms) {
 			names.add(r.getRoomName());
@@ -350,16 +347,9 @@ public class AdminController {
 		User stu = student.getUser();
 		try {
 			eService.sendMail(stu);
-			System.out.println("Success");
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
-//		try {
-//			mService.sendSimpleMail(stu.getEmail(), "Account Created For "+stu.getGroupName(), "Username: "+stu.getGroupName()+ "\nPassword: password. \nPlease reset your password immediately after first login.");
-//			System.out.println("Success");
-//		} catch (Exception e) {
-//			System.out.println(e.getMessage());
-//		}
 		return mav;
 	}
 
@@ -466,18 +456,7 @@ public class AdminController {
 		int week = date.get(WeekFields.ISO.weekOfWeekBasedYear());
 		int year = date.getYear();
 
-//		LocalDate date = LocalDate.now();
-//		int week  = date.get(WeekFields.ISO.weekOfWeekBasedYear());
-//		int month = date.getMonth().getValue();
-//		int year = date.getYear();
-//		
-//		Calendar calendar = Calendar.getInstance();
-//		calendar.clear();
-//		calendar.set(Calendar.WEEK_OF_YEAR, week);
-//		calendar.set(Calendar.YEAR, year);
-
 		LocalDate firstDayOfWeek = DateHelper.FirstDayOfDateWeek(LocalDate.now());
-		System.out.println(firstDayOfWeek);
 
 		List<Booking> weekBookings = bService.findBookingsInCurrentWeek(LocalDate.now());
 
@@ -559,7 +538,6 @@ public class AdminController {
 		String strReportWeek = "Report Counts From " + monday + " to " + friday;
 
 		mav.addObject("getBookingData", getBookingData);
-		System.out.println(getBookingData);
 		mav.addObject("reports", reports);
 		mav.addObject("strProcessReport", strProcessReport);
 		mav.addObject("strTodayReport", strTodayReport);

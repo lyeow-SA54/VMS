@@ -1,5 +1,6 @@
 package iss.team5.vms.controllers;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,7 @@ public class React_AdminController {
 	@GetMapping("/bookings")
     public List<Booking> getBookings() {
         List <Booking> bookings = bs.findAllBookings();
+        Collections.reverse(bookings);
         return bs.updateBookingInProgress(bookings);
 	}
 

@@ -83,7 +83,6 @@ public class BookingServiceImpl implements BookingService {
 
 	@Override
 	public String checkIn(Student student, Booking booking) {
-//		if (booking.getStudent().getId().equals(student.getId())) {
 		if (booking.getStudent().getId() == student.getId()) {
 			if (booking.getTime().plusMinutes(10).compareTo(LocalTime.now()) > 0) {
 				booking.setCheckedIn(true);
@@ -126,9 +125,6 @@ public class BookingServiceImpl implements BookingService {
 			}
 		}
 
-//		for (Booking b : bookings) {
-//			System.out.println(b.getDate() + "/" + b.getTime()+"/"+b.getRoom().getRoomName());
-//		}
 		// filtering bookings to be offered against student's existing bookings so there
 		// are no overlaps
 		List<Booking> sbookings = findStudentBookingsForDate(student, booking.getDate());
@@ -254,7 +250,6 @@ public class BookingServiceImpl implements BookingService {
 				createBooking(booking);
 			}
 
-
 		};
 
 		executorService.schedule(setStatus, 1, TimeUnit.MINUTES);
@@ -325,11 +320,7 @@ public class BookingServiceImpl implements BookingService {
 				return b1.getDate().compareTo(b2.getDate());
 			}
 		});
-//		for(Booking b: bookingsFromToday)
-//		{
-//			System.out.println(b.getDate()+"/"+b.getTime());
-//		}
-//		System.out.println(bookingsFromToday.get(0).getDate()+"/"+bookingsFromToday.get(0).getTime());
+
 		return bookingsFromToday.get(0);
 	}
 
@@ -348,31 +339,13 @@ public class BookingServiceImpl implements BookingService {
 
 	@Override
 	public boolean predictPeak(Booking booking) {
-//		Booking bookingTest = findBookingById("B1006");
 
 		LocalDate date = booking.getDate();
 		int week = date.get(WeekFields.ISO.weekOfWeekBasedYear());
-//		int year = date.getYear();
-////		
-////		System.out.println(week + ", "+ year);
-//
-//		Calendar calendar = Calendar.getInstance();
-//		calendar.clear();
-//		calendar.set(Calendar.WEEK_OF_YEAR, week);
-//		calendar.set(Calendar.YEAR, year);
-//
-//		LocalDate firstDayOfWeek = LocalDate.ofInstant(calendar.getTime().toInstant(), ZoneOffset.ofHours(8))
-//				.plusDays(8);
-////		System.out.println(firstDayOfWeek);
-//		calendar.add(Calendar.DAY_OF_MONTH, 6);
-//		LocalDate lastDayOfWeek = LocalDate.ofInstant(calendar.getTime().toInstant(), ZoneOffset.ofHours(8))
-//				.plusDays(8);
-////		System.out.println(lastDayOfWeek);
-//
+
 		List<Booking> pastWeekBookings = findBookingsInCurrentWeek(booking.getDate().minusDays(6));
 
 		int volume = (int) pastWeekBookings.stream().count();
-//		System.out.println(volume);
 
 		String uri = "http://127.0.0.1:5000/peakpredict?week=" + week + "&volume=" + volume;
 		RestTemplate restTemplate = new RestTemplate();
@@ -384,37 +357,13 @@ public class BookingServiceImpl implements BookingService {
 		}
 		return false;
 	}
-	
-//	@Override
-//	public boolean predictPeakForIndicatedWeek(int week) {
-//		LocalDate firstBookingDate = br.findAll().stream()
-//				.
-//	}
 
 	@Override
 	public List<Booking> findBookingsInCurrentWeek(LocalDate date) {
-//		int week = date.get(WeekFields.ISO.weekOfWeekBasedYear());
-//		int year = date.getYear();
-////		
-////		System.out.println(week + ", "+ year);
-//
-//		Calendar calendar = Calendar.getInstance();
-//		calendar.clear();
-//		calendar.set(Calendar.WEEK_OF_YEAR, week);
-//		calendar.set(Calendar.YEAR, year);
-//
-//		LocalDate firstDayOfWeek = LocalDate.ofInstant(calendar.getTime().toInstant(), ZoneOffset.ofHours(8))
-//				.plusDays(8);
-////		System.out.println(firstDayOfWeek);
-//		calendar.add(Calendar.DAY_OF_MONTH, 6);
-//		LocalDate lastDayOfWeek = LocalDate.ofInstant(calendar.getTime().toInstant(), ZoneOffset.ofHours(8))
-//				.plusDays(8);
-////		System.out.println(lastDayOfWeek);
-
+		
 		LocalDate firstDayOfWeek = DateHelper.FirstDayOfDateWeek(date);
 		return br.findByDateBetween(firstDayOfWeek, firstDayOfWeek.plusDays(6));
 
-//		return (int) bookings.stream().count();
 	}
 
 	@Override

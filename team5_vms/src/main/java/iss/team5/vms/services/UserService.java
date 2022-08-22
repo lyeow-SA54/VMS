@@ -8,8 +8,6 @@ public interface UserService {
 	
 	boolean tableExist();
 	
-	ArrayList<User> findAllUsers();
-
 	User createUser(User user);
 	
 	User changeUser(User user);

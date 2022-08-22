@@ -53,6 +53,8 @@ public interface BookingService {
 	int getBookingStatusCounts(List<Booking> bookings, BookingStatus status);
 
 	Integer getSuccessBookingsDurationForDate(List<Booking> bookings, LocalDate date);
+	
+	Integer getBookingHoursForRoom(List<Booking> bookings, Room room);
 
 	void cancelCourseById(String id);
 
@@ -63,7 +65,6 @@ public interface BookingService {
 	void addRoom(Booking booking, Room room);
 
 	int getBookingCountsForRoom(List<Booking> bookings, Room room);
-	
-	Integer getBookingHoursForRoom(List<Booking> bookings, Room room);
+
 
 }

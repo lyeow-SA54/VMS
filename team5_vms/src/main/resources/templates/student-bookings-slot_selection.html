@@ -92,9 +92,8 @@
 								</span><br>
 								<span class="card-text text-center" th:text="${booking.date}">
 								</span><br>
-								<span class="card-text text-center font-weight-bold"
-									th:text="#{fieldLabel.blockedStartTime}">
-								</span><br>
+								<span class="card-text text-center font-weight-bold">
+								</span>Start Time<br>
 								<span class="card-text text-center" th:text="${booking.time}">
 								</span><br>
 								<span class="card-text text-center font-weight-bold"
@@ -107,7 +106,7 @@
 									<input type="hidden" th:value="${booking.room.roomName}"
 										th:field="${booking.room.roomName}" />
 									<input type="hidden" th:value="${booking.date}" th:field="${booking.date}" />
-									<input type="hidden" th:value="${booking.time}" th:field="${booking.time}" />
+									<input type="hidden" name="time" th:value="${booking.time}" />
 									<input type="hidden" th:value="${booking.duration}"
 										th:field="${booking.duration}" />
 									<input type="submit" value="Book" class="btn btn-block btnorange mt-3" />

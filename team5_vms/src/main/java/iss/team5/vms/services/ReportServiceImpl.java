@@ -76,8 +76,6 @@ public class ReportServiceImpl implements ReportService {
 		r.setStudent(report.getStudent());
 		r.setBooking(report.getBooking());
 		r.setCategory(report.getCategory());
-		r.setStatus(report.getStatus());
-//		r.setImg(report.getImg());
 		return rprepo.saveAndFlush(r);
 	}
 	
@@ -87,18 +85,6 @@ public class ReportServiceImpl implements ReportService {
 		return true;
 		else
 		return false;
-	}
-
-//	@Override
-//	@Transactional
-//	public void removeReport(Report report) {
-//		rprepo.delete(report);
-//		rprepo.flush();
-//	}
-
-	@Override
-	public ArrayList<Report> findAllReportByStudent(Student student) {
-		return rprepo.findAllReportByStudent(student);
 	}
 
 	@Override
@@ -165,8 +151,6 @@ public class ReportServiceImpl implements ReportService {
 		                            .withMinute(59)
 		                            .withSecond(0);
 		
-//		System.out.println(nextRun);
-		
 		if (now.compareTo(nextRun) > 0)
 			nextRun = nextRun.plusDays(6);
 
@@ -175,8 +159,8 @@ public class ReportServiceImpl implements ReportService {
 
 		ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
-		// pulls list students
-		// set all student score to 0
+		// pulls list students with score >0
+		// reduces all filtered students score by 1
 		Runnable getStudentWithScore = () -> {
 			List<Student> students = ss.findAllStudents().stream()
 					.filter(s->s.getScore()>0)

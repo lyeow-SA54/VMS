@@ -100,7 +100,6 @@ public class StudentController {
 		List<Booking> availableBookings = bs.findBookingsAvailableExact(bookingForTheDay, rooms, student);
 		Stack<Booking> stackBookings = new Stack<Booking>();
 		stackBookings.addAll(availableBookings);
-		System.out.println(stackBookings.size());
 
 		ModelAndView mav = new ModelAndView("student-home-page");
 		try {
@@ -126,13 +125,11 @@ public class StudentController {
 			bookingsForCarousel.add(bookings);
 		}
 
-//		System.out.println(bookingsForCarousel.size());
 		mav.addObject("bookings", availableBookings);
 		if (bookingsForCarousel.size() > 0) {
 			mav.addObject("bookingsCarousel1", bookingsForCarousel.get(0));
 			bookingsForCarousel.remove(0);
 		}
-		System.out.println(bookingsForCarousel.size());
 		mav.addObject("bookingsCarousel", bookingsForCarousel);
 		return mav;
 	}
@@ -196,7 +193,6 @@ public class StudentController {
 		List<Booking> bookings = new ArrayList<Booking>();
 		bookings = bs.findBookingsAvailableExact(booking, roomsExact, student);
 		if (bookings.size() == 0) {
-//			System.out.println("Alternative list");
 			List<Room> roomsContaining = rms.findRoomsByContainingAttributes(room);
 			bookings.addAll(bs.findBookingsAvailableAlternative(booking, roomsExact, student));
 			bookings.addAll(bs.findBookingsAvailableExact(booking, roomsContaining, student));
@@ -209,11 +205,12 @@ public class StudentController {
 	}
 
 	@RequestMapping(value = "/booking/save", method = RequestMethod.POST)
-	public Object bookingNew(Booking booking, @RequestParam("roomid") String roomString, HttpServletRequest request) {
+	public Object bookingNew(Booking booking, @RequestParam("roomid") String roomString,@RequestParam("time") String time, HttpServletRequest request) {
 
 		Student student = (Student) session.getAttribute("student");
 		Room room = rms.findRoomById(roomString);
 
+		booking.setTime(LocalTime.parse(time));
 		booking.setStudent(student);
 		booking.setRoom(room);
 
@@ -223,7 +220,6 @@ public class StudentController {
 			mav.addObject("booking", booking);
 			return mav;
 		} else {
-//			booking.setRoom(rs.findRoomById(room.getId()));
 			if (booking.getStudent().getScore() >= 3) {
 				booking.setStatus(BookingStatus.WAITINGLIST);
 				bs.scheduleWaitingList(booking, room);
@@ -234,7 +230,6 @@ public class StudentController {
 				bs.createBooking(booking);
 				return "forward:/student/booking/status/" + booking.getId();
 			}
-//			return "error";	
 		}
 	}
 
@@ -250,13 +245,6 @@ public class StudentController {
 		mav.addObject("booking", booking);
 		return mav;
 	}
-
-//	//this is for report form test
-//	@RequestMapping("/reportform")
-//	public String reportform(){
-//		System.out.println("0 success");
-//		return "misuse-report-form";
-//	}
 
 	@RequestMapping("/booking/history")
 	public ModelAndView bookingHistory() {

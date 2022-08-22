@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ResponsePojo {
-//   @JsonProperty("<result>") // only required, if fieldName != jsonFieldName
    private String result; 
    
    public ResponsePojo (@JsonProperty("result") String result)

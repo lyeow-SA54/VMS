@@ -24,8 +24,6 @@ public interface ReportService {
 	Report changeReport(Report report);
 
 	void addBooking(Report report,Booking booking);
-
-//	void removeReport(Report report);
 	
 	void dailyBookingCheckinScoring();
 	
@@ -39,7 +37,7 @@ public interface ReportService {
 
 	int getReportRoomCounts(List<Report> report, Room room);
 	
-	ArrayList<Report> findAllReportByStudent(Student student);
+//	ArrayList<Report> findAllReportByStudent(Student student);
 
 	List<Report> findReportsInCurrentWeek(LocalDate date);
 	

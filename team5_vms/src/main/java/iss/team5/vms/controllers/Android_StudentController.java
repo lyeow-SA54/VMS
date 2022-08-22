@@ -76,7 +76,6 @@ public class Android_StudentController {
 		if (user != null) {
 			String id = String.valueOf(user.getId());
 			String accessToken = JWTGenerator.generateJWT(id, "jwtauthenticator", account.getUsername(), 604800000);
-//			JWTGenerator.verifyJWT(accessToken);
 			Student s = ss.findStudentByUser(user);
 			mapResponse.put("studentId", s.getId());
 			mapResponse.put("studentName", user.getGroupName());
@@ -99,15 +98,10 @@ public class Android_StudentController {
 			bookingForTheDay.setTime(LocalTime.now());
 			List<Room> availableRooms = new ArrayList<Room>();
 			Student student = ss.findStudentById((String) payload.get("studentId"));
-//			System.out.println(token);
 			try {
 				List<Booking> availableBookings = bs.findBookingsAvailableExact(bookingForTheDay, rooms, student);
 				availableRooms = availableBookings.stream().map(Booking::getRoom).distinct()
 						.collect(Collectors.toList());
-//				for (Room r: availableRooms)
-//				{
-//					System.out.println(r.getRoomName());
-//				}
 				return availableRooms;
 			} catch (Exception e) {
 				return availableRooms;
@@ -124,9 +118,7 @@ public class Android_StudentController {
 		if (JWTGenerator.verifyJWT(token)) {
 			Map<String, Object> payload = rawPayload.get(0);
 			Student s = ss.findStudentById((String) payload.get("studentId"));
-//			System.out.println(payload.get("studentId"));
 			List<Booking> bookings = bs.findBookingsByStudent(s);
-//			System.out.println("returning list");
 			return bs.updateBookingInProgress(bookings);
 		} else
 			return null;
@@ -196,17 +188,11 @@ public class Android_StudentController {
 			List<Room> roomsExact = rms.findRoomsByExactAttributes(room);
 			List<Booking> bookings = bs.findBookingsAvailableExact(booking, roomsExact, student);
 			if (bookings.size() == 0) {
-//				System.out.println("Alternative list");
 				List<Room> roomsContaining = rms.findRoomsByContainingAttributes(room);
 				bookings.addAll(bs.findBookingsAvailableAlternative(booking, roomsExact, student));
 				bookings.addAll(bs.findBookingsAvailableExact(booking, roomsContaining, student));
 
 			}
-
-//		System.out.println(payload.get("facilities"));
-//		System.out.println(payload.get("date"));
-//		System.out.println(payload.get("time"));
-//		System.out.println(payload.get("capacity"));
 
 			return bookings;
 		} else
@@ -259,7 +245,6 @@ public class Android_StudentController {
 			@RequestBody Map<String, Object> payload) {
 		if (JWTGenerator.verifyJWT(token)) {
 
-//		Student student = ss.findStudentById((String) payload.get("studentId"));
 			Booking booking = bs.findBookingById((String) payload.get("bookingId"));
 			String outcomeMsg = "FAILED - INVALID BOOKING";
 
@@ -323,8 +308,6 @@ public class Android_StudentController {
 				}
 			}
 
-			/*ms.sendSimpleMail("e0838388@u.nus.edu","report test","new report generated!");*/
-
 			mapResponse.put("response", "REPORT CREATED");
 			}
 			else
@@ -360,11 +343,6 @@ public class Android_StudentController {
 			Booking booking = new Booking("1", date, time, Integer.parseInt((String) payload.get("duration")), room);
 			booking.setStudent(student);
 			List<HttpStatus> response = new ArrayList<HttpStatus>();
-//		booking.setRoom(room);
-//		booking.setRoom(rs.findRoomById(room.getId()));
-//		booking.setRoom(rs.findRoomById(booking.getRoom().getId()));
-//		List<Room> rooms = rs.findRoomsByAttributes(room);
-//		List<Booking> bookings = bs.checkBookingAvailable(booking, rooms);
 			if (bs.checkBookingByDateTimeRoom(booking, room)) {
 				booking.setStatus(BookingStatus.REJECTED);
 				response.add(HttpStatus.EXPECTATION_FAILED);

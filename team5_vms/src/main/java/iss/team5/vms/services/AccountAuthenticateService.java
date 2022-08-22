@@ -9,8 +9,5 @@ import iss.team5.vms.model.User;
 
 public interface AccountAuthenticateService {
 	public User authenticateAccount(Account account);
-//
-//	public String generateNewToken();
-//
-//	Map<Student, String> getMap();
+
 }
