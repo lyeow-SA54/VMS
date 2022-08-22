@@ -102,6 +102,8 @@ public class AdminController {
 			return new ModelAndView("room-form");
 		LocalTime myTime = room.getBlockedStartTime();
 		int myDuration = room.getBlockDuration();
+		System.out.println("Time" + myTime);
+		System.out.println("Duration" + myDuration);
 		boolean valid = validate(myTime, myDuration);
 		for (String name : names) {
 			if (name.equalsIgnoreCase(roomName)) {
@@ -128,8 +130,11 @@ public class AdminController {
 	public static boolean validate(LocalTime myTime, int myDuration) {
 		LocalTime maxTime = LocalTime.parse("17:00");
 		LocalTime endTime = myTime.plusHours(myDuration);
-		if(endTime.equals(maxTime))
+		System.out.println("After adding" + endTime);
+		if (endTime.equals(maxTime))
 			return true;
+		else if (endTime.equals(LocalTime.parse("00:00")))
+			return false;
 		else if (endTime.isBefore(maxTime))
 			return true;
 		else
@@ -146,7 +151,7 @@ public class AdminController {
 		}
 		ModelAndView mav = new ModelAndView("rooms");
 
-		List<Booking> bookings = bService.findAllBookings();
+		List<Booking> bookings = bService.findTodayAndUpcomingBookings();
 		HashSet<String> roomIds = new HashSet<>();
 		for (Booking b : bookings) {
 			roomIds.add(b.getRoom().getId());
@@ -171,7 +176,7 @@ public class AdminController {
 	@ResponseBody
 	public ModelAndView roomList() {
 		User user = userSessionService.findUserBySession();
-		List<Booking> bookings = bService.findAllBookings();
+		List<Booking> bookings = bService.findTodayAndUpcomingBookings();
 		HashSet<String> roomIds = new HashSet<>();
 		for (Booking b : bookings) {
 			roomIds.add(b.getRoom().getId());
@@ -219,11 +224,11 @@ public class AdminController {
 		for (Booking b : bookings) {
 			roomIds.add(b.getRoom().getId());
 		}
-		
+
 		LocalTime myTime = room.getBlockedStartTime();
 
 		int myDuration = room.getBlockDuration();
-		
+
 		boolean valid = validate(myTime, myDuration);
 		List<Room> rooms = rService.findAllRooms();
 		Room currentRoom = rService.findRoomById(room.getId());
@@ -521,7 +526,8 @@ public class AdminController {
 			getTodayRoomUsageData.add(List.of(r.getRoomName(), bService.getBookingHoursForRoom(bookings, r)));
 		}
 
-		long todayReport = ReService.findAllReports().stream().filter(r -> r.getBooking().getDate().equals(date)).count();
+		long todayReport = ReService.findAllReports().stream().filter(r -> r.getBooking().getDate().equals(date))
+				.count();
 
 		long processingReports = ReService.findAllReports().stream()
 				.filter(r -> r.getReportStatus().equals(ReportStatus.PROCESSING)).count();
