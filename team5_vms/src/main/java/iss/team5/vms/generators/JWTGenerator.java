@@ -44,10 +44,6 @@ public class JWTGenerator {
 			Claims claims = Jwts.parser()
 					.setSigningKey(DatatypeConverter.parseBase64Binary("asldf81721lk2h1o291AUjUUn")).parseClaimsJws(jwt)
 					.getBody();
-			System.out.println("ID: " + claims.getId());
-			System.out.println("Subject: " + claims.getSubject());
-			System.out.println("Issuer: " + claims.getIssuer());
-			System.out.println("Expiration: " + claims.getExpiration());
 			return true;
 		} catch (Exception e) {
 			return false;

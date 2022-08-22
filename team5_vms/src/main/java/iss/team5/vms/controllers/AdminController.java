@@ -128,6 +128,7 @@ public class AdminController {
 	}
 
 	public static boolean validate(LocalTime myTime, int myDuration) {
+		if (myTime!=null) {
 		LocalTime maxTime = LocalTime.parse("17:00");
 		LocalTime endTime = myTime.plusHours(myDuration);
 		System.out.println("After adding" + endTime);
@@ -138,7 +139,8 @@ public class AdminController {
 		else if (endTime.isBefore(maxTime))
 			return true;
 		else
-			return false;
+			return false;}
+		return true;
 	}
 
 	@RequestMapping(value = "/rooms/search", method = RequestMethod.GET)

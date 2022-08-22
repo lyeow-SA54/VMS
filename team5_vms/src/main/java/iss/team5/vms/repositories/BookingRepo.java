@@ -34,6 +34,6 @@ public interface BookingRepo extends JpaRepository<Booking,String>{
 	List<Booking> findByDateAfterAndStudent(LocalDate date, Student student);
 
 	@Query("SELECT b FROM Booking b WHERE b.date >= :date AND b.time >= :time AND (b.status='SUCCESSFUL' OR b.status='WAITINGLIST')")
-	public List<Booking> findAllBookingsByDateTime(@Param("date") LocalDate date, @Param("time") LocalTime time);
+	public List<Booking> findAllBookingsAfterDateTime(@Param("date") LocalDate date, @Param("time") LocalTime time);
 	
 }

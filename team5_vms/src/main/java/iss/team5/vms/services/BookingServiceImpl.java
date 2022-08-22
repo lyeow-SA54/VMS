@@ -398,7 +398,7 @@ public class BookingServiceImpl implements BookingService {
 		LocalDate date = LocalDate.now();
 		LocalTime currentTime = LocalTime.now();
 		LocalTime time = LocalTime.of(currentTime.getHour(), currentTime.getMinute(), currentTime.getSecond());
-		return br.findAllBookingsByDateTime(date, time);
+		return br.findAllBookingsAfterDateTime(date, time);
 	}
 
 }
