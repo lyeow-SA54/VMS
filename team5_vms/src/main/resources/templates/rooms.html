@@ -53,7 +53,8 @@
 							<option class="dropdown-item" value="1">Full</option>
 						</select>
 						<button class="btn btnorange" type="submit">Search</button>
-						<a th:href="@{/admin/rooms/create}" class="btn btnorange" style="margin-left: 20px;">Add New Room</a>
+						<a th:href="@{/admin/rooms/create}" class="btn btnorange" style="margin-left: 20px;">Add New
+							Room</a>
 					</form>
 				</div>
 			</div>
@@ -89,7 +90,7 @@
 								</td>
 								<td th:unless="${not roomids.contains(room.id)}">
 									<span>-</span>
-								</td>							
+								</td>
 								<td th:if="${not roomids.contains(room.id)}">
 									<a href="" th:href="@{/admin/rooms/delete/}+${room.id}">Delete</a>
 								</td>

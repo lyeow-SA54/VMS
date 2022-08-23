@@ -392,19 +392,4 @@ public class BookingServiceImpl implements BookingService {
 			return minutes/60;
 
 	}
-
-	@Override
-	public List<Booking> findTodayAndUpcomingBookings() {
-		LocalDate date = LocalDate.now();
-		LocalTime currentTime = LocalTime.now();
-		LocalTime time = LocalTime.of(currentTime.getHour(), currentTime.getMinute(), currentTime.getSecond());
-		return br.findAllBookingsAfterDateTime(date, time);
-	}
-
-	@Override
-	public void removeBooking(Booking booking) {
-		br.delete(booking);
-		br.flush();
-	}
-
 }

@@ -12,10 +12,10 @@
 		<div class="row">
 			<div class="col-3"></div>
 			<div class="col-6">
-			<form action="#" th:action="@{/admin/students/edit}" th:object="${student}" method="post">
-				<h5 class="mt-5">Edit Student Profile</h5>
-				<input type="hidden" th:field="*{id}">
-				<table class="table table-borderless" align="center">
+				<form action="#" th:action="@{/admin/students/edit}" th:object="${student}" method="post">
+					<h5 class="mt-5">Edit Student Profile</h5>
+					<input type="hidden" th:field="*{id}">
+					<table class="table table-borderless" align="center">
 						<tbody>
 							<tr>
 								<td><span th:text="#{fieldLabel.firstName}"></span></td>
@@ -25,7 +25,8 @@
 									</fieldset>
 								</td>
 								<td th:if="${#fields.hasErrors('user.firstName')}" th:errors="*{user.firstName}"></td>
-							</tr><tr>
+							</tr>
+							<tr>
 								<td><span th:text="#{fieldLabel.lastName}"></span></td>
 								<td>
 									<fieldset>
@@ -55,7 +56,8 @@
 								<td><span th:text="#{fieldLabel.groupSize}"></span></td>
 								<td>
 									<fieldset>
-										<input type="number" th:field="${student.user.groupSize}" th:min="1" th:max="10">
+										<input type="number" th:field="${student.user.groupSize}" th:min="1"
+											th:max="10">
 									</fieldset>
 								</td>
 							</tr>

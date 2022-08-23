@@ -14,7 +14,6 @@ import javax.validation.constraints.NotNull;
 import iss.team5.vms.helper.ReportStatus;
 import org.hibernate.annotations.GenericGenerator;
 import iss.team5.vms.helper.ReportCategory;
-import iss.team5.vms.helper.StudentStatus;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

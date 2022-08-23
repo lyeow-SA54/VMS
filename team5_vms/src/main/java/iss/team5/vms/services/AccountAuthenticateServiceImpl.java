@@ -1,17 +1,12 @@
 package iss.team5.vms.services;
 
-import java.security.SecureRandom;
 import java.util.Arrays;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import iss.team5.vms.DTO.Account;
 import iss.team5.vms.generators.HashStringGenerator;
-import iss.team5.vms.model.Student;
 import iss.team5.vms.model.User;
 import iss.team5.vms.repositories.UserRepo;
 

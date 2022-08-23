@@ -4,8 +4,6 @@
 <head th:replace="fragments/general.html :: headerfiles" />
 <title>VMS</title>
 <link rel="stylesheet" th:href="@{/css/simple.css}" />
-<!--<script src="https://cdn.jsdelivr.net/timepicker.js/latest/timepicker.min.js"></script>
-<link href="https://cdn.jsdelivr.net/timepicker.js/latest/timepicker.min.css" rel="stylesheet" />-->
 <style>
 	p {
 		color: red;
@@ -41,7 +39,7 @@
 								<td>
 									<fieldset>
 										<input id="Time" type="time" name="Time" class="form-control" required=""
-											th:field="${booking.time}" min="09:00" max="18:00"/>
+											th:field="${booking.time}" min="09:00" max="18:00" />
 									</fieldset>
 								</td>
 							</tr>
@@ -100,4 +98,5 @@
 		</div>
 	</footer>
 </body>
+
 </html>
