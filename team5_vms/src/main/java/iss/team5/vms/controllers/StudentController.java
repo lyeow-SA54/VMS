@@ -379,7 +379,7 @@ public class StudentController {
 		Booking booking = bs.findStudentCurrentBooking(student);
 		Booking lastBooking = bs.findBookingBefore(booking);
 		Report newReport = new Report(details, fileName, lastBooking, ReportStatus.PROCESSING,
-				ReportCategory.valueOf(category), student);
+				ReportCategory.valueOf(category), lastBooking.getStudent());
 		if (!rs.checkMultipleReports(newReport))
 		{
 		rs.createReport(newReport);

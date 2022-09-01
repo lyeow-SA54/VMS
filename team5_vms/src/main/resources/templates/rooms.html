@@ -85,7 +85,7 @@
 								<td th:text="${room.availability} ? 'OPEN' : 'CLOSED'"></td>
 								<td th:text=${room.blockedStartTime}></td>
 								<td th:text=${room.blockDuration}></td>
-								<td th:if="${not roomids.contains(room.id)}">
+								<td>
 									<a href="" th:href="@{/admin/rooms/edit/}+${room.id}">Edit</a>
 								</td>
 								<td th:unless="${not roomids.contains(room.id)}">

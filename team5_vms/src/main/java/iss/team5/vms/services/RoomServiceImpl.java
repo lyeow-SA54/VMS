@@ -97,9 +97,9 @@ public class RoomServiceImpl implements RoomService {
 						.collect(Collectors.toList());
 
 				// all rooms that are open in requested timing
-				frooms.addAll(nullBlockTimeRooms);
+				nullBlockTimeRooms.addAll(frooms);
 				
-				return frooms;
+				return nullBlockTimeRooms;
 	}
 
 	@Override

@@ -89,7 +89,7 @@ public class BookingServiceImpl implements BookingService {
 				br.saveAndFlush(booking);
 				return "Checked in successfully";
 			} else
-				return "Time now is past check in window period";
+				return "Time now is past check in window period (10 min from start)";
 		} else
 			return "Booking owner mismatch";
 	}
@@ -114,6 +114,7 @@ public class BookingServiceImpl implements BookingService {
 		if (predictPeak(booking)&&duration>60) {
 			duration = 60;
 		}
+		booking.setDuration(duration);
 		List<Room> frooms = rms.findAllRoomsOpenForBooking(booking, rooms);
 
 		List<Booking> bookings = new ArrayList<Booking>();

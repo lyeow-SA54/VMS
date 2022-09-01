@@ -131,6 +131,8 @@ public class ReportServiceImpl implements ReportService {
 			score += 1;
 		}
 		student.setScore(score);
+		report.setReportStatus(ReportStatus.APPROVED);
+		createReport(report);
 		ss.changeStudent(student);
 		ms.sendSimpleMail(student.getUser().getEmail(),
 				"REPORT AGAINST YOUR BOOKING ON:" + report.getBooking().getDate() + "FOR: "

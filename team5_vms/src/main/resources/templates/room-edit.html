@@ -57,7 +57,7 @@
 									<select name="availability" th:field="*{availability}">
 										<option th:each="availability : ${availabilities}" th:value="${availability}"
 											th:selected="${availability==room.availability}"
-											th:text="${availability} ? 'OPEN' : 'FULL'"></option>
+											th:text="${availability} ? 'OPEN' : 'CLOSED'"></option>
 									</select>
 								</td>
 							</tr>

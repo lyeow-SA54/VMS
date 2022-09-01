@@ -74,6 +74,7 @@ public class SeedDBServiceImpl implements SeedDBService {
 		bs.createBooking(new Booking("B7", LocalDate.now(), LocalTime.now().minusMinutes(120), 45, BookingStatus.SUCCESSFUL));
 		bs.createBooking(new Booking("B8", LocalDate.now(), LocalTime.now().minusMinutes(45), 90, BookingStatus.SUCCESSFUL));
 		bs.createBooking(new Booking("B9", LocalDate.now().plusDays(1), dateTimeInput.timeInput("14:00:05"), 120, BookingStatus.SUCCESSFUL));
+		bs.createBooking(new Booking("B10", LocalDate.now().plusDays(1), dateTimeInput.timeInput("13:00:00"), 60, BookingStatus.SUCCESSFUL));
 
 
 		/*bs.createBooking(new Booking("B10", LocalDate.now().minusDays(24), LocalTime.now().minusMinutes(60), 60, BookingStatus.SUCCESSFUL));
@@ -120,6 +121,7 @@ public class SeedDBServiceImpl implements SeedDBService {
 	public void loadBookingData() {
 		Student s1 = ss.findStudentById("S1001");
 		Student s2 = ss.findStudentById("S1002");
+		Student s3 = ss.findStudentById("S1003");
 
 		Booking b1 = bs.findBookingById("B1001");
 		Booking b2 = bs.findBookingById("B1002");
@@ -127,6 +129,10 @@ public class SeedDBServiceImpl implements SeedDBService {
 		Booking b4 = bs.findBookingById("B1004");
 		Booking b5 = bs.findBookingById("B1005");
 		Booking b6 = bs.findBookingById("B1006");
+		Booking b7 = bs.findBookingById("B1007");
+		Booking b8 = bs.findBookingById("B1008");
+		Booking b9 = bs.findBookingById("B1009");
+		Booking b10 = bs.findBookingById("B1010");
 
 		Report rp1 = rs.findReportById("RE1001");
 		Report rp2 = rs.findReportById("RE1002");
@@ -170,6 +176,10 @@ public class SeedDBServiceImpl implements SeedDBService {
 		bs.addStudent(b4, s2);	
 		bs.addStudent(b5, s2);
 		bs.addStudent(b6, s1);
+		bs.addStudent(b7,s2);
+		bs.addStudent(b8,s1);
+		bs.addStudent(b9,s1);
+		bs.addStudent(b10,s1);
 
 		rs.addBooking(rp1,b1);
 		rs.addBooking(rp2,b2);
@@ -177,23 +187,18 @@ public class SeedDBServiceImpl implements SeedDBService {
 		rs.addBooking(rp4,b4);
 		rs.addBooking(rp5,b5);
 		
+		
 		bs.addRoom(b1, r1);
 		bs.addRoom(b2, r2);
 		bs.addRoom(b3, r3);
 		bs.addRoom(b4, r1);
 		bs.addRoom(b5, r3);
 		bs.addRoom(b6, r3);
-
-		Student s3 = ss.findStudentById("S1003");
-		Booking b7 = bs.findBookingById("B1007");
-		Booking b8 = bs.findBookingById("B1008");
-		Booking b9 = bs.findBookingById("B1009");
-		bs.addStudent(b7,s1);
-		bs.addStudent(b8,s1);
-		bs.addStudent(b9,s1);
 		bs.addRoom(b7,r1);
 		bs.addRoom(b8,r1);
 		bs.addRoom(b9,r1);
+		bs.addRoom(b10,r3);
+
 		s3.setScore(5);
 		ss.changeStudent(s3);
 	}
